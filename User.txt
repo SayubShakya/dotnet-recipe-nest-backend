@@ -1,0 +1,35 @@
+using MySql.Data.MySqlClient;
+using System;
+
+
+namespace DatabaseUtil
+{
+
+    public class MySqlUsersConnectionUtil
+    {
+        private string connectionString = "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;";
+
+        public void ConnectToDatabaseUsers()
+        {
+            MySqlConnection connection = new MySqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+                Console.WriteLine("Connection successful!");
+
+                string query = "SELECT * FROM users";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Console.WriteLine(reader["name"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+    }
+}
