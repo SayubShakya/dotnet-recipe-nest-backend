@@ -2,35 +2,30 @@
 using System.Text;
 
 using Router;
-using Repository;
-using Repository.Implementation;
-using RecipeNest.Util.Database;
+
 using RecipeNest.Controller;
 using RecipeNest.Service;
+using RecipeNest.Db;
+using RecipeNest.Repository;
+using RecipeNest.Repository.Impl.Database;
+using System.Text.RegularExpressions;
 
 class Application
 {
     static void Main()
     {
-        // Set the minimum and maximum number of threads in the thread pool
-        int minThreads = 100;  // Minimum threads in the pool
-        int maxThreads = 100; // Maximum threads in the pool
 
-        // Set the thread pool size
-        ThreadPool.SetMinThreads(minThreads, minThreads);
-        ThreadPool.SetMaxThreads(maxThreads, maxThreads);
+        string url = "http://localhost:9000/";
 
-        // Create an HttpListener to listen for HTTP requests
         HttpListener listener = new HttpListener();
-        listener.Prefixes.Add("http://localhost:9000/");
 
-        // Start the listener
+        listener.Prefixes.Add(url);
+
         listener.Start();
-        Console.WriteLine("Listening on http://localhost:9000/");
 
-        DatabaseUtil databaseUtil = new DatabaseUtil();
+        Console.WriteLine("Listening on " + url);
 
-        RoleRepository roleRepository = new RoleRepositoryImpl(databaseUtil);
+        IRoleRepository roleRepository = new RoleRepositoryDatabaseImpl();
 
         RoleService roleService = new RoleService(roleRepository);
 
@@ -40,32 +35,49 @@ class Application
 
         while (true)
         {
-            // Wait for a new incoming request
-            HttpListenerContext context = listener.GetContext();
-
-            // Handle the request in a separate thread
-            ThreadPool.QueueUserWorkItem((object state) =>
+            try
             {
                 Console.WriteLine($"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Thread.CurrentThread.ManagedThreadId}");
+                // Wait for a new incoming request
+                HttpListenerContext context = listener.GetContext();
 
-                HttpListenerContext context = (HttpListenerContext)state;
-                HttpListenerRequest? request = context.Request;
-                HttpListenerResponse? response = context.Response;
+                // Handle the request in a separate thread
+                ThreadPool.QueueUserWorkItem((object state) =>
+                {
+                    HttpListenerResponse? response = null;
 
-                // Process the request and generate a response
-                string responseString = router.Route(request);
-                // Convert the response string to byte array
-                byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-                response.ContentLength64 = buffer.Length;
-                response.ContentType = "application/json";
+                    Console.WriteLine($"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Thread.CurrentThread.ManagedThreadId}");
 
-                // Write the response
-                response.OutputStream.Write(buffer, 0, buffer.Length);
+                    HttpListenerContext context = (HttpListenerContext)state;
+                    HttpListenerRequest? request = context.Request;
+                    response = context.Response;
 
-                // Close the response stream
-                response.OutputStream.Close();
+                    // Process the request and generate a response
+                    string responseString = router.Route(request);
 
-            }, context);
+                    ResponseBuilder(response, responseString);
+
+                }, context);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
         }
+    }
+
+    private static void ResponseBuilder(HttpListenerResponse response, string responseString)
+    {
+        // Convert the response string to byte array
+        byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+        response.ContentLength64 = buffer.Length;
+        response.ContentType = "application/json";
+
+        // Write the response
+        response.OutputStream.Write(buffer, 0, buffer.Length);
+
+        // Close the response stream
+        response.OutputStream.Close();
     }
 }
