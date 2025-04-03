@@ -1,3 +1,5 @@
+// Role.cs
+
 using MessagePack;
 
 namespace RecipeNest.Model

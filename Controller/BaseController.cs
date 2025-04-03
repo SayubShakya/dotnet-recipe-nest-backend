@@ -1,3 +1,6 @@
+//BaseController.cs
+
+using System.IO;
 using System.Net;
 using System.Text;
 using MessagePack;
@@ -20,9 +23,8 @@ namespace RecipeNest.Controller
         public static T JsonRequestBody<T>(HttpListenerRequest request)
         {
             string requestBody = RequestBody(request);
-
-        
             return MessagePackSerializer.Deserialize<T>( MessagePackSerializer.ConvertFromJson(requestBody));
         }
     }
 }
+

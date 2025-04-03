@@ -1,3 +1,4 @@
+//QueryConstant.cs
 namespace RecipeNest.Consta
 {
     public interface IQueryConstant
@@ -11,5 +12,25 @@ namespace RecipeNest.Consta
             public const string DELETE_BY_ID = "UPDATE roles set is_active=0 WHERE id=@param1 And is_active = 1";
 
         }
+        
+        public interface IUser
+        {
+            public const string SAVE = " INSERT INTO users (first_name, last_name, phone_number, image_url, about, email, password, role_id) VALUES ( @param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8)";
+            public const string UPDATE = "UPDATE users SET first_name=@param1, last_name=@param2, phone_number=@param3,image_url=@param4, about=@param5, email=@param6, password=@param7, role_id=@param8 WHERE is_active=1 AND id=@param9";
+            public const string GET_BY_ID = "SELECT * FROM users WHERE id=@param1 AND is_active=1";
+            public const string GET_ALL = "SELECT * FROM users WHERE is_active=1";
+            public const string DELETE_BY_ID = "UPDATE users SET is_active=0 WHERE id=@param1 AND is_active = 1";
+            public const string GET_BY_EMAIL = "SELECT * FROM users WHERE email=@param1 AND is_active=1";
+        }
+        public interface ICuisine
+        {
+            public const string SAVE = "INSERT INTO cuisines (name, image_url) VALUES (@param1, @param2)";
+            public const string UPDATE = "UPDATE cuisines SET name=@param1, image_url=@param2 WHERE is_active=1 AND id=@param3";
+            public const string GET_BY_ID = "SELECT * FROM cuisines WHERE id=@param1 AND is_active=1";
+            public const string GET_ALL = "SELECT * FROM cuisines WHERE is_active=1";
+            public const string DELETE_BY_ID = "UPDATE cuisines SET is_active=0 WHERE id=@param1 AND is_active = 1";
+            public const string GET_BY_NAME = "SELECT * FROM cuisines WHERE name=@param1 AND is_active=1";
+        }
+        
     }
 }

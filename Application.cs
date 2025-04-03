@@ -1,14 +1,15 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Text;
 
 using Router;
 
 using RecipeNest.Controller;
 using RecipeNest.Service;
-using RecipeNest.Db;
 using RecipeNest.Repository;
 using RecipeNest.Repository.Impl.Database;
-using System.Text.RegularExpressions;
+using RecipeNest.Util;
+using RecipeNest.Util.Impl;
 
 class Application
 {
@@ -24,24 +25,36 @@ class Application
         listener.Start();
 
         Console.WriteLine("Listening on " + url);
-
+        IHashingUtil hashingUtil = new BcryptUtil();
+        String password = "Password1";
+        String hashed = hashingUtil.Hash(password);
+        
+        Console.WriteLine("Check Password: " + hashingUtil.Verify(hashed,password ));
+        
+        Console.WriteLine($"Hashed: {hashed}");
         IRoleRepository roleRepository = new RoleRepositoryDatabaseImpl();
+        IUserRepository userRepository = new UserRepositoryDatabaseImpl();
+        ICuisineRepository cuisineRepository = new CuisineRepositoryDatabaseImpl();
+
 
         RoleService roleService = new RoleService(roleRepository);
+        UserService userService = new UserService(userRepository, hashingUtil);
+        CuisineService cuisineService = new CuisineService(cuisineRepository);
+        
 
         RoleController roleController = new RoleController(roleService);
+        UserController userController = new UserController(userService);
+        CuisineController cuisineController = new CuisineController(cuisineService);
 
-        APIRouter router = new APIRouter(roleController);
+        APIRouter router = new APIRouter(roleController, userController, cuisineController);
 
         while (true)
         {
             try
             {
                 Console.WriteLine($"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Thread.CurrentThread.ManagedThreadId}");
-                // Wait for a new incoming request
                 HttpListenerContext context = listener.GetContext();
 
-                // Handle the request in a separate thread
                 ThreadPool.QueueUserWorkItem((object state) =>
                 {
                     HttpListenerResponse? response = null;
@@ -52,7 +65,6 @@ class Application
                     HttpListenerRequest? request = context.Request;
                     response = context.Response;
 
-                    // Process the request and generate a response
                     string responseString = router.Route(request);
 
                     ResponseBuilder(response, responseString);
@@ -69,15 +81,12 @@ class Application
 
     private static void ResponseBuilder(HttpListenerResponse response, string responseString)
     {
-        // Convert the response string to byte array
         byte[] buffer = Encoding.UTF8.GetBytes(responseString);
         response.ContentLength64 = buffer.Length;
         response.ContentType = "application/json";
 
-        // Write the response
         response.OutputStream.Write(buffer, 0, buffer.Length);
 
-        // Close the response stream
         response.OutputStream.Close();
     }
 }

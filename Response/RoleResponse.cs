@@ -1,3 +1,5 @@
+// RoleResponse.cs
+
 using MessagePack;
 
 namespace RecipeNest.Reponse

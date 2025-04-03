@@ -1,3 +1,7 @@
+// BaseRepository.cs
+
+using System.Collections.Generic;
+
 namespace RecipeNest.Repository
 {
     public interface IBaseRepository<T>

@@ -1,3 +1,5 @@
+//ServerResponse.cs
+
 using MessagePack;
 
 namespace RecipeNest.Reponse
