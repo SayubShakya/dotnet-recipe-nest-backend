@@ -32,5 +32,14 @@ namespace RecipeNest.Consta
             public const string GET_BY_NAME = "SELECT * FROM cuisines WHERE name=@param1 AND is_active=1";
         }
         
+        public interface IRecipe
+        {
+            public const string SAVE = "INSERT INTO recipes (image_url, title, description, recipe, ingredients, recipe_by, cuisine) VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7)";
+            public const string UPDATE = "UPDATE recipes SET image_url=@param1, title=@param2, description=@param3, recipe=@param4, ingredients=@param5, recipe_by=@param6, cuisine=@param7 WHERE is_active=1 AND id=@param8";
+            public const string GET_BY_ID = "SELECT * FROM recipes WHERE id=@param1 AND is_active=1";
+            public const string GET_ALL = "SELECT * FROM recipes WHERE is_active=1";
+            public const string DELETE_BY_ID = "UPDATE recipes SET is_active=0 WHERE id=@param1 AND is_active = 1";
+            public const string GET_BY_TITLE = "SELECT * FROM recipes WHERE title=@param1 AND is_active=1";
+        }
     }
 }

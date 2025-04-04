@@ -9,18 +9,22 @@ using RecipeNest.Request;
 
 namespace Router
 {
+
     public class APIRouter
     {
         private RoleController roleController;
         private UserController userController;
         private CuisineController cuisineController;
+        private RecipeController recipeController;
 
 
-        public APIRouter(RoleController roleController, UserController userController, CuisineController cuisineController)
+        public APIRouter(RoleController roleController, UserController userController,
+            CuisineController cuisineController, RecipeController recipeController)
         {
             this.roleController = roleController;
             this.userController = userController;
             this.cuisineController = cuisineController;
+            this.recipeController = recipeController;
         }
 
         public string Route(HttpListenerRequest request)
@@ -43,10 +47,14 @@ namespace Router
                     {
                         return User(path, request);
                     }
-                    
+
                     if (path.Contains("/cuisines"))
                     {
                         return Cuisine(path, request);
+                    }
+                    if (path.Contains("/recipes"))
+                    {
+                        return Recipe(path, request);
                     }
                 }
 
@@ -71,7 +79,7 @@ namespace Router
                 }
                 else if (request.HttpMethod.Equals("POST"))
                 {
-                   return roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
+                    return roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
                 }
                 else if (request.HttpMethod.Equals("PUT"))
                 {
@@ -80,12 +88,12 @@ namespace Router
             }
             else if (Regex.IsMatch(path, @"^/roles\?id=\d+$"))
             {
-                int id =  Convert.ToInt32(request.QueryString["id"]);
-                
+                int id = Convert.ToInt32(request.QueryString["id"]);
+
                 if (request.HttpMethod.Equals("GET"))
                 {
                     return roleController.GetById(id);
-                } 
+                }
                 else if (request.HttpMethod.Equals("DELETE"))
                 {
                     return roleController.DeleteById(id);
@@ -116,12 +124,12 @@ namespace Router
             }
             else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
             {
-                int id =  Convert.ToInt32(request.QueryString["id"]);
-                
+                int id = Convert.ToInt32(request.QueryString["id"]);
+
                 if (request.HttpMethod.Equals("GET"))
                 {
                     return userController.GetById(id);
-                } 
+                }
                 else if (request.HttpMethod.Equals("DELETE"))
                 {
                     return userController.DeleteById(id);
@@ -138,9 +146,9 @@ namespace Router
 
             return NotFound();
         }
-        
-        
-        
+
+
+
         public String Cuisine(string path, HttpListenerRequest request)
         {
             Console.WriteLine("Cuisine path check: " + path);
@@ -173,7 +181,8 @@ namespace Router
                         return cuisineController.DeleteById(id);
                     }
                 }
-                else {
+                else
+                {
                     Console.WriteLine("Failed to parse ID from query string: " + request.QueryString["id"]);
                 }
             }
@@ -190,10 +199,62 @@ namespace Router
             return NotFound();
         }
 
+
+
+        public String Recipe(string path, HttpListenerRequest request)
+        {
+            Console.WriteLine("Recipe path check: " + path);
+
+            if (Regex.IsMatch(path, @"^/recipes/?$"))
+            {
+                if (request.HttpMethod.Equals("GET"))
+                {
+                    return recipeController.GetAll();
+                }
+                else if (request.HttpMethod.Equals("POST"))
+                {
+                    return recipeController.Save(BaseController.JsonRequestBody<CreateRecipeRequest>(request));
+                }
+                else if (request.HttpMethod.Equals("PUT"))
+                {
+                    return recipeController.Update(BaseController.JsonRequestBody<UpdateRecipeRequest>(request));
+                }
+            }
+            else if (Regex.IsMatch(path, @"^/recipes\?id=\d+$"))
+            {
+                if (request.QueryString["id"] != null && int.TryParse(request.QueryString["id"], out int id))
+                {
+                    if (request.HttpMethod.Equals("GET"))
+                    {
+                        return recipeController.GetById(id);
+                    }
+                    else if (request.HttpMethod.Equals("DELETE"))
+                    {
+                        return recipeController.DeleteById(id);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Failed to parse ID from query string: " + request.QueryString["id"]);
+                }
+            }
+            else if (Regex.IsMatch(path, @"^/recipes\?title=.+$"))
+            {
+                string title = request.QueryString["title"];
+                if (title != null && request.HttpMethod.Equals("GET"))
+                {
+                    Console.WriteLine("Attempting to get recipe by name: " + title);
+                    return recipeController.GetByTitle(title);
+                }
+            }
+
+            return NotFound();
+        }
+
         public String NotFound()
         {
             Console.WriteLine("Returning 404 Not Found");
             return BaseController.ToJsonResponse(new ServerResponse(null, "404 Not Found", 404));
         }
     }
-    }
+}

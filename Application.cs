@@ -35,18 +35,21 @@ class Application
         IRoleRepository roleRepository = new RoleRepositoryDatabaseImpl();
         IUserRepository userRepository = new UserRepositoryDatabaseImpl();
         ICuisineRepository cuisineRepository = new CuisineRepositoryDatabaseImpl();
+        IRecipeRepository recipeRepository = new RecipeRepositoryDatabaseImpl();
 
 
         RoleService roleService = new RoleService(roleRepository);
         UserService userService = new UserService(userRepository, hashingUtil);
         CuisineService cuisineService = new CuisineService(cuisineRepository);
+        RecipeService recipeService = new RecipeService(recipeRepository);
         
 
         RoleController roleController = new RoleController(roleService);
         UserController userController = new UserController(userService);
         CuisineController cuisineController = new CuisineController(cuisineService);
+        RecipeController recipeController = new RecipeController(recipeService);
 
-        APIRouter router = new APIRouter(roleController, userController, cuisineController);
+        APIRouter router = new APIRouter(roleController, userController, cuisineController, recipeController);
 
         while (true)
         {
