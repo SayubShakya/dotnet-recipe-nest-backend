@@ -18,16 +18,18 @@ namespace Router
         private CuisineController cuisineController;
         private RecipeController recipeController;
         private FavoriteController favoriteController;
+        private RatingController ratingController;
 
 
         public APIRouter(RoleController roleController, UserController userController,
-            CuisineController cuisineController, RecipeController recipeController, FavoriteController favoriteController)
+            CuisineController cuisineController, RecipeController recipeController, FavoriteController favoriteController, RatingController ratingController)
         {
             this.roleController = roleController;
             this.userController = userController;
             this.cuisineController = cuisineController;
             this.recipeController = recipeController;
             this.favoriteController = favoriteController;
+            this.ratingController = ratingController;
         }
 
         public string Route(HttpListenerRequest request)
@@ -62,6 +64,10 @@ namespace Router
                     if (path.Contains("/favorites"))
                     {
                         return Favorite(path, request);
+                    }
+                    if (path.Contains("/ratings"))
+                    {
+                        return Rating(path, request);
                     }
                 }
 
@@ -281,6 +287,42 @@ namespace Router
                 else if (request.HttpMethod.Equals("DELETE"))
                 {
                     return favoriteController.DeleteByUserAndRecipe(userId, recipeId);
+                }
+            }
+            return NotFound();
+        }
+        
+        
+       public String Rating(string path, HttpListenerRequest request)
+        {
+            Console.WriteLine("requesting Rating path: " + path);
+
+            if (Regex.IsMatch(path, @"^/ratings/?$"))
+            {
+                if (request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ratingController.Save(BaseController.JsonRequestBody<CreateRatingRequest>(request));
+                }
+            }
+            else if (Regex.IsMatch(path, @"^/ratings\?user_id=\d+&recipe_id=\d+$"))
+            {
+                 if (request.QueryString["user_id"] != null
+                    && int.TryParse(request.QueryString["user_id"], out int userId)
+                    && request.QueryString["recipe_id"] != null
+                    && int.TryParse(request.QueryString["recipe_id"], out int recipeId))
+                {
+                    if (request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return ratingController.GetByUserAndRecipe(userId, recipeId);
+                    }
+                    else if (request.HttpMethod.Equals("DELETE", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return ratingController.DeleteByUserAndRecipe(userId, recipeId);
+                    }
+                }
+                 else
+                {
+                    Console.WriteLine("Failed to parse user_id or recipe_id from rating query string.");
                 }
             }
             return NotFound();

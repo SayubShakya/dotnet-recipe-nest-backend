@@ -37,21 +37,24 @@ class Application
         ICuisineRepository cuisineRepository = new CuisineRepositoryDatabaseImpl();
         IRecipeRepository recipeRepository = new RecipeRepositoryDatabaseImpl();
         IFavoriteRepository favoriteRepository = new FavoriteRepositoryDatabaseImpl();
+        IRatingRepository ratingRepository = new RatingRepositoryDatabaseImpl();    
 
 
         RoleService roleService = new RoleService(roleRepository);
         UserService userService = new UserService(userRepository, hashingUtil);
         CuisineService cuisineService = new CuisineService(cuisineRepository);
         RecipeService recipeService = new RecipeService(recipeRepository);
-        FavoriteService favoriteService = new FavoriteService(favoriteRepository, userRepository, recipeRepository);        
+        FavoriteService favoriteService = new FavoriteService(favoriteRepository, userRepository, recipeRepository);   
+        RatingService ratingService = new RatingService(ratingRepository, userRepository, recipeRepository);
 
         RoleController roleController = new RoleController(roleService);
         UserController userController = new UserController(userService);
         CuisineController cuisineController = new CuisineController(cuisineService);
         RecipeController recipeController = new RecipeController(recipeService);
         FavoriteController favoriteController = new FavoriteController(favoriteService);
+        RatingController ratingController = new RatingController(ratingService);
 
-        APIRouter router = new APIRouter(roleController, userController, cuisineController, recipeController, favoriteController);
+        APIRouter router = new APIRouter(roleController, userController, cuisineController, recipeController, favoriteController, ratingController);
 
         while (true)
         {
