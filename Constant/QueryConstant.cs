@@ -12,7 +12,7 @@ namespace RecipeNest.Consta
             public const string DELETE_BY_ID = "UPDATE roles set is_active=0 WHERE id=@param1 And is_active = 1";
 
         }
-        
+
         public interface IUser
         {
             public const string SAVE = " INSERT INTO users (first_name, last_name, phone_number, image_url, about, email, password, role_id) VALUES ( @param1, @param2, @param3, @param4, @param5, @param6, @param7, @param8)";
@@ -22,6 +22,7 @@ namespace RecipeNest.Consta
             public const string DELETE_BY_ID = "UPDATE users SET is_active=0 WHERE id=@param1 AND is_active = 1";
             public const string GET_BY_EMAIL = "SELECT * FROM users WHERE email=@param1 AND is_active=1";
         }
+
         public interface ICuisine
         {
             public const string SAVE = "INSERT INTO cuisines (name, image_url) VALUES (@param1, @param2)";
@@ -31,15 +32,34 @@ namespace RecipeNest.Consta
             public const string DELETE_BY_ID = "UPDATE cuisines SET is_active=0 WHERE id=@param1 AND is_active = 1";
             public const string GET_BY_NAME = "SELECT * FROM cuisines WHERE name=@param1 AND is_active=1";
         }
-        
+
         public interface IRecipe
         {
             public const string SAVE = "INSERT INTO recipes (image_url, title, description, recipe, ingredients, recipe_by, cuisine) VALUES (@param1, @param2, @param3, @param4, @param5, @param6, @param7)";
             public const string UPDATE = "UPDATE recipes SET image_url=@param1, title=@param2, description=@param3, recipe=@param4, ingredients=@param5, recipe_by=@param6, cuisine=@param7 WHERE is_active=1 AND id=@param8";
             public const string GET_BY_ID = "SELECT * FROM recipes WHERE id=@param1 AND is_active=1";
-            public const string GET_ALL = "SELECT * FROM recipes WHERE is_active=1";
+            public const string GET_ALL = "SELECT * FROM recipes r LEFT JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1";
             public const string DELETE_BY_ID = "UPDATE recipes SET is_active=0 WHERE id=@param1 AND is_active = 1";
             public const string GET_BY_TITLE = "SELECT * FROM recipes WHERE title=@param1 AND is_active=1";
+            public const string GET_ALL_FAVORITES = "SELECT * FROM recipes r INNER JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 AND f.user_id=@param1";
+        }
+
+
+        public interface IFavorite
+        {
+            public const string SAVE="INSERT INTO favorites (user_id, recipe_id) VALUES (@param1, @param2)";
+            public const string DELETE_BY_ID = "UPDATE favorites SET is_active=0 WHERE user_id=@param1 AND is_active = 1 AND recipe_id=@param2";
+            public const string GET_BY_ID = "SELECT * FROM favorites WHERE user_id=@param1 AND is_active=1 AND recipe_id=@param2";
+        }
+        
+        public interface IRating
+        {
+            public const string SAVE= "INSERT INTO ratings (user_id, recipe_id, rating) VALUES (@param1, @param2, @param3)";
+            public const string DELETE_BY_ID = "UPDATE ratings SET is_active=0 WHERE user_id=@param1 AND is_active = 1 AND recipe_id=@param2";
+            public const string GET_BY_ID = "SELECT * FROM ratings WHERE user_id=@param1 AND is_active=1 AND recipe_id=@param2";
         }
     }
 }
+    
+
+    

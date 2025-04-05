@@ -109,6 +109,37 @@ public class DatabaseConnector
         }
         return default(T);
     }
+    
+    
+    public static List<T> QueryList<T>(string sql, IRowMapper<T> rowMapper, params object[] parameters)
+    {
+        List<T> results = new List<T>();
+        using (var connection = GetConnection())
+        using (var preparedStatement = GetPreparedStatement(connection, sql))
+        {
+            try
+            {
+                if (parameters != null && parameters.Length > 0)
+                {
+                    MapParams(parameters, preparedStatement);
+                }
+
+                using (var resultSet = preparedStatement.ExecuteReader())
+                {
+                    while (resultSet.Read()) 
+                    {
+                        results.Add(rowMapper.Map(resultSet));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"######## Error fetching list: {sql}");
+                Console.WriteLine(ex.Message);
+            }
+        }
+        return results; 
+    }
 
     private static void MapParams(object[] parameters, MySqlCommand mySqlCommand)
     {

@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Text.RegularExpressions;
 using RecipeNest.Controller;
+using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Request;
 
@@ -16,15 +17,17 @@ namespace Router
         private UserController userController;
         private CuisineController cuisineController;
         private RecipeController recipeController;
+        private FavoriteController favoriteController;
 
 
         public APIRouter(RoleController roleController, UserController userController,
-            CuisineController cuisineController, RecipeController recipeController)
+            CuisineController cuisineController, RecipeController recipeController, FavoriteController favoriteController)
         {
             this.roleController = roleController;
             this.userController = userController;
             this.cuisineController = cuisineController;
             this.recipeController = recipeController;
+            this.favoriteController = favoriteController;
         }
 
         public string Route(HttpListenerRequest request)
@@ -55,6 +58,10 @@ namespace Router
                     if (path.Contains("/recipes"))
                     {
                         return Recipe(path, request);
+                    }
+                    if (path.Contains("/favorites"))
+                    {
+                        return Favorite(path, request);
                     }
                 }
 
@@ -248,6 +255,34 @@ namespace Router
                 }
             }
 
+            return NotFound();
+        }
+
+
+        public String Favorite(string path, HttpListenerRequest request)
+        {
+            Console.WriteLine("requesting Favorite path: " + path);
+            if (Regex.IsMatch(path, @"^/favorites/?$"))
+            {
+                if (request.HttpMethod.Equals("POST"))
+                {
+                    return favoriteController.Save(BaseController.JsonRequestBody<CreateFavoriteRequest>(request));
+                }
+            }
+            else if (Regex.IsMatch(path, @"^/favorites\?user_id=\d+&recipe_id=\d+$"))
+            {
+                int userId = Convert.ToInt32(request.QueryString["user_id"]);
+                int recipeId = Convert.ToInt32(request.QueryString["recipe_id"]);
+
+                if (request.HttpMethod.Equals("GET"))
+                {
+                    return favoriteController.GetByUserAndRecipe(userId, recipeId);
+                }
+                else if (request.HttpMethod.Equals("DELETE"))
+                {
+                    return favoriteController.DeleteByUserAndRecipe(userId, recipeId);
+                }
+            }
             return NotFound();
         }
 
