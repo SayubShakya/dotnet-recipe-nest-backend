@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using RecipeNest.Model;
 using RecipeNest.Db;
-using RecipeNest.Consta; // Correct namespace
-using RecipeNest.Db.Query.Impl; // Assuming FavoriteRowMapper is here
+using RecipeNest.Consta; 
+using RecipeNest.Db.Query.Impl;
 using System; 
 
 namespace RecipeNest.Repository.Impl.Database
@@ -24,10 +24,8 @@ namespace RecipeNest.Repository.Impl.Database
                     return false; 
                 }
 
-                int rowsAffected = DatabaseConnector.Update(IQueryConstant.IFavorite.SAVE,
-                    favorite.UserId,
-                    favorite.RecipeId);
-                return rowsAffected > 0;
+                DatabaseConnector.Update(IQueryConstant.IFavorite.SAVE, favorite.UserId, favorite.RecipeId);
+                return true;
             }
             catch (Exception ex) 
             {
@@ -41,11 +39,7 @@ namespace RecipeNest.Repository.Impl.Database
         {
             try
             {
-                return DatabaseConnector.QueryOne(
-                    IQueryConstant.IFavorite.GET_BY_ID,
-                    new FavoriteRowMapper(), 
-                    userId,
-                    recipeId);
+                return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GET_BY_ID, new FavoriteRowMapper(), userId, recipeId);
             }
             catch (Exception ex)
             {
@@ -58,10 +52,7 @@ namespace RecipeNest.Repository.Impl.Database
         {
             try
             {
-                return DatabaseConnector.Update(
-                    IQueryConstant.IFavorite.DELETE_BY_ID,
-                    userId,
-                    recipeId) > 0;
+                return DatabaseConnector.Update(IQueryConstant.IFavorite.DELETE_BY_ID, userId, recipeId) > 0;
             }
             catch (Exception ex)
             {

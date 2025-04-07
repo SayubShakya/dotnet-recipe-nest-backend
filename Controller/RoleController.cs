@@ -23,15 +23,13 @@ namespace RecipeNest.Controller
             ServerResponse serverRespose = new ServerResponse(roleService.GetAll(), "Role list!", 200);
             return ToJsonResponse(serverRespose);
         }
-
-
+        
         public string GetById(int id)
         {
             ServerResponse serverRespose = new ServerResponse(roleService.GetById(id), "Role found!", 200);
             return ToJsonResponse(serverRespose);
         }
-
-
+        
         public string Save(CreateRoleRequest request)
         {
             bool success = roleService.Save(request);
@@ -45,8 +43,7 @@ namespace RecipeNest.Controller
             }
 
         }
-
-
+        
         public string Update(UpdateRoleRequest request)
         {
             bool success = roleService.Update(request);
@@ -65,7 +62,5 @@ namespace RecipeNest.Controller
             ServerResponse serverRespose = new ServerResponse(roleService.DeleteById(id), "Role deleted!", 200);
             return ToJsonResponse(serverRespose);
         }
-
-        
     }
 }

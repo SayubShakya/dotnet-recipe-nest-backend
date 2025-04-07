@@ -8,7 +8,6 @@ namespace RecipeNest.Controller
     public class RatingController : BaseController
     {
         private readonly RatingService _ratingService;
-
         public RatingController(RatingService ratingService)
         {
             this._ratingService = ratingService;

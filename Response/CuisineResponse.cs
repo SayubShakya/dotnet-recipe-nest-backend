@@ -18,7 +18,6 @@ namespace RecipeNest.Reponse
         {
         }
 
-        // Parameterized constructor for easy creation in the service layer
         public CuisineResponse(int id, string name, string? imageUrl)
         {
             Id = id;

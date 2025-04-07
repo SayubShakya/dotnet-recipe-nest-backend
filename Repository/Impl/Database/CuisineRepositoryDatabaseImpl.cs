@@ -11,7 +11,6 @@ namespace RecipeNest.Repository.Impl.Database
     public class CuisineRepositoryDatabaseImpl : ICuisineRepository
     {
         private DatabaseConnector databaseConnector = new DatabaseConnector();
-
         public bool DeleteById(int id)
         {
             Cuisine cuisine = GetById(id);
@@ -52,10 +51,7 @@ namespace RecipeNest.Repository.Impl.Database
                 return false;
             }
 
-            DatabaseConnector.Update(IQueryConstant.ICuisine.SAVE,
-                cuisine.Name,
-                cuisine.ImageUrl
-            );
+            DatabaseConnector.Update(IQueryConstant.ICuisine.SAVE, cuisine.Name, cuisine.ImageUrl);
             return true;
         }
 
@@ -66,11 +62,7 @@ namespace RecipeNest.Repository.Impl.Database
                 return false;
             }
 
-            DatabaseConnector.Update(IQueryConstant.ICuisine.UPDATE,
-                cuisine.Name,
-                cuisine.ImageUrl,
-                cuisine.Id
-            );
+            DatabaseConnector.Update(IQueryConstant.ICuisine.UPDATE, cuisine.Name, cuisine.ImageUrl, cuisine.Id);
             return true;
         }
     }

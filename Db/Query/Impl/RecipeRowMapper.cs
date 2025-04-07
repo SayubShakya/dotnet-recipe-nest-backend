@@ -17,7 +17,6 @@ namespace RecipeNest.Db.Query.Impl
             string ingredients = reader.GetString("ingredients");
             int? recipeByUserId = reader.IsDBNull(reader.GetOrdinal("recipe_by")) ? null : reader.GetInt32("recipe_by");
             int? cuisineId = reader.IsDBNull(reader.GetOrdinal("cuisine")) ? null : reader.GetInt32("cuisine");
-
             return new Recipe(id, imageUrl, title, description, recipeDetail, ingredients, recipeByUserId, cuisineId);
         }
     }

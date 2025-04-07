@@ -19,8 +19,7 @@ namespace Router
         private RecipeController recipeController;
         private FavoriteController favoriteController;
         private RatingController ratingController;
-
-
+        
         public APIRouter(RoleController roleController, UserController userController,
             CuisineController cuisineController, RecipeController recipeController, FavoriteController favoriteController, RatingController ratingController)
         {

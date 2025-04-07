@@ -1,7 +1,7 @@
 ﻿using MessagePack;
 using RecipeNest.Model;
 
-namespace RecipeNest.Reponse // Corrected namespace spelling from 'Reponse' to 'Response' if needed
+namespace RecipeNest.Reponse
 {
     [MessagePackObject]
     public class RatingResponse

@@ -58,11 +58,11 @@ namespace RecipeNest.Controller
                 bool success = userService.Save(request);
                 if (success)
                 {
-                    return ToJsonResponse(new ServerResponse(null, "User has been created!", 201)); // 201 Created
+                    return ToJsonResponse(new ServerResponse(null, "User has been created!", 201));
                 }
                 else
                 {
-                    return ToJsonResponse(new ServerResponse(null, "User creation failed. Email might already exist.", 400)); // 400 Bad Request or 409 Conflict
+                    return ToJsonResponse(new ServerResponse(null, "User creation failed. Email might already exist.", 400)); 
                 }
             }
              catch (System.Exception ex) 
@@ -78,11 +78,11 @@ namespace RecipeNest.Controller
                 bool success = userService.Update(request);
                 if (success)
                 {
-                    return ToJsonResponse(new ServerResponse(null, "User has been updated!", 200)); // 200 OK
+                    return ToJsonResponse(new ServerResponse(null, "User has been updated!", 200)); 
                 }
                 else
                 {
-                     return ToJsonResponse(new ServerResponse(null, "User update failed. User not found or email might already exist.", 400)); // 400 Bad Request or 404 Not Found or 409 Conflict
+                     return ToJsonResponse(new ServerResponse(null, "User update failed. User not found or email might already exist.", 400)); 
                 }
             }
              catch (System.Exception ex) 

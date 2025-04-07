@@ -15,11 +15,7 @@ namespace RecipeNest.Repository.Impl.Database
         {
             try
             {
-                return DatabaseConnector.QueryOne(
-                    IQueryConstant.IRating.GET_BY_ID, 
-                    new RatingRowMapper(),
-                    userId,
-                    recipeId);
+                return DatabaseConnector.QueryOne(IQueryConstant.IRating.GET_BY_ID, new RatingRowMapper(), userId, recipeId);
             }
             catch (Exception ex)
             {
@@ -32,10 +28,7 @@ namespace RecipeNest.Repository.Impl.Database
         {
             try
             {
-                DatabaseConnector.Update(
-                    IQueryConstant.IRating.DELETE_BY_ID,
-                    userId,
-                    recipeId);
+                DatabaseConnector.Update(IQueryConstant.IRating.DELETE_BY_ID, userId, recipeId);
                 return true;
             }
             catch (Exception ex)
@@ -72,13 +65,8 @@ namespace RecipeNest.Repository.Impl.Database
                 Console.WriteLine($"--- DEBUG: Saving Rating - Original: {rating.Score.Value}, Storing Enum: {scoreToStore}, Storing Byte: {scoreByte} ---");
 
 
-                int rowsAffected = DatabaseConnector.Update(
-                    IQueryConstant.IRating.SAVE,
-                    rating.UserId.Value,
-                    rating.RecipeId.Value,
-                    scoreByte 
-                );
-                return rowsAffected > 0;
+                DatabaseConnector.Update(IQueryConstant.IRating.SAVE, rating.UserId.Value, rating.RecipeId.Value, scoreByte);
+                return true;
             }
             catch (Exception ex)
             {

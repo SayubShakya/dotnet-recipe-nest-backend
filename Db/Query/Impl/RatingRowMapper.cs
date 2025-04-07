@@ -19,7 +19,6 @@ namespace RecipeNest.Db.Query.Impl
             {
                 score = parsedScore;
             }
-
             return new Rating(id, score, recipeId, userId);
         }
     }

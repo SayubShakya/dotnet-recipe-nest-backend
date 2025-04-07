@@ -79,7 +79,7 @@ namespace RecipeNest.Controller
                 bool success = _cuisineService.Save(request); 
                 if (success)
                 {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been created!", 201)); // 201 Created
+                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been created!", 201)); 
                 }
                 else
                 {
