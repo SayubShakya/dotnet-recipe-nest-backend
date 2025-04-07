@@ -43,8 +43,8 @@ namespace RecipeNest.Consta
             public const string GET_BY_TITLE = "SELECT * FROM recipes WHERE title=@param1 AND is_active=1";
             public const string GET_ALL_FAVORITES = "SELECT * FROM recipes r INNER JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 AND f.user_id=@param1";
         }
-
-
+        
+        
         public interface IFavorite
         {
             public const string SAVE="INSERT INTO favorites (user_id, recipe_id) VALUES (@param1, @param2)";

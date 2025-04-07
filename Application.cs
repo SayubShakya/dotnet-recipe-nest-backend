@@ -26,12 +26,6 @@ class Application
 
         Console.WriteLine("Listening on " + url);
         IHashingUtil hashingUtil = new BcryptUtil();
-        String password = "Password1";
-        String hashed = hashingUtil.Hash(password);
-        
-        Console.WriteLine("Check Password: " + hashingUtil.Verify(hashed,password ));
-        
-        Console.WriteLine($"Hashed: {hashed}");
         IRoleRepository roleRepository = new RoleRepositoryDatabaseImpl();
         IUserRepository userRepository = new UserRepositoryDatabaseImpl();
         ICuisineRepository cuisineRepository = new CuisineRepositoryDatabaseImpl();
