@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using RecipeNest.Model;
 using RecipeNest.Db;
-using RecipeNest.Consta; 
+using RecipeNest.Consta;
 using RecipeNest.Db.Query.Impl;
-using System; 
+using System;
 
 namespace RecipeNest.Repository.Impl.Database
 {
@@ -20,14 +20,15 @@ namespace RecipeNest.Repository.Impl.Database
                 var existing = GetByUserAndRecipe(favorite.UserId, favorite.RecipeId);
                 if (existing != null)
                 {
-                    Console.WriteLine($"Favorite already exists for UserID: {favorite.UserId}, RecipeID: {favorite.RecipeId}");
-                    return false; 
+                    Console.WriteLine(
+                        $"Favorite already exists for UserID: {favorite.UserId}, RecipeID: {favorite.RecipeId}");
+                    return false;
                 }
 
                 DatabaseConnector.Update(IQueryConstant.IFavorite.SAVE, favorite.UserId, favorite.RecipeId);
                 return true;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error saving favorite: {ex.Message}");
                 return false;
@@ -39,7 +40,8 @@ namespace RecipeNest.Repository.Impl.Database
         {
             try
             {
-                return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GET_BY_ID, new FavoriteRowMapper(), userId, recipeId);
+                return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GET_BY_ID, new FavoriteRowMapper(), userId,
+                    recipeId);
             }
             catch (Exception ex)
             {
@@ -63,23 +65,27 @@ namespace RecipeNest.Repository.Impl.Database
 
         public bool Update(Favorite obj)
         {
-            throw new NotImplementedException("Favorites are typically not updated directly, but deleted and re-added if necessary. Use specific methods.");
+            throw new NotImplementedException(
+                "Favorites are typically not updated directly, but deleted and re-added if necessary. Use specific methods.");
         }
 
         public Favorite GetById(int id)
         {
-            throw new NotImplementedException("Use GetByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
+            throw new NotImplementedException(
+                "Use GetByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
         }
 
 
         public List<Favorite> GetAll()
         {
-            throw new NotImplementedException("Use specific methods like GetByUserAndRecipe or potentially GetAllByUserId.");
+            throw new NotImplementedException(
+                "Use specific methods like GetByUserAndRecipe or potentially GetAllByUserId.");
         }
 
         public bool DeleteById(int id)
         {
-            throw new NotImplementedException("Use DeleteByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
+            throw new NotImplementedException(
+                "Use DeleteByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
         }
     }
 }

@@ -1,4 +1,4 @@
- // RoleController.cs
+// RoleController.cs
 
 using RecipeNest.Model;
 using RecipeNest.Reponse;
@@ -7,10 +7,8 @@ using RecipeNest.Service;
 
 namespace RecipeNest.Controller
 {
-
     public class RoleController : BaseController
     {
-
         private RoleService roleService;
 
         public RoleController(RoleService roleService)
@@ -23,13 +21,13 @@ namespace RecipeNest.Controller
             ServerResponse serverRespose = new ServerResponse(roleService.GetAll(), "Role list!", 200);
             return ToJsonResponse(serverRespose);
         }
-        
+
         public string GetById(int id)
         {
             ServerResponse serverRespose = new ServerResponse(roleService.GetById(id), "Role found!", 200);
             return ToJsonResponse(serverRespose);
         }
-        
+
         public string Save(CreateRoleRequest request)
         {
             bool success = roleService.Save(request);
@@ -41,9 +39,8 @@ namespace RecipeNest.Controller
             {
                 return ToJsonResponse(new ServerResponse(null, "Role creation failed!", 400));
             }
-
         }
-        
+
         public string Update(UpdateRoleRequest request)
         {
             bool success = roleService.Update(request);
@@ -55,8 +52,8 @@ namespace RecipeNest.Controller
             {
                 return ToJsonResponse(new ServerResponse(null, "Role has update failed!", 400));
             }
-
         }
+
         public string DeleteById(int id)
         {
             ServerResponse serverRespose = new ServerResponse(roleService.DeleteById(id), "Role deleted!", 200);

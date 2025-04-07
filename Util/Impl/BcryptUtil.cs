@@ -1,5 +1,3 @@
-
-
 namespace RecipeNest.Util.Impl
 {
     public class BcryptUtil : IHashingUtil

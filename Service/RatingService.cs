@@ -1,6 +1,6 @@
 ﻿using System;
 using RecipeNest.Model;
-using RecipeNest.Reponse; 
+using RecipeNest.Reponse;
 using RecipeNest.Repository;
 using RecipeNest.Request;
 
@@ -12,7 +12,8 @@ namespace RecipeNest.Service
         private readonly IUserRepository _userRepository;
         private readonly IRecipeRepository _recipeRepository;
 
-        public RatingService(IRatingRepository ratingRepository, IUserRepository userRepository, IRecipeRepository recipeRepository)
+        public RatingService(IRatingRepository ratingRepository, IUserRepository userRepository,
+            IRecipeRepository recipeRepository)
         {
             _ratingRepository = ratingRepository;
             _userRepository = userRepository;
@@ -30,7 +31,8 @@ namespace RecipeNest.Service
 
             if (ratingModel.UserId == null || ratingModel.RecipeId == null || ratingModel.Score == null)
             {
-                Console.WriteLine($"Warning: Fetched rating (ID: {ratingModel.Id}) has unexpected null values for required fields.");
+                Console.WriteLine(
+                    $"Warning: Fetched rating (ID: {ratingModel.Id}) has unexpected null values for required fields.");
                 return null;
             }
 
@@ -74,21 +76,23 @@ namespace RecipeNest.Service
             bool success = _ratingRepository.Save(ratingModel);
             if (!success)
             {
-                 Console.WriteLine($"RatingService.Save: Repository failed to save rating for UserID: {request.UserId}, RecipeID: {request.RecipeId}.");
+                Console.WriteLine(
+                    $"RatingService.Save: Repository failed to save rating for UserID: {request.UserId}, RecipeID: {request.RecipeId}.");
             }
+
             return success;
         }
 
         public bool DeleteByUserAndRecipe(int userId, int recipeId)
         {
             bool success = _ratingRepository.DeleteByUserAndRecipe(userId, recipeId);
-             if (!success)
+            if (!success)
             {
-                 Console.WriteLine($"RatingService.Delete: Repository failed to delete rating for UserID: {userId}, RecipeID: {recipeId}.");
+                Console.WriteLine(
+                    $"RatingService.Delete: Repository failed to delete rating for UserID: {userId}, RecipeID: {recipeId}.");
             }
+
             return success;
         }
-
-        
-        }
     }
+}

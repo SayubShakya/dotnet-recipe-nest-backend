@@ -1,9 +1,8 @@
 ﻿using MessagePack;
-using System; 
+using System;
 
 namespace RecipeNest.Model
 {
-
     public enum RatingScore : byte
     {
         Zero = 0,
@@ -22,22 +21,18 @@ namespace RecipeNest.Model
     [MessagePackObject]
     public class Rating
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("rating")]
-        public RatingScore? Score { get; set; } 
+        [Key("rating")] public RatingScore? Score { get; set; }
 
-        [Key("recipe_id")]
-        public int? RecipeId { get; set; }
+        [Key("recipe_id")] public int? RecipeId { get; set; }
 
-        [Key("user_id")]
-        public int? UserId { get; set; }
-        
+        [Key("user_id")] public int? UserId { get; set; }
+
         public Rating()
         {
         }
-        
+
         public Rating(int id, RatingScore? score, int? recipeId, int? userId)
         {
             Id = id;
@@ -45,9 +40,11 @@ namespace RecipeNest.Model
             RecipeId = recipeId;
             UserId = userId;
         }
+
         public override string ToString()
         {
-            return $"Rating ID: {Id}, UserID: {UserId?.ToString() ?? "NULL"}, RecipeID: {RecipeId?.ToString() ?? "NULL"}, Score: {Score?.ToString() ?? "NULL"}";
+            return
+                $"Rating ID: {Id}, UserID: {UserId?.ToString() ?? "NULL"}, RecipeID: {RecipeId?.ToString() ?? "NULL"}, Score: {Score?.ToString() ?? "NULL"}";
         }
     }
 }

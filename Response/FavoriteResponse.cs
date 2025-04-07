@@ -1,4 +1,5 @@
 ﻿// FavoriteResponse.cs
+
 using MessagePack;
 
 namespace RecipeNest.Reponse
@@ -6,16 +7,15 @@ namespace RecipeNest.Reponse
     [MessagePackObject]
     public class FavoriteResponse
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("user_id")]
-        public int UserId { get; set; }
+        [Key("user_id")] public int UserId { get; set; }
 
-        [Key("recipe_id")]
-        public int RecipeId { get; set; }
+        [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public FavoriteResponse() { }
+        public FavoriteResponse()
+        {
+        }
 
         public FavoriteResponse(int id, int userId, int recipeId)
         {

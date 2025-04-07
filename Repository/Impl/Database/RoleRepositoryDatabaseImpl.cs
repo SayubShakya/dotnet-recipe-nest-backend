@@ -8,7 +8,6 @@ using RecipeNest.Db.Query.Impl;
 
 namespace RecipeNest.Repository.Impl.Database
 {
-
     public class RoleRepositoryDatabaseImpl : IRoleRepository
     {
         private DatabaseConnector databaseConnector = new DatabaseConnector();
@@ -20,6 +19,7 @@ namespace RecipeNest.Repository.Impl.Database
             {
                 return false;
             }
+
             DatabaseConnector.Update(IQueryConstant.IRole.DELETE_BY_ID, id);
             return true;
         }
@@ -44,6 +44,7 @@ namespace RecipeNest.Repository.Impl.Database
             {
                 return false;
             }
+
             DatabaseConnector.Update(IQueryConstant.IRole.SAVE, [role.Name]);
             return true;
         }
@@ -55,7 +56,7 @@ namespace RecipeNest.Repository.Impl.Database
                 return false;
             }
 
-            DatabaseConnector.Update(IQueryConstant.IRole.UPDATE, [ role.Name, role.Id,]);
+            DatabaseConnector.Update(IQueryConstant.IRole.UPDATE, [role.Name, role.Id,]);
             return true;
         }
     }

@@ -8,6 +8,7 @@ namespace RecipeNest.Controller
     public class RatingController : BaseController
     {
         private readonly RatingService _ratingService;
+
         public RatingController(RatingService ratingService)
         {
             this._ratingService = ratingService;
@@ -22,12 +23,13 @@ namespace RecipeNest.Controller
                 {
                     return ToJsonResponse(new ServerResponse(null, "Rating not found", 404));
                 }
+
                 return ToJsonResponse(new ServerResponse(response, "Rating found", 200));
             }
             catch (Exception ex)
             {
-                 Console.WriteLine($"Error in GetByUserAndRecipe (RatingController): {ex.Message}");
-                 return ToJsonResponse(new ServerResponse(null, "An internal error occurred", 500, ex.Message));
+                Console.WriteLine($"Error in GetByUserAndRecipe (RatingController): {ex.Message}");
+                return ToJsonResponse(new ServerResponse(null, "An internal error occurred", 500, ex.Message));
             }
         }
 
@@ -53,14 +55,14 @@ namespace RecipeNest.Controller
             }
             catch (Exception ex)
             {
-                 Console.WriteLine($"Error in Save (RatingController): {ex.Message}");
-                 return ToJsonResponse(new ServerResponse(null, "An internal error occurred", 500, ex.Message));
+                Console.WriteLine($"Error in Save (RatingController): {ex.Message}");
+                return ToJsonResponse(new ServerResponse(null, "An internal error occurred", 500, ex.Message));
             }
         }
 
         public string DeleteByUserAndRecipe(int userId, int recipeId)
         {
-             try
+            try
             {
                 bool success = _ratingService.DeleteByUserAndRecipe(userId, recipeId);
                 if (success)
@@ -74,8 +76,8 @@ namespace RecipeNest.Controller
             }
             catch (Exception ex)
             {
-                 Console.WriteLine($"Error in DeleteByUserAndRecipe (RatingController): {ex.Message}");
-                 return ToJsonResponse(new ServerResponse(null, "An internal error occurred", 500, ex.Message));
+                Console.WriteLine($"Error in DeleteByUserAndRecipe (RatingController): {ex.Message}");
+                return ToJsonResponse(new ServerResponse(null, "An internal error occurred", 500, ex.Message));
             }
         }
     }

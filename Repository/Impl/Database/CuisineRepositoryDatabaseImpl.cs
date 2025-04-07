@@ -1,4 +1,5 @@
 ﻿// CuisineRepositoryDatabaseImpl.cs
+
 using RecipeNest.Consta; // For IQueryConstant
 using RecipeNest.Db; // For DatabaseConnector
 using RecipeNest.Db.Query.Impl; // For CuisineRowMapper
@@ -7,10 +8,10 @@ using System.Collections.Generic;
 
 namespace RecipeNest.Repository.Impl.Database
 {
-
     public class CuisineRepositoryDatabaseImpl : ICuisineRepository
     {
         private DatabaseConnector databaseConnector = new DatabaseConnector();
+
         public bool DeleteById(int id)
         {
             Cuisine cuisine = GetById(id);
@@ -26,7 +27,6 @@ namespace RecipeNest.Repository.Impl.Database
         public List<Cuisine> GetAll()
         {
             return databaseConnector.QueryAll(IQueryConstant.ICuisine.GET_ALL, new CuisineRowMapper());
-
         }
 
         public Cuisine GetById(int id)
@@ -35,7 +35,7 @@ namespace RecipeNest.Repository.Impl.Database
             cuisine = DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_ID, new CuisineRowMapper(), id);
             return cuisine;
         }
-        
+
         public Cuisine GetByName(string name)
         {
             Cuisine cuisine;

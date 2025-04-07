@@ -6,19 +6,17 @@ namespace RecipeNest.Reponse
     [MessagePackObject]
     public class RatingResponse
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("user_id")]
-        public int UserId { get; set; }
+        [Key("user_id")] public int UserId { get; set; }
 
-        [Key("recipe_id")]
-        public int RecipeId { get; set; }
+        [Key("recipe_id")] public int RecipeId { get; set; }
 
-        [Key("rating")]
-        public RatingScore Score { get; set; }
+        [Key("rating")] public RatingScore Score { get; set; }
 
-        public RatingResponse() { }
+        public RatingResponse()
+        {
+        }
 
         public RatingResponse(int id, int userId, int recipeId, RatingScore score)
         {

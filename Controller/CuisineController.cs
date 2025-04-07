@@ -6,7 +6,8 @@ namespace RecipeNest.Controller
 {
     public class CuisineController : BaseController
     {
-        private readonly CuisineService _cuisineService; 
+        private readonly CuisineService _cuisineService;
+
         public CuisineController(CuisineService cuisineService)
         {
             _cuisineService = cuisineService;
@@ -16,7 +17,7 @@ namespace RecipeNest.Controller
         {
             try
             {
-                var cuisineList = _cuisineService.GetAll(); 
+                var cuisineList = _cuisineService.GetAll();
                 ServerResponse serverResponse = new ServerResponse(cuisineList, "Cuisine list!", 200);
                 return ToJsonResponse(serverResponse);
             }
@@ -31,11 +32,12 @@ namespace RecipeNest.Controller
         {
             try
             {
-                var cuisineResponse = _cuisineService.GetById(id); 
+                var cuisineResponse = _cuisineService.GetById(id);
                 if (cuisineResponse != null)
                 {
                     return ToJsonResponse(new ServerResponse(cuisineResponse, "Cuisine found!", 200));
                 }
+
                 return ToJsonResponse(new ServerResponse(null, "Cuisine not found", 404));
             }
             catch (Exception ex)
@@ -45,11 +47,11 @@ namespace RecipeNest.Controller
             }
         }
 
-        public string GetByName(string name) 
+        public string GetByName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                 return ToJsonResponse(new ServerResponse(null, "Cuisine name cannot be empty.", 400));
+                return ToJsonResponse(new ServerResponse(null, "Cuisine name cannot be empty.", 400));
             }
 
             try
@@ -59,6 +61,7 @@ namespace RecipeNest.Controller
                 {
                     return ToJsonResponse(new ServerResponse(cuisineResponse, "Cuisine found!", 200));
                 }
+
                 return ToJsonResponse(new ServerResponse(null, "Cuisine not found", 404));
             }
             catch (Exception ex)
@@ -70,16 +73,17 @@ namespace RecipeNest.Controller
 
         public string Save(CreateCuisineRequest request)
         {
-             if (request == null)
-             {
-                 return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
-             }
+            if (request == null)
+            {
+                return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
+            }
+
             try
             {
-                bool success = _cuisineService.Save(request); 
+                bool success = _cuisineService.Save(request);
                 if (success)
                 {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been created!", 201)); 
+                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been created!", 201));
                 }
                 else
                 {
@@ -89,32 +93,36 @@ namespace RecipeNest.Controller
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CuisineController.Save: {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Cuisine creation failed due to an internal error.", 500, ex.Message));
+                return ToJsonResponse(new ServerResponse(null, "Cuisine creation failed due to an internal error.", 500,
+                    ex.Message));
             }
         }
 
         public string Update(UpdateCuisineRequest request)
         {
-             if (request == null)
-             {
-                 return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
-             }
+            if (request == null)
+            {
+                return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
+            }
+
             try
             {
-                bool success = _cuisineService.Update(request); 
+                bool success = _cuisineService.Update(request);
                 if (success)
                 {
                     return ToJsonResponse(new ServerResponse(null, "Cuisine has been updated!", 200));
                 }
                 else
                 {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine update failed. Cuisine not found or invalid data.", 404)); 
+                    return ToJsonResponse(new ServerResponse(null,
+                        "Cuisine update failed. Cuisine not found or invalid data.", 404));
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CuisineController.Update: {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Cuisine update failed due to an internal error.", 500, ex.Message));
+                return ToJsonResponse(new ServerResponse(null, "Cuisine update failed due to an internal error.", 500,
+                    ex.Message));
             }
         }
 
@@ -125,7 +133,7 @@ namespace RecipeNest.Controller
                 bool success = _cuisineService.DeleteById(id);
                 if (success)
                 {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been deleted!", 200)); 
+                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been deleted!", 200));
                 }
                 else
                 {
@@ -135,7 +143,8 @@ namespace RecipeNest.Controller
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in CuisineController.DeleteById({id}): {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Cuisine deletion failed due to an internal error.", 500, ex.Message));
+                return ToJsonResponse(new ServerResponse(null, "Cuisine deletion failed due to an internal error.", 500,
+                    ex.Message));
             }
         }
     }

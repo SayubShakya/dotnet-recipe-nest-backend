@@ -1,4 +1,5 @@
 ﻿// UpdateFavoriteRequest.cs
+
 using MessagePack;
 
 namespace RecipeNest.Request
@@ -6,16 +7,16 @@ namespace RecipeNest.Request
     [MessagePackObject]
     public class UpdateFavoriteRequest
     {
-        [Key("id")]
-        public int Id { get; set; } 
+        [Key("id")] public int Id { get; set; }
 
-        [Key("user_id")]
-        public int UserId { get; set; }
+        [Key("user_id")] public int UserId { get; set; }
 
-        [Key("recipe_id")]
-        public int RecipeId { get; set; } 
+        [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public UpdateFavoriteRequest() { }
+        public UpdateFavoriteRequest()
+        {
+        }
+
         public UpdateFavoriteRequest(int id, int userId, int recipeId)
         {
             Id = id;

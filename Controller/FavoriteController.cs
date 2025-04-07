@@ -20,6 +20,7 @@ namespace RecipeNest.Controller
             {
                 return ToJsonResponse(new ServerResponse(null, "Favorite not found", 404));
             }
+
             return ToJsonResponse(new ServerResponse(response, "Favorite found", 200));
         }
 
@@ -34,11 +35,13 @@ namespace RecipeNest.Controller
 
             if (success)
             {
-                return ToJsonResponse(new ServerResponse(null, "Favorite created successfully", 201)); 
+                return ToJsonResponse(new ServerResponse(null, "Favorite created successfully", 201));
             }
-            return ToJsonResponse(new ServerResponse(null, "Failed to create favorite - recipe/user not found or favorite already exists", 400));
+
+            return ToJsonResponse(new ServerResponse(null,
+                "Failed to create favorite - recipe/user not found or favorite already exists", 400));
         }
-        
+
         public string DeleteByUserAndRecipe(int userId, int recipeId)
         {
             bool success = favoriteService.DeleteByUserAndRecipe(userId, recipeId);
@@ -46,6 +49,7 @@ namespace RecipeNest.Controller
             {
                 return ToJsonResponse(new ServerResponse(null, "Favorite deleted", 200));
             }
+
             return ToJsonResponse(new ServerResponse(null, "Favorite not found", 404));
         }
     }

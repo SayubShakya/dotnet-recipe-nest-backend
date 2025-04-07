@@ -7,13 +7,13 @@ namespace RecipeNest.Reponse
     [MessagePackObject]
     public class RoleResponse
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("name")]
-        public string Name { get; set; }
+        [Key("name")] public string Name { get; set; }
 
-        public RoleResponse() { }
+        public RoleResponse()
+        {
+        }
 
         public RoleResponse(int id, string name)
         {

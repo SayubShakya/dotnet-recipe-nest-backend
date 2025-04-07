@@ -1,4 +1,5 @@
 ﻿// Repository/Impl/Database/RecipeRepositoryDatabaseImpl.cs
+
 using System.Collections.Generic;
 using RecipeNest.Model;
 using RecipeNest.Db;
@@ -30,16 +31,12 @@ namespace RecipeNest.Repository.Impl.Database
 
         public Recipe GetById(int id)
         {
-            Recipe recipe;
-            recipe = DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_ID, new RecipeRowMapper(), id);
-            return recipe;
+            return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_ID, new RecipeRowMapper(), id);;
         }
 
         public Recipe GetByTitle(string title)
         {
-            Recipe recipe;
-            recipe = DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_TITLE, new RecipeRowMapper(), title);
-            return recipe;
+            return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_TITLE, new RecipeRowMapper(), title);
         }
 
 

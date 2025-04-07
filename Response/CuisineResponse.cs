@@ -5,14 +5,11 @@ namespace RecipeNest.Reponse
     [MessagePackObject]
     public class CuisineResponse
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("name")]
-        public string Name { get; set; }
+        [Key("name")] public string Name { get; set; }
 
-        [Key("image_url")]
-        public string? ImageUrl { get; set; } 
+        [Key("image_url")] public string? ImageUrl { get; set; }
 
         public CuisineResponse()
         {

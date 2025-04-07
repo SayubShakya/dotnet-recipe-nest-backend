@@ -29,7 +29,7 @@ namespace RecipeNest.Service
 
         public CuisineResponse? GetById(int id)
         {
-            Cuisine? cuisine = _cuisineRepository.GetById(id); 
+            Cuisine? cuisine = _cuisineRepository.GetById(id);
             if (cuisine == null)
             {
                 return null;
@@ -41,14 +41,15 @@ namespace RecipeNest.Service
                 cuisine.ImageUrl
             );
         }
-        public CuisineResponse? GetByName(string name) 
+
+        public CuisineResponse? GetByName(string name)
         {
-             if (string.IsNullOrWhiteSpace(name)) return null;
+            if (string.IsNullOrWhiteSpace(name)) return null;
 
             Cuisine? cuisine = _cuisineRepository.GetByName(name);
             if (cuisine == null)
             {
-                return null; 
+                return null;
             }
 
             return new CuisineResponse(
@@ -67,7 +68,7 @@ namespace RecipeNest.Service
                 ImageUrl = request.ImageUrl
             };
 
-            return _cuisineRepository.Save(cuisine); 
+            return _cuisineRepository.Save(cuisine);
         }
 
         public bool Update(UpdateCuisineRequest request)
@@ -81,12 +82,12 @@ namespace RecipeNest.Service
 
             Cuisine cuisineToUpdate = new Cuisine
             {
-                Id = request.Id, 
+                Id = request.Id,
                 Name = request.Name,
                 ImageUrl = request.ImageUrl
             };
 
-            return _cuisineRepository.Update(cuisineToUpdate); 
+            return _cuisineRepository.Update(cuisineToUpdate);
         }
 
         public bool DeleteById(int id)

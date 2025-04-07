@@ -1,4 +1,5 @@
 ﻿// CreateFavoriteRequest.cs
+
 using MessagePack;
 
 namespace RecipeNest.Request
@@ -6,13 +7,14 @@ namespace RecipeNest.Request
     [MessagePackObject]
     public class CreateFavoriteRequest
     {
-        [Key("user_id")]
-        public int UserId { get; set; }
+        [Key("user_id")] public int UserId { get; set; }
 
-        [Key("recipe_id")]
-        public int RecipeId { get; set; }
+        [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public CreateFavoriteRequest() { }
+        public CreateFavoriteRequest()
+        {
+        }
+
         public CreateFavoriteRequest(int userId, int recipeId)
         {
             UserId = userId;

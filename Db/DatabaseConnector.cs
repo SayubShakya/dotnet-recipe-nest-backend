@@ -9,7 +9,9 @@ namespace RecipeNest.Db;
 
 public class DatabaseConnector
 {
-    private readonly string connectionString = "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;";
+    private readonly string connectionString =
+        "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;";
+
     private MySqlConnection? connection;
 
     private void Connect()
@@ -36,7 +38,7 @@ public class DatabaseConnector
             Console.WriteLine(sql);
             sqlConnection = GetConnection();
             sqlCommand = GetPreparedStatement(sqlConnection, sql);
-                
+
             MapParams(parameters, sqlCommand);
 
             return sqlCommand.ExecuteNonQuery();
@@ -107,10 +109,11 @@ public class DatabaseConnector
                 Console.WriteLine(ex.Message);
             }
         }
+
         return default(T);
     }
-    
-    
+
+
     public static List<T> QueryList<T>(string sql, IRowMapper<T> rowMapper, params object[] parameters)
     {
         List<T> results = new List<T>();
@@ -126,7 +129,7 @@ public class DatabaseConnector
 
                 using (var resultSet = preparedStatement.ExecuteReader())
                 {
-                    while (resultSet.Read()) 
+                    while (resultSet.Read())
                     {
                         results.Add(rowMapper.Map(resultSet));
                     }
@@ -138,7 +141,8 @@ public class DatabaseConnector
                 Console.WriteLine(ex.Message);
             }
         }
-        return results; 
+
+        return results;
     }
 
     private static void MapParams(object[] parameters, MySqlCommand mySqlCommand)
@@ -146,7 +150,7 @@ public class DatabaseConnector
         int counter = 1;
         foreach (var param in parameters)
         {
-            mySqlCommand.Parameters.AddWithValue("@param"+(counter++), param);
+            mySqlCommand.Parameters.AddWithValue("@param" + (counter++), param);
         }
     }
 

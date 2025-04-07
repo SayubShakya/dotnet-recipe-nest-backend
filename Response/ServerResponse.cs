@@ -7,25 +7,20 @@ namespace RecipeNest.Reponse
     [MessagePackObject]
     public class ServerResponse
     {
-        [Key("data")]
-        public object? Object { get; set; }
+        [Key("data")] public object? Object { get; set; }
 
-        [Key("message")]
-        public string? Message { get; set; }
+        [Key("message")] public string? Message { get; set; }
 
-        [Key("detail")]
-        public string? Detail { get; set; }
+        [Key("detail")] public string? Detail { get; set; }
 
-        [Key("statusCode")]
-         [IgnoreMember]
-        public int? StatusCode { get; set; }
+        [Key("statusCode")] [IgnoreMember] public int? StatusCode { get; set; }
 
         public ServerResponse()
         {
-
         }
 
-        public ServerResponse(object? objectz = null, string? msg="Internal Server Error", int? statusCode=500, string? detail = "")
+        public ServerResponse(object? objectz = null, string? msg = "Internal Server Error", int? statusCode = 500,
+            string? detail = "")
         {
             Object = objectz;
             Message = msg;

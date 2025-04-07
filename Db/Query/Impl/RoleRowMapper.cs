@@ -16,4 +16,3 @@ namespace RecipeNest.Db.Query.Impl
         }
     }
 }
-

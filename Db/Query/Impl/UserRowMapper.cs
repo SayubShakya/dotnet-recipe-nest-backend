@@ -1,7 +1,7 @@
 ﻿// UserRowMapper.cs
 
 using MySql.Data.MySqlClient;
-using RecipeNest.Model;     
+using RecipeNest.Model;
 using RecipeNest.Db.Query;
 
 namespace RecipeNest.Db.Query.Impl
@@ -17,9 +17,9 @@ namespace RecipeNest.Db.Query.Impl
             string ImageUrl = reader.GetString("image_url");
             string About = reader.GetString("about");
             string Email = reader.GetString("email");
-            string Password = reader.GetString("password"); 
+            string Password = reader.GetString("password");
             int RoleId = reader.GetInt32("role_id");
-            return new User(id, FirstName, LastName,PhoneNumber, ImageUrl ,About, Email, Password, RoleId);
+            return new User(id, FirstName, LastName, PhoneNumber, ImageUrl, About, Email, Password, RoleId);
         }
     }
 }

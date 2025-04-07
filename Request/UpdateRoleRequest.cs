@@ -7,13 +7,13 @@ namespace RecipeNest.Request
     [MessagePackObject]
     public class UpdateRoleRequest
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("name")]
-        public string Name { get; set; }
+        [Key("name")] public string Name { get; set; }
 
-        public UpdateRoleRequest() { }
+        public UpdateRoleRequest()
+        {
+        }
 
         public UpdateRoleRequest(int id, string name)
         {

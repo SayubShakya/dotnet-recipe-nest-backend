@@ -1,10 +1,10 @@
 ﻿// Cuisine.cs
+
 using System;
 using MessagePack;
 
 namespace RecipeNest.Model
 {
-
     [MessagePackObject]
     public class Cuisine
     {

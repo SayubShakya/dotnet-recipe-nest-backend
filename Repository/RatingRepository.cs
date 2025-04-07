@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using RecipeNest.Model; 
+using RecipeNest.Model;
 
 namespace RecipeNest.Repository
 {

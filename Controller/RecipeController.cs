@@ -1,14 +1,15 @@
 ﻿// Controller/RecipeController.cs
-using RecipeNest.Model; 
+
+using RecipeNest.Model;
 using RecipeNest.Reponse;
-using RecipeNest.Request; 
-using RecipeNest.Service; 
+using RecipeNest.Request;
+using RecipeNest.Service;
 
 namespace RecipeNest.Controller
 {
     public class RecipeController : BaseController
     {
-        private RecipeService recipeService; 
+        private RecipeService recipeService;
 
         public RecipeController(RecipeService recipeService)
         {
@@ -27,13 +28,14 @@ namespace RecipeNest.Controller
             return ToJsonResponse(serverResponse);
         }
 
-        public string GetByTitle(string title) 
+        public string GetByTitle(string title)
         {
-            ServerResponse serverResponse = new ServerResponse(recipeService.GetByTitle(title), "Recipe found by title!", 200);
+            ServerResponse serverResponse =
+                new ServerResponse(recipeService.GetByTitle(title), "Recipe found by title!", 200);
             return ToJsonResponse(serverResponse);
         }
 
-        public string Save(CreateRecipeRequest request) 
+        public string Save(CreateRecipeRequest request)
         {
             bool success = recipeService.Save(request);
             if (success)
@@ -46,7 +48,7 @@ namespace RecipeNest.Controller
             }
         }
 
-        public string Update(UpdateRecipeRequest request) 
+        public string Update(UpdateRecipeRequest request)
         {
             bool success = recipeService.Update(request);
             if (success)

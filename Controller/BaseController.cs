@@ -23,8 +23,7 @@ namespace RecipeNest.Controller
         public static T JsonRequestBody<T>(HttpListenerRequest request)
         {
             string requestBody = RequestBody(request);
-            return MessagePackSerializer.Deserialize<T>( MessagePackSerializer.ConvertFromJson(requestBody));
+            return MessagePackSerializer.Deserialize<T>(MessagePackSerializer.ConvertFromJson(requestBody));
         }
     }
 }
-

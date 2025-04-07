@@ -8,9 +8,8 @@ using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Request;
 
-namespace Router
+namespace RecipeNest.Router
 {
-
     public class APIRouter
     {
         private RoleController roleController;
@@ -19,9 +18,10 @@ namespace Router
         private RecipeController recipeController;
         private FavoriteController favoriteController;
         private RatingController ratingController;
-        
+
         public APIRouter(RoleController roleController, UserController userController,
-            CuisineController cuisineController, RecipeController recipeController, FavoriteController favoriteController, RatingController ratingController)
+            CuisineController cuisineController, RecipeController recipeController,
+            FavoriteController favoriteController, RatingController ratingController)
         {
             this.roleController = roleController;
             this.userController = userController;
@@ -56,14 +56,17 @@ namespace Router
                     {
                         return Cuisine(path, request);
                     }
+
                     if (path.Contains("/recipes"))
                     {
                         return Recipe(path, request);
                     }
+
                     if (path.Contains("/favorites"))
                     {
                         return Favorite(path, request);
                     }
+
                     if (path.Contains("/ratings"))
                     {
                         return Rating(path, request);
@@ -160,7 +163,6 @@ namespace Router
         }
 
 
-
         public String Cuisine(string path, HttpListenerRequest request)
         {
             Console.WriteLine("Cuisine path check: " + path);
@@ -210,7 +212,6 @@ namespace Router
 
             return NotFound();
         }
-
 
 
         public String Recipe(string path, HttpListenerRequest request)
@@ -288,11 +289,12 @@ namespace Router
                     return favoriteController.DeleteByUserAndRecipe(userId, recipeId);
                 }
             }
+
             return NotFound();
         }
-        
-        
-       public String Rating(string path, HttpListenerRequest request)
+
+
+        public String Rating(string path, HttpListenerRequest request)
         {
             Console.WriteLine("requesting Rating path: " + path);
 
@@ -305,7 +307,7 @@ namespace Router
             }
             else if (Regex.IsMatch(path, @"^/ratings\?user_id=\d+&recipe_id=\d+$"))
             {
-                 if (request.QueryString["user_id"] != null
+                if (request.QueryString["user_id"] != null
                     && int.TryParse(request.QueryString["user_id"], out int userId)
                     && request.QueryString["recipe_id"] != null
                     && int.TryParse(request.QueryString["recipe_id"], out int recipeId))
@@ -319,11 +321,12 @@ namespace Router
                         return ratingController.DeleteByUserAndRecipe(userId, recipeId);
                     }
                 }
-                 else
+                else
                 {
                     Console.WriteLine("Failed to parse user_id or recipe_id from rating query string.");
                 }
             }
+
             return NotFound();
         }
 

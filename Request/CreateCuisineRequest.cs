@@ -2,7 +2,6 @@
 
 namespace RecipeNest.Request
 {
-
     [MessagePackObject]
     public class CreateCuisineRequest
     {
@@ -23,7 +22,6 @@ namespace RecipeNest.Request
         public override string ToString()
         {
             return $"CreateCuisineRequest(Name='{Name}', ImageUrl='{ImageUrl}";
-
         }
     }
 }

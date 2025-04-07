@@ -7,13 +7,13 @@ namespace RecipeNest.Model
     [MessagePackObject]
     public class Role
     {
-        [Key("id")]
-        public int Id { get; set; }
+        [Key("id")] public int Id { get; set; }
 
-        [Key("name")]
-        public string Name { get; set; }
+        [Key("name")] public string Name { get; set; }
 
-        public Role() { }
+        public Role()
+        {
+        }
 
         public Role(int id, string name)
         {

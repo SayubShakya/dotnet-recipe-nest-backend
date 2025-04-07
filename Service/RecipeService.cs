@@ -1,6 +1,7 @@
 ﻿// Service/RecipeService.cs
+
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Repository;
@@ -75,7 +76,7 @@ namespace RecipeNest.Service
         }
 
         public bool Save(CreateRecipeRequest request)
-        { 
+        {
             Recipe recipe = new Recipe
             {
                 ImageUrl = request.ImageUrl,
@@ -95,7 +96,6 @@ namespace RecipeNest.Service
             Recipe? existingRecipe = _recipeRepository.GetById(request.Id);
             if (existingRecipe == null)
             {
-
                 return false;
             }
 

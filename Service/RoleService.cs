@@ -11,6 +11,7 @@ namespace RecipeNest.Service
     public class RoleService
     {
         private IRoleRepository _roleRepository;
+
         public RoleService(IRoleRepository roleRepository)
         {
             this._roleRepository = roleRepository;
@@ -51,7 +52,7 @@ namespace RecipeNest.Service
             role.Name = request.Name;
             return _roleRepository.Update(role);
         }
-        
+
         public bool DeleteById(int id)
         {
             return _roleRepository.DeleteById(id);

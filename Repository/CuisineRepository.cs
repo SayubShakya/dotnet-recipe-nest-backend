@@ -4,10 +4,8 @@ using RecipeNest.Model;
 
 namespace RecipeNest.Repository
 {
-
     public interface ICuisineRepository : IBaseRepository<Cuisine>
     {
-        Cuisine? GetByName(string name); 
-
+        Cuisine? GetByName(string name);
     }
 }

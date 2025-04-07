@@ -1,9 +1,9 @@
 ﻿// UserRepositoryDatabaseImpl.cs
 
 using System.Collections.Generic;
-using RecipeNest.Model;       
-using RecipeNest.Db;           
-using RecipeNest.Consta;   
+using RecipeNest.Model;
+using RecipeNest.Db;
+using RecipeNest.Consta;
 using RecipeNest.Db.Query.Impl;
 
 namespace RecipeNest.Repository.Impl.Database
@@ -17,11 +17,11 @@ namespace RecipeNest.Repository.Impl.Database
             User user = GetById(id);
             if (user == null)
             {
-            return false;
+                return false;
             }
-            
+
             DatabaseConnector.Update(IQueryConstant.IUser.DELETE_BY_ID, id);
-            return true; 
+            return true;
         }
 
         public List<User> GetAll()
@@ -36,7 +36,7 @@ namespace RecipeNest.Repository.Impl.Database
             user = DatabaseConnector.QueryOne(IQueryConstant.IUser.GET_BY_EMAIL, new UserRowMapper(), email);
             return user;
         }
-        
+
         public User GetById(int id)
         {
             User user;
@@ -50,14 +50,15 @@ namespace RecipeNest.Repository.Impl.Database
             {
                 return false;
             }
+
             DatabaseConnector.Update(IQueryConstant.IUser.SAVE,
                 user.FirstName,
                 user.LastName,
                 user.PhoneNumber,
-                user.ImageUrl, 
-                user.About,   
+                user.ImageUrl,
+                user.About,
                 user.Email,
-                user.Password, 
+                user.Password,
                 user.RoleId
             );
             return true;
@@ -69,6 +70,7 @@ namespace RecipeNest.Repository.Impl.Database
             {
                 return false;
             }
+
             DatabaseConnector.Update(IQueryConstant.IUser.UPDATE,
                 user.FirstName,
                 user.LastName,
@@ -76,9 +78,9 @@ namespace RecipeNest.Repository.Impl.Database
                 user.ImageUrl,
                 user.About,
                 user.Email,
-                user.Password, 
+                user.Password,
                 user.RoleId,
-                user.Id        
+                user.Id
             );
             return true;
         }

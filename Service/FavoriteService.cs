@@ -2,7 +2,7 @@
 using RecipeNest.Reponse;
 using RecipeNest.Repository;
 using RecipeNest.Request;
-using System; 
+using System;
 
 namespace RecipeNest.Service
 {
@@ -12,7 +12,8 @@ namespace RecipeNest.Service
         private readonly IUserRepository _userRepository;
         private readonly IRecipeRepository _recipeRepository;
 
-        public FavoriteService(IFavoriteRepository favoriteRepository, IUserRepository userRepository, IRecipeRepository recipeRepository)
+        public FavoriteService(IFavoriteRepository favoriteRepository, IUserRepository userRepository,
+            IRecipeRepository recipeRepository)
         {
             this._favoriteRepository = favoriteRepository;
             this._userRepository = userRepository;
@@ -26,6 +27,7 @@ namespace RecipeNest.Service
             {
                 return null;
             }
+
             return new FavoriteResponse(favorite.Id, favorite.UserId, favorite.RecipeId);
         }
 
@@ -60,8 +62,10 @@ namespace RecipeNest.Service
             bool success = _favoriteRepository.Save(favorite);
             if (!success)
             {
-                 Console.WriteLine($"FavoriteService.Save: Repository failed to save favorite for UserID: {request.UserId}, RecipeID: {request.RecipeId}. Might already exist or DB error.");
+                Console.WriteLine(
+                    $"FavoriteService.Save: Repository failed to save favorite for UserID: {request.UserId}, RecipeID: {request.RecipeId}. Might already exist or DB error.");
             }
+
             return success;
         }
 

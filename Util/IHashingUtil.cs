@@ -1,5 +1,3 @@
-
-
 namespace RecipeNest.Util
 {
     public interface IHashingUtil

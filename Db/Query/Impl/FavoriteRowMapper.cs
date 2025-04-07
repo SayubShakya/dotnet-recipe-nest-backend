@@ -1,7 +1,8 @@
 ﻿// FavoriteRowMapper.cs
+
 using MySql.Data.MySqlClient;
-using RecipeNest.Db.Query; 
-using RecipeNest.Model; 
+using RecipeNest.Db.Query;
+using RecipeNest.Model;
 
 namespace RecipeNest.Db.Query.Impl
 {

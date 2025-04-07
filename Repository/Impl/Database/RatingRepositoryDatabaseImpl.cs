@@ -15,11 +15,13 @@ namespace RecipeNest.Repository.Impl.Database
         {
             try
             {
-                return DatabaseConnector.QueryOne(IQueryConstant.IRating.GET_BY_ID, new RatingRowMapper(), userId, recipeId);
+                return DatabaseConnector.QueryOne(IQueryConstant.IRating.GET_BY_ID, new RatingRowMapper(), userId,
+                    recipeId);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting rating by user/recipe (UserID: {userId}, RecipeID: {recipeId}): {ex.Message}");
+                Console.WriteLine(
+                    $"Error getting rating by user/recipe (UserID: {userId}, RecipeID: {recipeId}): {ex.Message}");
                 return null;
             }
         }
@@ -33,11 +35,12 @@ namespace RecipeNest.Repository.Impl.Database
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting rating by user/recipe (UserID: {userId}, RecipeID: {recipeId}): {ex.Message}");
+                Console.WriteLine(
+                    $"Error deleting rating by user/recipe (UserID: {userId}, RecipeID: {recipeId}): {ex.Message}");
                 return false;
             }
         }
-        
+
 
         public bool Save(Rating rating)
         {
@@ -52,25 +55,30 @@ namespace RecipeNest.Repository.Impl.Database
                 var existing = GetByUserAndRecipe(rating.UserId.Value, rating.RecipeId.Value);
                 if (existing != null)
                 {
-                    Console.WriteLine($"Rating already exists for UserID: {rating.UserId.Value}, RecipeID: {rating.RecipeId.Value}. Use update operation instead of save.");
+                    Console.WriteLine(
+                        $"Rating already exists for UserID: {rating.UserId.Value}, RecipeID: {rating.RecipeId.Value}. Use update operation instead of save.");
                     return false;
                 }
 
                 RatingScore scoreToStore = rating.Score.Value;
                 if (scoreToStore < RatingScore.Ten)
                 {
-                    scoreToStore++; 
+                    scoreToStore++;
                 }
+
                 byte scoreByte = (byte)scoreToStore;
-                Console.WriteLine($"--- DEBUG: Saving Rating - Original: {rating.Score.Value}, Storing Enum: {scoreToStore}, Storing Byte: {scoreByte} ---");
+                Console.WriteLine(
+                    $"--- DEBUG: Saving Rating - Original: {rating.Score.Value}, Storing Enum: {scoreToStore}, Storing Byte: {scoreByte} ---");
 
 
-                DatabaseConnector.Update(IQueryConstant.IRating.SAVE, rating.UserId.Value, rating.RecipeId.Value, scoreByte);
+                DatabaseConnector.Update(IQueryConstant.IRating.SAVE, rating.UserId.Value, rating.RecipeId.Value,
+                    scoreByte);
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving rating (UserID: {rating.UserId}, RecipeID: {rating.RecipeId}): {ex.Message}");
+                Console.WriteLine(
+                    $"Error saving rating (UserID: {rating.UserId}, RecipeID: {rating.RecipeId}): {ex.Message}");
                 return false;
             }
         }

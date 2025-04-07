@@ -7,11 +7,11 @@ namespace RecipeNest.Request
     [MessagePackObject]
     public class CreateRoleRequest
     {
+        [Key("name")] public string Name { get; set; }
 
-        [Key("name")]
-        public string Name { get; set; }
-
-        public CreateRoleRequest() { }
+        public CreateRoleRequest()
+        {
+        }
 
         public CreateRoleRequest(string name)
         {

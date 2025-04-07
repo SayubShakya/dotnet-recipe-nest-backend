@@ -1,9 +1,9 @@
 ﻿// UserService.cs
 
 using System.Security.Policy;
-using RecipeNest.Model;     
-using RecipeNest.Reponse;  
-using RecipeNest.Repository; 
+using RecipeNest.Model;
+using RecipeNest.Reponse;
+using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Util;
 
@@ -11,7 +11,7 @@ namespace RecipeNest.Service
 {
     public class UserService
     {
-        private readonly IUserRepository _userRepository; 
+        private readonly IUserRepository _userRepository;
         private readonly IHashingUtil _hashingUtil;
 
 
@@ -21,10 +21,10 @@ namespace RecipeNest.Service
             _hashingUtil = hashingUtil;
         }
 
-        public List<UserResponse> GetAll() 
+        public List<UserResponse> GetAll()
         {
             List<User> users = _userRepository.GetAll();
-            List<UserResponse> userResponses = []; 
+            List<UserResponse> userResponses = [];
             foreach (User user in users)
             {
                 userResponses.Add(new UserResponse(
@@ -38,10 +38,11 @@ namespace RecipeNest.Service
                     user.RoleId
                 ));
             }
+
             return userResponses;
         }
 
-        public UserResponse GetById(int id) 
+        public UserResponse GetById(int id)
         {
             User user = _userRepository.GetById(id);
 
@@ -57,7 +58,7 @@ namespace RecipeNest.Service
             );
         }
 
-        public bool Save(CreateUserRequest request) 
+        public bool Save(CreateUserRequest request)
         {
             User user = new User
             {
@@ -74,7 +75,7 @@ namespace RecipeNest.Service
             return _userRepository.Save(user);
         }
 
-        public bool Update(UpdateUserRequest request) 
+        public bool Update(UpdateUserRequest request)
         {
             User existingUser = _userRepository.GetById(request.Id) ?? throw new ArgumentNullException(nameof(request));
 
@@ -99,14 +100,14 @@ namespace RecipeNest.Service
         {
             return _userRepository.DeleteById(id);
         }
-        
-        
-        public UserResponse? GetByEmail(string email) 
+
+
+        public UserResponse? GetByEmail(string email)
         {
             User? user = _userRepository.GetByEmail(email);
             if (user == null)
             {
-                return null; 
+                return null;
             }
 
             return new UserResponse(

@@ -1,6 +1,7 @@
 ﻿// Repository/IRecipeRepository.cs
-using System.Collections.Generic; 
-using RecipeNest.Model; 
+
+using System.Collections.Generic;
+using RecipeNest.Model;
 
 namespace RecipeNest.Repository
 {

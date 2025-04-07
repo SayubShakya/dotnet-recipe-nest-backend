@@ -1,4 +1,5 @@
 ﻿// Db/Query/Impl/RecipeRowMapper.cs
+
 using MySql.Data.MySqlClient;
 using RecipeNest.Model;
 using RecipeNest.Db.Query;
@@ -12,7 +13,9 @@ namespace RecipeNest.Db.Query.Impl
             int id = reader.GetInt32("id");
             string? imageUrl = reader.IsDBNull(reader.GetOrdinal("image_url")) ? null : reader.GetString("image_url");
             string title = reader.GetString("title");
-            string? description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString("description");
+            string? description = reader.IsDBNull(reader.GetOrdinal("description"))
+                ? null
+                : reader.GetString("description");
             string recipeDetail = reader.GetString("recipe");
             string ingredients = reader.GetString("ingredients");
             int? recipeByUserId = reader.IsDBNull(reader.GetOrdinal("recipe_by")) ? null : reader.GetInt32("recipe_by");
