@@ -1,19 +1,16 @@
 // BaseRepository.cs
 
-using System.Collections.Generic;
+namespace RecipeNest.Repository;
 
-namespace RecipeNest.Repository
+public interface IBaseRepository<T>
 {
-    public interface IBaseRepository<T>
-    {
-        bool Save(T obj);
+    bool Save(T obj);
 
-        bool Update(T obj);
+    bool Update(T obj);
 
-        T GetById(int id);
+    T GetById(int id);
 
-        List<T> GetAll();
+    List<T> GetAll();
 
-        bool DeleteById(int id);
-    }
+    bool DeleteById(int id);
 }

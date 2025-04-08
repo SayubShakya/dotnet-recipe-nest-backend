@@ -2,10 +2,9 @@
 
 using MySql.Data.MySqlClient;
 
-namespace RecipeNest.Db.Query
+namespace RecipeNest.Db.Query;
+
+public interface IRowMapper<T>
 {
-    public interface IRowMapper<T>
-    {
-        T Map(MySqlDataReader reader);
-    }
+    T Map(MySqlDataReader reader);
 }

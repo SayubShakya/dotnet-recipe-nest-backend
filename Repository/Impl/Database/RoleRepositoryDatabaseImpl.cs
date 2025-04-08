@@ -1,63 +1,51 @@
 // RoleRepositoryDatabaseImpl.cs
 
-using System.Collections.Generic;
-using RecipeNest.Model;
-using RecipeNest.Db;
 using RecipeNest.Consta;
+using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl;
+using RecipeNest.Model;
 
-namespace RecipeNest.Repository.Impl.Database
+namespace RecipeNest.Repository.Impl.Database;
+
+public class RoleRepositoryDatabaseImpl : IRoleRepository
 {
-    public class RoleRepositoryDatabaseImpl : IRoleRepository
+
+    public bool DeleteById(int id)
     {
-        private DatabaseConnector databaseConnector = new DatabaseConnector();
+        var role = GetById(id);
+        if (role == null) return false;
 
-        public bool DeleteById(int id)
-        {
-            Role role = GetById(id);
-            if (role == null)
-            {
-                return false;
-            }
+        DatabaseConnector.Update(IQueryConstant.IRole.DELETE_BY_ID, id);
+        return true;
+    }
 
-            DatabaseConnector.Update(IQueryConstant.IRole.DELETE_BY_ID, id);
-            return true;
-        }
+    public List<Role> GetAll()
+    {
+        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL, new RoleRowMapper());
+    }
 
-        public List<Role> GetAll()
-        {
-            return databaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL, new RoleRowMapper());
-        }
+    public Role GetById(int id)
+    {
+        Role role;
 
-        public Role GetById(int id)
-        {
-            Role role;
+        role = DatabaseConnector.QueryOne(IQueryConstant.IRole.GET_BY_ID, new RoleRowMapper(), id);
 
-            role = DatabaseConnector.QueryOne(IQueryConstant.IRole.GET_BY_ID, new RoleRowMapper(), id);
+        return role;
+    }
 
-            return role;
-        }
+    public bool Save(Role role)
+    {
+        if (role == null) return false;
 
-        public bool Save(Role role)
-        {
-            if (role == null)
-            {
-                return false;
-            }
+        DatabaseConnector.Update(IQueryConstant.IRole.SAVE, role.Name);
+        return true;
+    }
 
-            DatabaseConnector.Update(IQueryConstant.IRole.SAVE, [role.Name]);
-            return true;
-        }
+    public bool Update(Role role)
+    {
+        if (role == null) return false;
 
-        public bool Update(Role role)
-        {
-            if (role == null)
-            {
-                return false;
-            }
-
-            DatabaseConnector.Update(IQueryConstant.IRole.UPDATE, [role.Name, role.Id,]);
-            return true;
-        }
+        DatabaseConnector.Update(IQueryConstant.IRole.UPDATE, role.Name, role.Id);
+        return true;
     }
 }

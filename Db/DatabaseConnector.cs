@@ -1,31 +1,26 @@
 // DatabaseConnector.cs
 
-using System;
-using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using RecipeNest.Db.Query;
+using RecipeNest.Dto;
 
 namespace RecipeNest.Db;
 
 public class DatabaseConnector
 {
-    private readonly string connectionString =
-        "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;";
+    private static readonly string ConnectionString =
+        "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
 
-    private MySqlConnection? connection;
-
-    private void Connect()
+    private static MySqlConnection GetConnection()
     {
-        this.connection = new MySqlConnection(connectionString);
-        this.connection.Open();
+        var connection = new MySqlConnection(ConnectionString);
+        connection.Open();
+        return connection;
     }
 
-    private void Disconnect()
+    private static void Disconnect(MySqlConnection connection)
     {
-        // if (this.connection?.State == System.Data.ConnectionState.Open)
-        // {
-        //     this.connection?.Close();
-        // }
+        if (connection != null) connection.Close();
     }
 
     public static int Update(string sql, params object[] parameters)
@@ -57,29 +52,30 @@ public class DatabaseConnector
         return 0;
     }
 
-    public List<T> QueryAll<T>(string sql, IRowMapper<T> rowMapper)
+    public static List<T> QueryAll<T>(string sql, IRowMapper<T> rowMapper)
     {
         List<T> dataList = [];
-
+        MySqlConnection? sqlConnection = null;
         try
         {
-            Connect();
-            MySqlCommand command = new(sql, this.connection);
-            MySqlDataReader reader = command.ExecuteReader();
+            sqlConnection = GetConnection();
+            MySqlCommand command = new(sql, sqlConnection);
+            var reader = command.ExecuteReader();
 
             while (reader.Read())
             {
-                T data = rowMapper.Map(reader);
+                var data = rowMapper.Map(reader);
                 dataList.Add(data);
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine("An error occurred: " + ex.Message);
+            throw;
         }
         finally
         {
-            Disconnect();
+            Disconnect(sqlConnection);
         }
 
         return dataList;
@@ -88,77 +84,131 @@ public class DatabaseConnector
 
     public static T QueryOne<T>(string sql, IRowMapper<T> rowMapper, params object[] parameters)
     {
-        using (var connection = GetConnection())
-        using (var preparedStatement = GetPreparedStatement(connection, sql))
-        {
-            try
-            {
-                MapParams(parameters, preparedStatement);
+        var sqlConnection = GetConnection();
+        var preparedStatement = GetPreparedStatement(sqlConnection, sql);
 
-                using (var resultSet = preparedStatement.ExecuteReader())
-                {
-                    if (resultSet.Read())
-                    {
-                        return rowMapper.Map(resultSet);
-                    }
-                }
-            }
-            catch (Exception ex)
+        try
+        {
+            MapParams(parameters, preparedStatement);
+
+            using (var resultSet = preparedStatement.ExecuteReader())
             {
-                Console.WriteLine($"######## Error fetching: {sql}");
-                Console.WriteLine(ex.Message);
+                if (resultSet.Read()) return rowMapper.Map(resultSet);
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"######## Error fetching: {sql}");
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+        finally
+        {
+            Disconnect(sqlConnection);
+        }
 
-        return default(T);
+
+        return default;
     }
 
 
     public static List<T> QueryList<T>(string sql, IRowMapper<T> rowMapper, params object[] parameters)
     {
         List<T> results = new List<T>();
-        using (var connection = GetConnection())
-        using (var preparedStatement = GetPreparedStatement(connection, sql))
-        {
-            try
-            {
-                if (parameters != null && parameters.Length > 0)
-                {
-                    MapParams(parameters, preparedStatement);
-                }
+        var sqlConnection = GetConnection();
+        var preparedStatement = GetPreparedStatement(sqlConnection, sql);
 
-                using (var resultSet = preparedStatement.ExecuteReader())
-                {
-                    while (resultSet.Read())
-                    {
-                        results.Add(rowMapper.Map(resultSet));
-                    }
-                }
-            }
-            catch (Exception ex)
+        try
+        {
+            if (parameters != null && parameters.Length > 0) MapParams(parameters, preparedStatement);
+
+            using (var resultSet = preparedStatement.ExecuteReader())
             {
-                Console.WriteLine($"######## Error fetching list: {sql}");
-                Console.WriteLine(ex.Message);
+                while (resultSet.Read()) results.Add(rowMapper.Map(resultSet));
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"######## Error fetching list: {sql}");
+            Console.WriteLine(ex.Message);
+            throw;
+        }
+        finally
+        {
+            Disconnect(sqlConnection);
         }
 
         return results;
     }
 
-    private static void MapParams(object[] parameters, MySqlCommand mySqlCommand)
+
+    public static int Count(string sql)
     {
-        int counter = 1;
-        foreach (var param in parameters)
+        MySqlConnection? sqlConnection = null;
+        try
         {
-            mySqlCommand.Parameters.AddWithValue("@param" + (counter++), param);
+            sqlConnection = GetConnection();
+            MySqlCommand command = new(sql, sqlConnection);
+            var reader = command.ExecuteReader();
+
+            if (reader.Read())
+            {
+                return reader.GetInt32(reader.GetOrdinal("count"));
+            }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+            throw;
+        }
+        finally
+        {
+            Disconnect(sqlConnection);
+        }
+
+        return -1;
     }
 
-    private static MySqlConnection GetConnection()
+    public static Paged<T> QueryAll<T>(string sql, string countSql, int start, int limit, IRowMapper<T> rowMapper)
     {
-        var connection = new MySqlConnection("Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;");
-        connection.Open();
-        return connection;
+        int count = 0;
+        int offset = (start - 1) * limit;
+        sql += $" LIMIT {limit} OFFSET {offset}";
+        
+        Console.WriteLine(sql);
+        List<T> dataList = [];
+        MySqlConnection? sqlConnection = null;
+        try
+        {
+            sqlConnection = GetConnection();
+            MySqlCommand command = new(sql, sqlConnection);
+            var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var data = rowMapper.Map(reader);
+                dataList.Add(data);
+            }
+
+            count = Count(countSql);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+            throw;
+        }
+        finally
+        {
+            Disconnect(sqlConnection);
+        }
+
+        return new Paged<T>(start, limit, count, dataList);
+    }
+
+    private static void MapParams(object[] parameters, MySqlCommand mySqlCommand)
+    {
+        var counter = 1;
+        foreach (var param in parameters) mySqlCommand.Parameters.AddWithValue("@param" + counter++, param);
     }
 
     private static MySqlCommand GetPreparedStatement(MySqlConnection connection, string sql)

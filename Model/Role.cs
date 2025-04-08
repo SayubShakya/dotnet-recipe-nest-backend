@@ -2,28 +2,27 @@
 
 using MessagePack;
 
-namespace RecipeNest.Model
+namespace RecipeNest.Model;
+
+[MessagePackObject]
+public class Role
 {
-    [MessagePackObject]
-    public class Role
+    public Role()
     {
-        [Key("id")] public int Id { get; set; }
+    }
 
-        [Key("name")] public string Name { get; set; }
+    public Role(int id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 
-        public Role()
-        {
-        }
+    [Key("id")] public int Id { get; set; }
 
-        public Role(int id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
+    [Key("name")] public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return $"Role ID: {Id}, Name: {Name}";
-        }
+    public override string ToString()
+    {
+        return $"Role ID: {Id}, Name: {Name}";
     }
 }

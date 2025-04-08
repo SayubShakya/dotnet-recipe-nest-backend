@@ -2,9 +2,8 @@
 
 using RecipeNest.Model;
 
-namespace RecipeNest.Repository
+namespace RecipeNest.Repository;
+
+public interface IRoleRepository : IBaseRepository<Role>
 {
-    public interface IRoleRepository : IBaseRepository<Role>
-    {
-    }
 }

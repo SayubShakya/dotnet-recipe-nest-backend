@@ -1,31 +1,30 @@
 ﻿using MessagePack;
 using RecipeNest.Model;
 
-namespace RecipeNest.Request
+namespace RecipeNest.Request;
+
+[MessagePackObject]
+public class UpdateRatingRequest
 {
-    [MessagePackObject]
-    public class UpdateRatingRequest
+    public UpdateRatingRequest()
     {
-        [Key("user_id")] public int UserId { get; set; }
+    }
 
-        [Key("recipe_id")] public int RecipeId { get; set; }
+    public UpdateRatingRequest(int userId, int recipeId, RatingScore score)
+    {
+        UserId = userId;
+        RecipeId = recipeId;
+        Score = score;
+    }
 
-        [Key("rating")] public RatingScore Score { get; set; }
+    [Key("user_id")] public int UserId { get; set; }
 
-        public UpdateRatingRequest()
-        {
-        }
+    [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public UpdateRatingRequest(int userId, int recipeId, RatingScore score)
-        {
-            UserId = userId;
-            RecipeId = recipeId;
-            Score = score;
-        }
+    [Key("rating")] public RatingScore Score { get; set; }
 
-        public override string ToString()
-        {
-            return $"UpdateRatingRequest: UserID: {UserId}, RecipeID: {RecipeId}, New Score: {Score}";
-        }
+    public override string ToString()
+    {
+        return $"UpdateRatingRequest: UserID: {UserId}, RecipeID: {RecipeId}, New Score: {Score}";
     }
 }

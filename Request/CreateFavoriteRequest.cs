@@ -2,28 +2,27 @@
 
 using MessagePack;
 
-namespace RecipeNest.Request
+namespace RecipeNest.Request;
+
+[MessagePackObject]
+public class CreateFavoriteRequest
 {
-    [MessagePackObject]
-    public class CreateFavoriteRequest
+    public CreateFavoriteRequest()
     {
-        [Key("user_id")] public int UserId { get; set; }
+    }
 
-        [Key("recipe_id")] public int RecipeId { get; set; }
+    public CreateFavoriteRequest(int userId, int recipeId)
+    {
+        UserId = userId;
+        RecipeId = recipeId;
+    }
 
-        public CreateFavoriteRequest()
-        {
-        }
+    [Key("user_id")] public int UserId { get; set; }
 
-        public CreateFavoriteRequest(int userId, int recipeId)
-        {
-            UserId = userId;
-            RecipeId = recipeId;
-        }
+    [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public override string ToString()
-        {
-            return $"CreateFavoriteRequest: User ID: {UserId}, Recipe ID: {RecipeId}";
-        }
+    public override string ToString()
+    {
+        return $"CreateFavoriteRequest: User ID: {UserId}, Recipe ID: {RecipeId}";
     }
 }

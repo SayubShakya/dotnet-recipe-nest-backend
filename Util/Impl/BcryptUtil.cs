@@ -1,15 +1,14 @@
-namespace RecipeNest.Util.Impl
-{
-    public class BcryptUtil : IHashingUtil
-    {
-        public String Hash(String input)
-        {
-            return BCrypt.Net.BCrypt.HashPassword(input);
-        }
+namespace RecipeNest.Util.Impl;
 
-        public bool Verify(String hash, String input)
-        {
-            return BCrypt.Net.BCrypt.Verify(input, hash);
-        }
+public class BcryptUtil : IHashingUtil
+{
+    public string Hash(string input)
+    {
+        return BCrypt.Net.BCrypt.HashPassword(input);
+    }
+
+    public bool Verify(string hash, string input)
+    {
+        return BCrypt.Net.BCrypt.Verify(input, hash);
     }
 }

@@ -2,48 +2,46 @@
 
 using MessagePack;
 
-namespace RecipeNest.Reponse
+namespace RecipeNest.Reponse;
+
+[MessagePackObject]
+public class UserResponse
 {
-    [MessagePackObject]
-    public class UserResponse
+    public UserResponse()
     {
-        [Key("id")] public int Id { get; set; }
+    }
 
-        [Key("first_name")] public string FirstName { get; set; }
+    public UserResponse(int id, string firstName, string lastName, string phoneNumber, string? imageUrl,
+        string? about, string email, int roleId)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        PhoneNumber = phoneNumber;
+        ImageUrl = imageUrl;
+        About = about;
+        Email = email;
+        RoleId = roleId;
+    }
 
-        [Key("last_name")] public string LastName { get; set; }
+    [Key("id")] public int Id { get; set; }
 
-        [Key("phone_number")] public string PhoneNumber { get; set; }
+    [Key("first_name")] public string FirstName { get; set; }
 
-        [Key("image_url")] public string? ImageUrl { get; set; }
+    [Key("last_name")] public string LastName { get; set; }
 
-        [Key("about")] public string? About { get; set; }
+    [Key("phone_number")] public string PhoneNumber { get; set; }
 
-        [Key("email")] public string Email { get; set; }
+    [Key("image_url")] public string? ImageUrl { get; set; }
 
-        [Key("role_id")] public int RoleId { get; set; }
+    [Key("about")] public string? About { get; set; }
 
+    [Key("email")] public string Email { get; set; }
 
-        public UserResponse()
-        {
-        }
+    [Key("role_id")] public int RoleId { get; set; }
 
-        public UserResponse(int id, string firstName, string lastName, string phoneNumber, string? imageUrl,
-            string? about, string email, int roleId)
-        {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            PhoneNumber = phoneNumber;
-            ImageUrl = imageUrl;
-            About = about;
-            Email = email;
-            RoleId = roleId;
-        }
-
-        public override string ToString()
-        {
-            return $"UserResponse ID: {Id}, Name: {FirstName} {LastName}, Email: {Email}";
-        }
+    public override string ToString()
+    {
+        return $"UserResponse ID: {Id}, Name: {FirstName} {LastName}, Email: {Email}";
     }
 }

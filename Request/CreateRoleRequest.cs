@@ -2,25 +2,24 @@
 
 using MessagePack;
 
-namespace RecipeNest.Request
+namespace RecipeNest.Request;
+
+[MessagePackObject]
+public class CreateRoleRequest
 {
-    [MessagePackObject]
-    public class CreateRoleRequest
+    public CreateRoleRequest()
     {
-        [Key("name")] public string Name { get; set; }
+    }
 
-        public CreateRoleRequest()
-        {
-        }
+    public CreateRoleRequest(string name)
+    {
+        Name = name;
+    }
 
-        public CreateRoleRequest(string name)
-        {
-            Name = name;
-        }
+    [Key("name")] public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return $"Role, Name: {Name}";
-        }
+    public override string ToString()
+    {
+        return $"Role, Name: {Name}";
     }
 }

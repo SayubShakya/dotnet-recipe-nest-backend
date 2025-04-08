@@ -1,27 +1,26 @@
 ﻿using MessagePack;
 
-namespace RecipeNest.Request
+namespace RecipeNest.Request;
+
+[MessagePackObject]
+public class CreateCuisineRequest
 {
-    [MessagePackObject]
-    public class CreateCuisineRequest
+    public CreateCuisineRequest()
     {
-        [Key("name")] public string Name { get; set; }
+    }
 
-        [Key("image_url")] public string? ImageUrl { get; set; }
+    public CreateCuisineRequest(string name, string? imageUrl)
+    {
+        Name = name;
+        ImageUrl = imageUrl;
+    }
 
-        public CreateCuisineRequest()
-        {
-        }
+    [Key("name")] public string Name { get; set; }
 
-        public CreateCuisineRequest(string name, string? imageUrl)
-        {
-            Name = name;
-            ImageUrl = imageUrl;
-        }
+    [Key("image_url")] public string? ImageUrl { get; set; }
 
-        public override string ToString()
-        {
-            return $"CreateCuisineRequest(Name='{Name}', ImageUrl='{ImageUrl}";
-        }
+    public override string ToString()
+    {
+        return $"CreateCuisineRequest(Name='{Name}', ImageUrl='{ImageUrl}";
     }
 }

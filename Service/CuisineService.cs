@@ -1,98 +1,99 @@
-﻿using RecipeNest.Model;
+﻿using RecipeNest.Dto;
+using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Repository;
 using RecipeNest.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using RecipeNest.Response;
 
-namespace RecipeNest.Service
+namespace RecipeNest.Service;
+
+public class CuisineService
 {
-    public class CuisineService
+    private readonly ICuisineRepository _cuisineRepository;
+
+    public CuisineService(ICuisineRepository cuisineRepository)
     {
-        private readonly ICuisineRepository _cuisineRepository;
+        _cuisineRepository = cuisineRepository;
+    }
 
-        public CuisineService(ICuisineRepository cuisineRepository)
+    public PaginatedResponse<CuisineResponse> GetAll(int start, int limit)
+    {
+        Paged<Cuisine> pagedCuisines = _cuisineRepository.GetAllPaginated(start, limit);
+        
+        List<CuisineResponse> items =  pagedCuisines.Items.Select(cuisine => new CuisineResponse(
+            cuisine.Id,
+            cuisine.Name,
+            cuisine.ImageUrl
+        )).ToList();
+
+        PaginatedResponse<CuisineResponse> paginatedResponse = new()
         {
-            _cuisineRepository = cuisineRepository;
-        }
+            Items = items,
+            Count = pagedCuisines.Count,
+            Limit = pagedCuisines.Limit,
+            Start = pagedCuisines.Start
+        };
 
-        public List<CuisineResponse> GetAll()
+        return paginatedResponse;
+    }
+
+    public CuisineResponse? GetById(int id)
+    {
+        var cuisine = _cuisineRepository.GetById(id);
+        if (cuisine == null) return null;
+
+        return new CuisineResponse(
+            cuisine.Id,
+            cuisine.Name,
+            cuisine.ImageUrl
+        );
+    }
+
+    public CuisineResponse? GetByName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return null;
+
+        var cuisine = _cuisineRepository.GetByName(name);
+        if (cuisine == null) return null;
+
+        return new CuisineResponse(
+            cuisine.Id,
+            cuisine.Name,
+            cuisine.ImageUrl
+        );
+    }
+
+
+    public bool Save(CreateCuisineRequest request)
+    {
+        var cuisine = new Cuisine
         {
-            List<Cuisine> cuisines = _cuisineRepository.GetAll();
-            return cuisines.Select(cuisine => new CuisineResponse(
-                cuisine.Id,
-                cuisine.Name,
-                cuisine.ImageUrl
-            )).ToList();
-        }
+            Name = request.Name,
+            ImageUrl = request.ImageUrl
+        };
 
-        public CuisineResponse? GetById(int id)
+        return _cuisineRepository.Save(cuisine);
+    }
+
+    public bool Update(UpdateCuisineRequest request)
+    {
+        var existingCuisine = _cuisineRepository.GetById(request.Id);
+        if (existingCuisine == null) throw new KeyNotFoundException($"Cuisine with ID {request.Id} not found.");
+
+
+        var cuisineToUpdate = new Cuisine
         {
-            Cuisine? cuisine = _cuisineRepository.GetById(id);
-            if (cuisine == null)
-            {
-                return null;
-            }
-
-            return new CuisineResponse(
-                cuisine.Id,
-                cuisine.Name,
-                cuisine.ImageUrl
-            );
-        }
-
-        public CuisineResponse? GetByName(string name)
-        {
-            if (string.IsNullOrWhiteSpace(name)) return null;
-
-            Cuisine? cuisine = _cuisineRepository.GetByName(name);
-            if (cuisine == null)
-            {
-                return null;
-            }
-
-            return new CuisineResponse(
-                cuisine.Id,
-                cuisine.Name,
-                cuisine.ImageUrl
-            );
-        }
+            Id = request.Id,
+            Name = request.Name,
+            ImageUrl = request.ImageUrl
+        };
 
 
-        public bool Save(CreateCuisineRequest request)
-        {
-            Cuisine cuisine = new Cuisine
-            {
-                Name = request.Name,
-                ImageUrl = request.ImageUrl
-            };
+        return _cuisineRepository.Update(cuisineToUpdate);
+    }
 
-            return _cuisineRepository.Save(cuisine);
-        }
-
-        public bool Update(UpdateCuisineRequest request)
-        {
-            Cuisine? existingCuisine = _cuisineRepository.GetById(request.Id);
-            if (existingCuisine == null)
-            {
-                throw new KeyNotFoundException($"Cuisine with ID {request.Id} not found.");
-            }
-
-
-            Cuisine cuisineToUpdate = new Cuisine
-            {
-                Id = request.Id,
-                Name = request.Name,
-                ImageUrl = request.ImageUrl
-            };
-
-            return _cuisineRepository.Update(cuisineToUpdate);
-        }
-
-        public bool DeleteById(int id)
-        {
-            return _cuisineRepository.DeleteById(id);
-        }
+    public bool DeleteById(int id)
+    {
+        return _cuisineRepository.DeleteById(id);
     }
 }

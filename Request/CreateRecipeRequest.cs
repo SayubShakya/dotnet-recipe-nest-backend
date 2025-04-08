@@ -2,44 +2,43 @@
 
 using MessagePack;
 
-namespace RecipeNest.Request
+namespace RecipeNest.Request;
+
+[MessagePackObject]
+public class CreateRecipeRequest
 {
-    [MessagePackObject]
-    public class CreateRecipeRequest
+    public CreateRecipeRequest()
     {
-        [Key("image_url")] public string? ImageUrl { get; set; }
+    }
 
-        [Key("title")] public string Title { get; set; }
+    public CreateRecipeRequest(string title, string recipeDetail, string ingredients, string? imageUrl = null,
+        string? description = null, int? recipeByUserId = null, int? cuisineId = null)
+    {
+        ImageUrl = imageUrl;
+        Title = title;
+        Description = description;
+        RecipeDetail = recipeDetail;
+        Ingredients = ingredients;
+        RecipeByUserId = recipeByUserId;
+        CuisineId = cuisineId;
+    }
 
-        [Key("description")] public string? Description { get; set; }
+    [Key("image_url")] public string? ImageUrl { get; set; }
 
-        [Key("recipe")] public string RecipeDetail { get; set; }
+    [Key("title")] public string Title { get; set; }
 
-        [Key("ingredients")] public string Ingredients { get; set; }
+    [Key("description")] public string? Description { get; set; }
 
-        [Key("recipe_by")] public int? RecipeByUserId { get; set; }
+    [Key("recipe")] public string RecipeDetail { get; set; }
 
-        [Key("cuisine")] public int? CuisineId { get; set; }
+    [Key("ingredients")] public string Ingredients { get; set; }
 
-        public CreateRecipeRequest()
-        {
-        }
+    [Key("recipe_by")] public int? RecipeByUserId { get; set; }
 
-        public CreateRecipeRequest(string title, string recipeDetail, string ingredients, string? imageUrl = null,
-            string? description = null, int? recipeByUserId = null, int? cuisineId = null)
-        {
-            ImageUrl = imageUrl;
-            Title = title;
-            Description = description;
-            RecipeDetail = recipeDetail;
-            Ingredients = ingredients;
-            RecipeByUserId = recipeByUserId;
-            CuisineId = cuisineId;
-        }
+    [Key("cuisine")] public int? CuisineId { get; set; }
 
-        public override string ToString()
-        {
-            return $"CreateRecipeRequest: Title={Title}, CuisineId={CuisineId}, UserId={RecipeByUserId}";
-        }
+    public override string ToString()
+    {
+        return $"CreateRecipeRequest: Title={Title}, CuisineId={CuisineId}, UserId={RecipeByUserId}";
     }
 }

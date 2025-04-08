@@ -1,82 +1,71 @@
 ﻿// Repository/Impl/Database/RecipeRepositoryDatabaseImpl.cs
 
-using System.Collections.Generic;
-using RecipeNest.Model;
-using RecipeNest.Db;
 using RecipeNest.Consta;
+using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl;
+using RecipeNest.Model;
 
-namespace RecipeNest.Repository.Impl.Database
+namespace RecipeNest.Repository.Impl.Database;
+
+public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 {
-    public class RecipeRepositoryDatabaseImpl : IRecipeRepository
+    private readonly DatabaseConnector databaseConnector = new();
+
+    public bool DeleteById(int id)
     {
-        private DatabaseConnector databaseConnector = new DatabaseConnector();
+        var recipe = GetById(id);
+        if (recipe == null) return false;
 
-        public bool DeleteById(int id)
-        {
-            Recipe recipe = GetById(id);
-            if (recipe == null)
-            {
-                return false;
-            }
+        DatabaseConnector.Update(IQueryConstant.IRecipe.DELETE_BY_ID, id);
+        return true;
+    }
 
-            DatabaseConnector.Update(IQueryConstant.IRecipe.DELETE_BY_ID, id);
-            return true;
-        }
+    public List<Recipe> GetAll()
+    {
+        return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GET_ALL, new RecipeRowMapper());
+    }
 
-        public List<Recipe> GetAll()
-        {
-            return databaseConnector.QueryAll(IQueryConstant.IRecipe.GET_ALL, new RecipeRowMapper());
-        }
+    public Recipe GetById(int id)
+    {
+        return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_ID, new RecipeRowMapper(), id);
+    }
 
-        public Recipe GetById(int id)
-        {
-            return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_ID, new RecipeRowMapper(), id);;
-        }
-
-        public Recipe GetByTitle(string title)
-        {
-            return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_TITLE, new RecipeRowMapper(), title);
-        }
+    public Recipe GetByTitle(string title)
+    {
+        return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GET_BY_TITLE, new RecipeRowMapper(), title);
+    }
 
 
-        public bool Save(Recipe recipe)
-        {
-            if (recipe == null)
-            {
-                return false;
-            }
+    public bool Save(Recipe recipe)
+    {
+        if (recipe == null) return false;
 
-            DatabaseConnector.Update(IQueryConstant.IRecipe.SAVE,
-                recipe.ImageUrl,
-                recipe.Title,
-                recipe.Description,
-                recipe.RecipeDetail,
-                recipe.Ingredients,
-                recipe.RecipeByUserId,
-                recipe.CuisineId
-            );
-            return true;
-        }
+        DatabaseConnector.Update(IQueryConstant.IRecipe.SAVE,
+            recipe.ImageUrl,
+            recipe.Title,
+            recipe.Description,
+            recipe.RecipeDetail,
+            recipe.Ingredients,
+            recipe.RecipeByUserId,
+            recipe.CuisineId
+        );
+        return true;
+    }
 
-        public bool Update(Recipe recipe)
-        {
-            if (recipe == null)
-            {
-                return false;
-            }
+    public bool Update(Recipe recipe)
+    {
+        if (recipe == null) return false;
 
-            DatabaseConnector.Update(IQueryConstant.IRecipe.UPDATE,
-                recipe.ImageUrl,
-                recipe.Title,
-                recipe.Description,
-                recipe.RecipeDetail,
-                recipe.Ingredients,
-                recipe.RecipeByUserId,
-                recipe.CuisineId,
-                recipe.Id
-            );
-            return true;
-        }
+        DatabaseConnector.Update(IQueryConstant.IRecipe.UPDATE,
+            recipe.ImageUrl,
+            recipe.Title,
+            recipe.Description,
+            recipe.RecipeDetail,
+            recipe.Ingredients,
+            recipe.RecipeByUserId,
+            recipe.CuisineId,
+            recipe.Id
+        );
+        return true;
     }
 }

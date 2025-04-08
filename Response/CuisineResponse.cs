@@ -1,30 +1,29 @@
 ﻿using MessagePack;
 
-namespace RecipeNest.Reponse
+namespace RecipeNest.Response;
+
+[MessagePackObject]
+public class CuisineResponse
 {
-    [MessagePackObject]
-    public class CuisineResponse
+    public CuisineResponse()
     {
-        [Key("id")] public int Id { get; set; }
+    }
 
-        [Key("name")] public string Name { get; set; }
+    public CuisineResponse(int id, string name, string? imageUrl)
+    {
+        Id = id;
+        Name = name;
+        ImageUrl = imageUrl;
+    }
 
-        [Key("image_url")] public string? ImageUrl { get; set; }
+    [Key("id")] public int Id { get; set; }
 
-        public CuisineResponse()
-        {
-        }
+    [Key("name")] public string Name { get; set; }
 
-        public CuisineResponse(int id, string name, string? imageUrl)
-        {
-            Id = id;
-            Name = name;
-            ImageUrl = imageUrl;
-        }
+    [Key("image_url")] public string? ImageUrl { get; set; }
 
-        public override string ToString()
-        {
-            return $"CuisineResponse(Id={Id}, Name='{Name}', ImageUrl='{ImageUrl}";
-        }
+    public override string ToString()
+    {
+        return $"CuisineResponse(Id={Id}, Name='{Name}', ImageUrl='{ImageUrl}";
     }
 }

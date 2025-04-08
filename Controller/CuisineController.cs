@@ -1,151 +1,124 @@
 ﻿using RecipeNest.Reponse;
 using RecipeNest.Request;
+using RecipeNest.Response;
 using RecipeNest.Service;
 
-namespace RecipeNest.Controller
+namespace RecipeNest.Controller;
+
+public class CuisineController : BaseController
 {
-    public class CuisineController : BaseController
+    private readonly CuisineService _cuisineService;
+
+    public CuisineController(CuisineService cuisineService)
     {
-        private readonly CuisineService _cuisineService;
+        _cuisineService = cuisineService;
+    }
 
-        public CuisineController(CuisineService cuisineService)
+    public string GetAll(int start, int limit)
+    {
+        try
         {
-            _cuisineService = cuisineService;
+            PaginatedResponse<CuisineResponse> response = _cuisineService.GetAll(start, limit);
+            ServerResponse serverResponse = new ServerResponse(response, null, 200);
+            return ToJsonResponse(serverResponse);
         }
-
-        public string GetAll()
+        catch (Exception ex)
         {
-            try
-            {
-                var cuisineList = _cuisineService.GetAll();
-                ServerResponse serverResponse = new ServerResponse(cuisineList, "Cuisine list!", 200);
-                return ToJsonResponse(serverResponse);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CuisineController.GetAll: {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Failed to retrieve cuisines.", 500, ex.Message));
-            }
+            Console.WriteLine($"Error in CuisineController.GetAll: {ex}");
+            return ToJsonResponse(new ServerResponse(null, "Failed to retrieve cuisines.", 500, ex.Message));
         }
+    }
 
-        public string GetById(int id)
+    public string GetById(int id)
+    {
+        try
         {
-            try
-            {
-                var cuisineResponse = _cuisineService.GetById(id);
-                if (cuisineResponse != null)
-                {
-                    return ToJsonResponse(new ServerResponse(cuisineResponse, "Cuisine found!", 200));
-                }
+            var cuisineResponse = _cuisineService.GetById(id);
+            if (cuisineResponse != null)
+                return ToJsonResponse(new ServerResponse(cuisineResponse, "Cuisine found!", 200));
 
-                return ToJsonResponse(new ServerResponse(null, "Cuisine not found", 404));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CuisineController.GetById({id}): {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Failed to retrieve cuisine.", 500, ex.Message));
-            }
+            return ToJsonResponse(new ServerResponse(null, "Cuisine not found", 404));
         }
-
-        public string GetByName(string name)
+        catch (Exception ex)
         {
-            if (string.IsNullOrWhiteSpace(name))
-            {
-                return ToJsonResponse(new ServerResponse(null, "Cuisine name cannot be empty.", 400));
-            }
-
-            try
-            {
-                var cuisineResponse = _cuisineService.GetByName(name);
-                if (cuisineResponse != null)
-                {
-                    return ToJsonResponse(new ServerResponse(cuisineResponse, "Cuisine found!", 200));
-                }
-
-                return ToJsonResponse(new ServerResponse(null, "Cuisine not found", 404));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CuisineController.GetByName('{name}'): {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Failed to retrieve cuisine by name.", 500, ex.Message));
-            }
+            Console.WriteLine($"Error in CuisineController.GetById({id}): {ex}");
+            return ToJsonResponse(new ServerResponse(null, "Failed to retrieve cuisine.", 500, ex.Message));
         }
+    }
 
-        public string Save(CreateCuisineRequest request)
+    public string GetByName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return ToJsonResponse(new ServerResponse(null, "Cuisine name cannot be empty.", 400));
+
+        try
         {
-            if (request == null)
-            {
-                return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
-            }
+            var cuisineResponse = _cuisineService.GetByName(name);
+            if (cuisineResponse != null)
+                return ToJsonResponse(new ServerResponse(cuisineResponse, "Cuisine found!", 200));
 
-            try
-            {
-                bool success = _cuisineService.Save(request);
-                if (success)
-                {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been created!", 201));
-                }
-                else
-                {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine creation failed.", 400));
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CuisineController.Save: {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Cuisine creation failed due to an internal error.", 500,
-                    ex.Message));
-            }
+            return ToJsonResponse(new ServerResponse(null, "Cuisine not found", 404));
         }
-
-        public string Update(UpdateCuisineRequest request)
+        catch (Exception ex)
         {
-            if (request == null)
-            {
-                return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
-            }
-
-            try
-            {
-                bool success = _cuisineService.Update(request);
-                if (success)
-                {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been updated!", 200));
-                }
-                else
-                {
-                    return ToJsonResponse(new ServerResponse(null,
-                        "Cuisine update failed. Cuisine not found or invalid data.", 404));
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CuisineController.Update: {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Cuisine update failed due to an internal error.", 500,
-                    ex.Message));
-            }
+            Console.WriteLine($"Error in CuisineController.GetByName('{name}'): {ex}");
+            return ToJsonResponse(new ServerResponse(null, "Failed to retrieve cuisine by name.", 500, ex.Message));
         }
+    }
 
-        public string DeleteById(int id)
+    public string Save(CreateCuisineRequest request)
+    {
+        if (request == null) return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
+
+        try
         {
-            try
-            {
-                bool success = _cuisineService.DeleteById(id);
-                if (success)
-                {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine has been deleted!", 200));
-                }
-                else
-                {
-                    return ToJsonResponse(new ServerResponse(null, "Cuisine deletion failed. Cuisine not found.", 404));
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in CuisineController.DeleteById({id}): {ex}");
-                return ToJsonResponse(new ServerResponse(null, "Cuisine deletion failed due to an internal error.", 500,
-                    ex.Message));
-            }
+            var success = _cuisineService.Save(request);
+            if (success) return ToJsonResponse(new ServerResponse(null, "Cuisine has been created!", 201));
+
+            return ToJsonResponse(new ServerResponse(null, "Cuisine creation failed.", 400));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in CuisineController.Save: {ex}");
+            return ToJsonResponse(new ServerResponse(null, "Cuisine creation failed due to an internal error.", 500,
+                ex.Message));
+        }
+    }
+
+    public string Update(UpdateCuisineRequest request)
+    {
+        if (request == null) return ToJsonResponse(new ServerResponse(null, "Invalid request body.", 400));
+
+        try
+        {
+            var success = _cuisineService.Update(request);
+            if (success) return ToJsonResponse(new ServerResponse(null, "Cuisine has been updated!", 200));
+
+            return ToJsonResponse(new ServerResponse(null,
+                "Cuisine update failed. Cuisine not found or invalid data.", 404));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in CuisineController.Update: {ex}");
+            return ToJsonResponse(new ServerResponse(null, "Cuisine update failed due to an internal error.", 500,
+                ex.Message));
+        }
+    }
+
+    public string DeleteById(int id)
+    {
+        try
+        {
+            var success = _cuisineService.DeleteById(id);
+            if (success) return ToJsonResponse(new ServerResponse(null, "Cuisine has been deleted!", 200));
+
+            return ToJsonResponse(new ServerResponse(null, "Cuisine deletion failed. Cuisine not found.", 404));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in CuisineController.DeleteById({id}): {ex}");
+            return ToJsonResponse(new ServerResponse(null, "Cuisine deletion failed due to an internal error.", 500,
+                ex.Message));
         }
     }
 }

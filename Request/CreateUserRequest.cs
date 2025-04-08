@@ -2,47 +2,46 @@
 
 using MessagePack;
 
-namespace RecipeNest.Request
+namespace RecipeNest.Request;
+
+[MessagePackObject]
+public class CreateUserRequest
 {
-    [MessagePackObject]
-    public class CreateUserRequest
+    public CreateUserRequest()
     {
-        [Key("first_name")] public string FirstName { get; set; }
+    }
 
-        [Key("last_name")] public string LastName { get; set; }
+    public CreateUserRequest(string firstName, string lastName, string phoneNumber, string email, string password,
+        int roleId, string? imageUrl, string? about)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        PhoneNumber = phoneNumber;
+        ImageUrl = imageUrl;
+        About = about;
+        Email = email;
+        Password = password;
+        RoleId = roleId;
+    }
 
-        [Key("phone_number")] public string PhoneNumber { get; set; }
+    [Key("first_name")] public string FirstName { get; set; }
 
-        [Key("image_url")] public string? ImageUrl { get; set; }
+    [Key("last_name")] public string LastName { get; set; }
 
-        [Key("about")] public string? About { get; set; }
+    [Key("phone_number")] public string PhoneNumber { get; set; }
 
-        [Key("email")] public string Email { get; set; }
+    [Key("image_url")] public string? ImageUrl { get; set; }
 
-        [Key("password")] public string Password { get; set; }
+    [Key("about")] public string? About { get; set; }
 
-        [Key("role_id")] public int RoleId { get; set; }
+    [Key("email")] public string Email { get; set; }
 
-        public CreateUserRequest()
-        {
-        }
+    [Key("password")] public string Password { get; set; }
 
-        public CreateUserRequest(string firstName, string lastName, string phoneNumber, string email, string password,
-            int roleId, string? imageUrl, string? about)
-        {
-            FirstName = firstName;
-            LastName = lastName;
-            PhoneNumber = phoneNumber;
-            ImageUrl = imageUrl;
-            About = about;
-            Email = email;
-            Password = password;
-            RoleId = roleId;
-        }
+    [Key("role_id")] public int RoleId { get; set; }
 
-        public override string ToString()
-        {
-            return $"CreateUserRequest: Name={FirstName} {LastName}, Email={Email}, RoleId={RoleId}";
-        }
+    public override string ToString()
+    {
+        return $"CreateUserRequest: Name={FirstName} {LastName}, Email={Email}, RoleId={RoleId}";
     }
 }

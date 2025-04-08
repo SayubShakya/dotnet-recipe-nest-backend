@@ -1,33 +1,31 @@
 ﻿// Cuisine.cs
 
-using System;
 using MessagePack;
 
-namespace RecipeNest.Model
+namespace RecipeNest.Model;
+
+[MessagePackObject]
+public class Cuisine
 {
-    [MessagePackObject]
-    public class Cuisine
+    public Cuisine()
     {
-        [Key("id")] public int Id { get; set; }
+    }
 
-        [Key("name")] public string Name { get; set; }
+    public Cuisine(int id, string name, string? imageUrl)
+    {
+        Id = id;
+        Name = name;
+        ImageUrl = imageUrl;
+    }
 
-        [Key("image_url")] public string? ImageUrl { get; set; }
+    [Key("id")] public int Id { get; set; }
 
-        public Cuisine()
-        {
-        }
+    [Key("name")] public string Name { get; set; }
 
-        public Cuisine(int id, string name, string? imageUrl)
-        {
-            Id = id;
-            Name = name;
-            ImageUrl = imageUrl;
-        }
+    [Key("image_url")] public string? ImageUrl { get; set; }
 
-        public override string ToString()
-        {
-            return $"Cuisine ID: {Id}, Name: {Name}, ImageUrl: {ImageUrl}";
-        }
+    public override string ToString()
+    {
+        return $"Cuisine ID: {Id}, Name: {Name}, ImageUrl: {ImageUrl}";
     }
 }

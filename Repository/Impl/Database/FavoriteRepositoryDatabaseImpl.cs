@@ -1,91 +1,86 @@
-﻿using System.Collections.Generic;
-using RecipeNest.Model;
+﻿using RecipeNest.Consta;
 using RecipeNest.Db;
-using RecipeNest.Consta;
 using RecipeNest.Db.Query.Impl;
-using System;
+using RecipeNest.Model;
 
-namespace RecipeNest.Repository.Impl.Database
+namespace RecipeNest.Repository.Impl.Database;
+
+public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
 {
-    public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
+    public bool Save(Favorite favorite)
     {
-        private static readonly DatabaseConnector databaseConnector = new DatabaseConnector();
+        if (favorite == null) return false;
 
-        public bool Save(Favorite favorite)
+        try
         {
-            if (favorite == null) return false;
-
-            try
+            var existing = GetByUserAndRecipe(favorite.UserId, favorite.RecipeId);
+            if (existing != null)
             {
-                var existing = GetByUserAndRecipe(favorite.UserId, favorite.RecipeId);
-                if (existing != null)
-                {
-                    Console.WriteLine(
-                        $"Favorite already exists for UserID: {favorite.UserId}, RecipeID: {favorite.RecipeId}");
-                    return false;
-                }
-
-                DatabaseConnector.Update(IQueryConstant.IFavorite.SAVE, favorite.UserId, favorite.RecipeId);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving favorite: {ex.Message}");
+                Console.WriteLine(
+                    $"Favorite already exists for UserID: {favorite.UserId}, RecipeID: {favorite.RecipeId}");
                 return false;
             }
+
+            DatabaseConnector.Update(IQueryConstant.IFavorite.SAVE, favorite.UserId, favorite.RecipeId);
+            return true;
         }
-
-
-        public Favorite GetByUserAndRecipe(int userId, int recipeId)
+        catch (Exception ex)
         {
-            try
-            {
-                return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GET_BY_ID, new FavoriteRowMapper(), userId,
-                    recipeId);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error getting favorite by user/recipe: {ex.Message}");
-                return null;
-            }
+            Console.WriteLine($"Error saving favorite: {ex.Message}");
+            return false;
         }
+    }
 
-        public bool DeleteByUserAndRecipe(int userId, int recipeId)
+
+    public Favorite GetByUserAndRecipe(int userId, int recipeId)
+    {
+        try
         {
-            try
-            {
-                return DatabaseConnector.Update(IQueryConstant.IFavorite.DELETE_BY_ID, userId, recipeId) > 0;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting favorite by user/recipe: {ex.Message}");
-                return false;
-            }
+            return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GET_BY_ID, new FavoriteRowMapper(), userId,
+                recipeId);
         }
-
-        public bool Update(Favorite obj)
+        catch (Exception ex)
         {
-            throw new NotImplementedException(
-                "Favorites are typically not updated directly, but deleted and re-added if necessary. Use specific methods.");
+            Console.WriteLine($"Error getting favorite by user/recipe: {ex.Message}");
+            return null;
         }
+    }
 
-        public Favorite GetById(int id)
+    public bool DeleteByUserAndRecipe(int userId, int recipeId)
+    {
+        try
         {
-            throw new NotImplementedException(
-                "Use GetByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
+            return DatabaseConnector.Update(IQueryConstant.IFavorite.DELETE_BY_ID, userId, recipeId) > 0;
         }
-
-
-        public List<Favorite> GetAll()
+        catch (Exception ex)
         {
-            throw new NotImplementedException(
-                "Use specific methods like GetByUserAndRecipe or potentially GetAllByUserId.");
+            Console.WriteLine($"Error deleting favorite by user/recipe: {ex.Message}");
+            return false;
         }
+    }
 
-        public bool DeleteById(int id)
-        {
-            throw new NotImplementedException(
-                "Use DeleteByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
-        }
+    public bool Update(Favorite obj)
+    {
+        throw new NotImplementedException(
+            "Favorites are typically not updated directly, but deleted and re-added if necessary. Use specific methods.");
+    }
+
+    public Favorite GetById(int id)
+    {
+        throw new NotImplementedException(
+            "Use GetByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
+    }
+
+
+    public List<Favorite> GetAll()
+    {
+        throw new NotImplementedException(
+            "Use specific methods like GetByUserAndRecipe or potentially GetAllByUserId.");
+    }
+
+    public bool DeleteById(int id)
+    {
+        throw new NotImplementedException(
+            "Use DeleteByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
     }
 }

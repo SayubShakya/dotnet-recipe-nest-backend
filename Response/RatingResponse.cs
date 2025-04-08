@@ -1,34 +1,33 @@
 ﻿using MessagePack;
 using RecipeNest.Model;
 
-namespace RecipeNest.Reponse
+namespace RecipeNest.Reponse;
+
+[MessagePackObject]
+public class RatingResponse
 {
-    [MessagePackObject]
-    public class RatingResponse
+    public RatingResponse()
     {
-        [Key("id")] public int Id { get; set; }
+    }
 
-        [Key("user_id")] public int UserId { get; set; }
+    public RatingResponse(int id, int userId, int recipeId, RatingScore score)
+    {
+        Id = id;
+        UserId = userId;
+        RecipeId = recipeId;
+        Score = score;
+    }
 
-        [Key("recipe_id")] public int RecipeId { get; set; }
+    [Key("id")] public int Id { get; set; }
 
-        [Key("rating")] public RatingScore Score { get; set; }
+    [Key("user_id")] public int UserId { get; set; }
 
-        public RatingResponse()
-        {
-        }
+    [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public RatingResponse(int id, int userId, int recipeId, RatingScore score)
-        {
-            Id = id;
-            UserId = userId;
-            RecipeId = recipeId;
-            Score = score;
-        }
+    [Key("rating")] public RatingScore Score { get; set; }
 
-        public override string ToString()
-        {
-            return $"RatingResponse: ID: {Id}, UserID: {UserId}, RecipeID: {RecipeId}, Score: {Score}";
-        }
+    public override string ToString()
+    {
+        return $"RatingResponse: ID: {Id}, UserID: {UserId}, RecipeID: {RecipeId}, Score: {Score}";
     }
 }

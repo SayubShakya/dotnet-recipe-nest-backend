@@ -1,33 +1,33 @@
 ﻿// Favorite.cs
 
 using MessagePack;
-using System; // Required for DateTime
 
-namespace RecipeNest.Model
+// Required for DateTime
+
+namespace RecipeNest.Model;
+
+[MessagePackObject]
+public class Favorite
 {
-    [MessagePackObject]
-    public class Favorite
+    public Favorite()
     {
-        [Key("id")] public int Id { get; set; }
+    }
 
-        [Key("recipe_id")] public int RecipeId { get; set; }
+    public Favorite(int id, int recipeId, int userId)
+    {
+        Id = id;
+        RecipeId = recipeId;
+        UserId = userId;
+    }
 
-        [Key("user_id")] public int UserId { get; set; }
+    [Key("id")] public int Id { get; set; }
 
-        public Favorite()
-        {
-        }
+    [Key("recipe_id")] public int RecipeId { get; set; }
 
-        public Favorite(int id, int recipeId, int userId)
-        {
-            Id = id;
-            RecipeId = recipeId;
-            UserId = userId;
-        }
+    [Key("user_id")] public int UserId { get; set; }
 
-        public override string ToString()
-        {
-            return $"Favorite ID: {Id}, User ID: {UserId}, Recipe ID: {RecipeId}";
-        }
+    public override string ToString()
+    {
+        return $"Favorite ID: {Id}, User ID: {UserId}, Recipe ID: {RecipeId}";
     }
 }

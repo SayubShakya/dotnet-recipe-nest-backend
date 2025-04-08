@@ -1,9 +1,8 @@
-namespace RecipeNest.Util
-{
-    public interface IHashingUtil
-    {
-        String Hash(String input);
+namespace RecipeNest.Util;
 
-        bool Verify(String hash, String input);
-    }
+public interface IHashingUtil
+{
+    string Hash(string input);
+
+    bool Verify(string hash, string input);
 }

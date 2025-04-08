@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using RecipeNest.Model;
+﻿using RecipeNest.Model;
 
-namespace RecipeNest.Repository
+namespace RecipeNest.Repository;
+
+public interface IRatingRepository : IBaseRepository<Rating>
 {
-    public interface IRatingRepository : IBaseRepository<Rating>
-    {
-        Rating GetByUserAndRecipe(int userId, int recipeId);
-        bool DeleteByUserAndRecipe(int userId, int recipeId);
-    }
+    Rating GetByUserAndRecipe(int userId, int recipeId);
+    bool DeleteByUserAndRecipe(int userId, int recipeId);
 }

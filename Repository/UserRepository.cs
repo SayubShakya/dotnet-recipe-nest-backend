@@ -1,10 +1,8 @@
 ﻿using RecipeNest.Model;
 
+namespace RecipeNest.Repository;
 
-namespace RecipeNest.Repository
+public interface IUserRepository : IBaseRepository<User>
 {
-    public interface IUserRepository : IBaseRepository<User>
-    {
-        User? GetByEmail(string email);
-    }
+    User? GetByEmail(string email);
 }
