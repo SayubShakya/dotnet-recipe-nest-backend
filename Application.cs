@@ -21,7 +21,6 @@ internal class Application
         };
 
 
-        // Register all types in this assembly
         builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
             .Where(t =>
             {

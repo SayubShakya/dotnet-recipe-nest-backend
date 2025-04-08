@@ -3,14 +3,18 @@
 using RecipeNest.Consta;
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl;
+using RecipeNest.Dto;
 using RecipeNest.Model;
 
 namespace RecipeNest.Repository.Impl.Database;
 
 public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 {
-    private readonly DatabaseConnector databaseConnector = new();
 
+    public Paged<Recipe> GetAllPaginated(int start, int limit)
+    {
+        return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, IQueryConstant.IRecipe.ALL_ACTIVE_COUNT, start, limit, new RecipeRowMapper());
+    }
     public bool DeleteById(int id)
     {
         var recipe = GetById(id);
@@ -22,7 +26,7 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 
     public List<Recipe> GetAll()
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GET_ALL, new RecipeRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, new RecipeRowMapper());
     }
 
     public Recipe GetById(int id)

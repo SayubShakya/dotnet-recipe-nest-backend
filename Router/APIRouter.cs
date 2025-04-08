@@ -68,11 +68,14 @@ public class APIRouter
 
     public string Role(string path, HttpListenerRequest request)
     {
-        Console.WriteLine("requesting path: " + path);
+        Console.WriteLine("Role requesting path: " + path);
 
-        if (Regex.IsMatch(path, @"^/roles/?$"))
+        if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
         {
-            if (request.HttpMethod.Equals("GET")) return roleController.GetAll();
+            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
+            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
+            
+            if (request.HttpMethod.Equals("GET")) return roleController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
                 return roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
@@ -82,7 +85,7 @@ public class APIRouter
         }
         else if (Regex.IsMatch(path, @"^/roles\?id=\d+$"))
         {
-            var id = Convert.ToInt32(request.QueryString["id"]);
+            int id = int.Parse(request.QueryString["id"]!);
 
             if (request.HttpMethod.Equals("GET")) return roleController.GetById(id);
 
@@ -94,11 +97,14 @@ public class APIRouter
 
     public string User(string path, HttpListenerRequest request)
     {
-        Console.WriteLine("requesting path: " + path);
+        Console.WriteLine("User requesting path: " + path);
 
-        if (Regex.IsMatch(path, @"^/users/?$"))
+        if (Regex.IsMatch(path, @"^/users/?(?:\?.*)?"))
         {
-            if (request.HttpMethod.Equals("GET")) return userController.GetAll();
+            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
+            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
+            
+            if (request.HttpMethod.Equals("GET")) return userController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
                 return userController.Save(BaseController.JsonRequestBody<CreateUserRequest>(request));
@@ -108,7 +114,7 @@ public class APIRouter
         }
         else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
         {
-            var id = Convert.ToInt32(request.QueryString["id"]);
+            int id = int.Parse(request.QueryString["id"]!);
 
             if (request.HttpMethod.Equals("GET")) return userController.GetById(id);
 
@@ -169,9 +175,12 @@ public class APIRouter
     {
         Console.WriteLine("Recipe path check: " + path);
 
-        if (Regex.IsMatch(path, @"^/recipes/?$"))
+        if (Regex.IsMatch(path, @"^/recipes/?(?:\?.*)?$"))
         {
-            if (request.HttpMethod.Equals("GET")) return recipeController.GetAll();
+            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
+            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
+        
+            if (request.HttpMethod.Equals("GET")) return recipeController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
                 return recipeController.Save(BaseController.JsonRequestBody<CreateRecipeRequest>(request));
@@ -179,20 +188,14 @@ public class APIRouter
             if (request.HttpMethod.Equals("PUT"))
                 return recipeController.Update(BaseController.JsonRequestBody<UpdateRecipeRequest>(request));
         }
-        else if (Regex.IsMatch(path, @"^/recipes\?id=\d+$"))
+        else if (Regex.IsMatch(path, @"^/recipes\?id=\d+(?:&.*)?$"))
         {
-            if (request.QueryString["id"] != null && int.TryParse(request.QueryString["id"], out var id))
-            {
-                if (request.HttpMethod.Equals("GET")) return recipeController.GetById(id);
+            int id = int.Parse(request.QueryString["id"]!);
+            if (request.HttpMethod.Equals("GET")) return recipeController.GetById(id);
 
-                if (request.HttpMethod.Equals("DELETE")) return recipeController.DeleteById(id);
-            }
-            else
-            {
-                Console.WriteLine("Failed to parse ID from query string: " + request.QueryString["id"]);
-            }
+            if (request.HttpMethod.Equals("DELETE")) return recipeController.DeleteById(id);
         }
-        else if (Regex.IsMatch(path, @"^/recipes\?title=.+$"))
+        else if (Regex.IsMatch(path, @"^/recipes\?title=[^&]+(?:&.*)?$"))
         {
             var title = request.QueryString["title"];
             if (title != null && request.HttpMethod.Equals("GET"))

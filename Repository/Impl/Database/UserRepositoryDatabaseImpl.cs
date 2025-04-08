@@ -3,12 +3,18 @@
 using RecipeNest.Consta;
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl;
+using RecipeNest.Dto;
 using RecipeNest.Model;
 
 namespace RecipeNest.Repository.Impl.Database;
 
 public class UserRepositoryDatabaseImpl : IUserRepository
 {
+    
+    public Paged<User> GetAllPaginated(int start, int limit)
+    {
+        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, IQueryConstant.IUser.ALL_ACTIVE_COUNT, start, limit, new UserRowMapper());
+    }
 
     public bool DeleteById(int id)
     {
@@ -21,7 +27,7 @@ public class UserRepositoryDatabaseImpl : IUserRepository
 
     public List<User> GetAll()
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GET_ALL, new UserRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, new UserRowMapper());
     }
 
 

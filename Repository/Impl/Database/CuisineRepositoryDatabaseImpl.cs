@@ -6,17 +6,12 @@ using RecipeNest.Db.Query.Impl;
 using RecipeNest.Dto;
 using RecipeNest.Model;
 
-// For IQueryConstant
-// For DatabaseConnector
-// For CuisineRowMapper
-// For Cuisine model
-
 namespace RecipeNest.Repository.Impl.Database;
 
 public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 {
 
-    public  Paged<Cuisine> GetAllPaginated(int start, int limit)
+    public Paged<Cuisine> GetAllPaginated(int start, int limit)
     {
         return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, IQueryConstant.ICuisine.ALL_ACTIVE_COUNT, start, limit, new CuisineRowMapper());
     }

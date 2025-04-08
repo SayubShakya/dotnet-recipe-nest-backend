@@ -1,9 +1,11 @@
 ﻿// UserService.cs
 
+using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Repository;
 using RecipeNest.Request;
+using RecipeNest.Response;
 using RecipeNest.Util;
 
 namespace RecipeNest.Service;
@@ -18,13 +20,12 @@ public class UserService
         _userRepository = userRepository;
         _hashingUtil = hashingUtil;
     }
-
-    public List<UserResponse> GetAll()
+    
+    public PaginatedResponse<UserResponse> GetAll(int start, int limit)
     {
-        List<User> users = _userRepository.GetAll();
-        List<UserResponse> userResponses = [];
-        foreach (var user in users)
-            userResponses.Add(new UserResponse(
+        Paged<User> pagedUsers = _userRepository.GetAllPaginated(start, limit);
+        
+        List<UserResponse> items =  pagedUsers.Items.Select(user => new UserResponse(
                 user.Id,
                 user.FirstName,
                 user.LastName,
@@ -33,9 +34,17 @@ public class UserService
                 user.About,
                 user.Email,
                 user.RoleId
-            ));
+        )).ToList();
 
-        return userResponses;
+        PaginatedResponse<UserResponse> paginatedResponse = new()
+        {
+            Items = items,
+            Count = pagedUsers.Count,
+            Limit = pagedUsers.Limit,
+            Start = pagedUsers.Start
+        };
+
+        return paginatedResponse;
     }
 
     public UserResponse GetById(int id)

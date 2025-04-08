@@ -3,13 +3,18 @@
 using RecipeNest.Consta;
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl;
+using RecipeNest.Dto;
 using RecipeNest.Model;
 
 namespace RecipeNest.Repository.Impl.Database;
 
 public class RoleRepositoryDatabaseImpl : IRoleRepository
 {
-
+    
+    public Paged<Role> GetAllPaginated(int start, int limit)
+    {
+        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, IQueryConstant.IRole.ALL_ACTIVE_COUNT, start, limit, new RoleRowMapper());
+    }
     public bool DeleteById(int id)
     {
         var role = GetById(id);
@@ -18,18 +23,16 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
         DatabaseConnector.Update(IQueryConstant.IRole.DELETE_BY_ID, id);
         return true;
     }
-
+    
     public List<Role> GetAll()
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL, new RoleRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, new RoleRowMapper());
     }
 
     public Role GetById(int id)
     {
         Role role;
-
         role = DatabaseConnector.QueryOne(IQueryConstant.IRole.GET_BY_ID, new RoleRowMapper(), id);
-
         return role;
     }
 

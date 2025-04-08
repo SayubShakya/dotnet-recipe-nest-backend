@@ -1,9 +1,11 @@
 ﻿// Service/RecipeService.cs
 
+using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Repository;
 using RecipeNest.Request;
+using RecipeNest.Response;
 
 namespace RecipeNest.Service;
 
@@ -15,11 +17,12 @@ public class RecipeService
     {
         _recipeRepository = recipeRepository;
     }
-
-    public List<RecipeResponse> GetAll()
+    
+    public PaginatedResponse<RecipeResponse> GetAll(int start, int limit)
     {
-        List<Recipe> recipes = _recipeRepository.GetAll();
-        return recipes.Select(recipe => new RecipeResponse(
+        Paged<Recipe> pagedRecipes = _recipeRepository.GetAllPaginated(start, limit);
+        
+        List<RecipeResponse> items =  pagedRecipes.Items.Select(recipe => new RecipeResponse(
             recipe.Id,
             recipe.ImageUrl,
             recipe.Title,
@@ -29,8 +32,18 @@ public class RecipeService
             recipe.RecipeByUserId,
             recipe.CuisineId
         )).ToList();
-    }
 
+        PaginatedResponse<RecipeResponse> paginatedResponse = new()
+        {
+            Items = items,
+            Count = pagedRecipes.Count,
+            Limit = pagedRecipes.Limit,
+            Start = pagedRecipes.Start
+        };
+
+        return paginatedResponse;
+    }
+    
     public RecipeResponse? GetById(int id)
     {
         var recipe = _recipeRepository.GetById(id);

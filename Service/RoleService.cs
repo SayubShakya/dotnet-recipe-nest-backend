@@ -1,28 +1,41 @@
 // RoleService.cs
 
+using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Reponse;
 using RecipeNest.Repository;
 using RecipeNest.Request;
+using RecipeNest.Response;
 
 namespace RecipeNest.Service;
 
 public class RoleService
 {
     private readonly IRoleRepository _roleRepository;
-
     public RoleService(IRoleRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }
-
-    public List<RoleResponse> GetAll()
+    
+    
+    public PaginatedResponse<RoleResponse> GetAll(int start, int limit)
     {
-        List<Role> roles = _roleRepository.GetAll();
-        List<RoleResponse> roleResponses = [];
-        foreach (var role in roles) roleResponses.Add(new RoleResponse(role.Id, role.Name));
+        Paged<Role> pagedRoles = _roleRepository.GetAllPaginated(start, limit);
+        
+        List<RoleResponse> items =  pagedRoles.Items.Select(role => new RoleResponse(
+            role.Id,
+            role.Name
+        )).ToList();
 
-        return roleResponses;
+        PaginatedResponse<RoleResponse> paginatedResponse = new()
+        {
+            Items = items,
+            Count = pagedRoles.Count,
+            Limit = pagedRoles.Limit,
+            Start = pagedRoles.Start
+        };
+
+        return paginatedResponse;
     }
 
     public RoleResponse GetById(int id)
