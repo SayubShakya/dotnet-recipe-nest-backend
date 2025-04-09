@@ -18,6 +18,9 @@
 --
 -- Table structure for table `cuisines`
 --
+DROP DATABASE recipe_nest;
+CREATE DATABASE recipe_nest;
+USE recipe_nest;
 
 DROP TABLE IF EXISTS `cuisines`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
