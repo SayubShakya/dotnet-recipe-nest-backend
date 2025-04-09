@@ -76,7 +76,7 @@ public interface IQueryConstant
         
         
         public const string GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE =
-            "SELECT * FROM recipes r LEFT JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 ORDER BY created_date";  
+            "SELECT * FROM recipes r LEFT JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 ORDER BY r.created_date";  
         
         public const string ALL_ACTIVE_COUNT =
             "SELECT count(*) as count FROM recipes WHERE is_active=1";

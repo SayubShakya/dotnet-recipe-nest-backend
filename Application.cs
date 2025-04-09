@@ -1,13 +1,21 @@
 ﻿using System.Net;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using Autofac;
+using RecipeNest.Dto;
+using RecipeNest.Repository.Impl.Database;
 using RecipeNest.Router;
+using RecipeNest.Util.Impl;
 
 internal class Application
 {
     private static void Main()
     {
+        Console.WriteLine(TokenUtil.GenerateToken("sah@gmail.com"));
+
+        Console.WriteLine(new BcryptUtil().Hash("123123123"));
+
         var builder = new ContainerBuilder();
 
         var dependencyPath = new List<string>
@@ -39,7 +47,10 @@ internal class Application
             })
             .AsImplementedInterfaces()
             .AsSelf();
-
+        
+        // Register your services with InstancePerRequest
+        builder.RegisterType<SessionUserDTO>();
+        
         var container = builder.Build();
         var router = container.Resolve<APIRouter>();
 
@@ -52,29 +63,50 @@ internal class Application
         listener.Start();
 
         Console.WriteLine("Listening on " + url);
+        
 
         while (true)
             try
             {
-                Console.WriteLine(
-                    $"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Thread.CurrentThread.ManagedThreadId}");
-                var context = listener.GetContext();
-
-                ThreadPool.QueueUserWorkItem(state =>
+                using (var scope = container.BeginLifetimeScope())
                 {
-                    HttpListenerResponse? response = null;
-
+                   var sessionUserDto =  scope.Resolve<SessionUserDTO>();
                     Console.WriteLine(
                         $"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Thread.CurrentThread.ManagedThreadId}");
+                    
+                    var context = listener.GetContext();
 
-                    var context = (HttpListenerContext)state;
-                    var request = context.Request;
-                    response = context.Response;
+                    ThreadPool.QueueUserWorkItem(state =>
+                    {
+                        HttpListenerResponse? response = null;
 
-                    var responseString = router.Route(request);
+                        Console.WriteLine(
+                            $"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Thread.CurrentThread.ManagedThreadId}");
 
-                    ResponseBuilder(response, responseString);
-                }, context);
+                        var context = (HttpListenerContext)state;
+                        var request = context.Request;
+                        response = context.Response;
+                        
+
+                        string? token = request.Headers["Authorization"];
+
+                        if (token != null)
+                        {
+                            ClaimsPrincipal claimsPrincipal = TokenUtil.ValidateToken(token);
+
+                            var email = claimsPrincipal.Claims.Where(x => x.Type == "_email").FirstOrDefault().Value;
+                            var userRespository = container.Resolve<UserRepositoryDatabaseImpl>();
+                            sessionUserDto.User = userRespository.GetByEmail(email);
+                            sessionUserDto.Authenticated = true;
+                        }
+
+
+                        var responseString = router.Route(request);
+                        
+
+                        ResponseBuilder(response, responseString);
+                    }, context);
+                }
             }
             catch (Exception e)
             {

@@ -1,10 +1,14 @@
 //APIRouter.cs
 
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using RecipeNest.Controller;
+using RecipeNest.Dto;
 using RecipeNest.Reponse;
 using RecipeNest.Request;
+using RecipeNest.Util.Impl;
 
 namespace RecipeNest.Router;
 
@@ -16,6 +20,8 @@ public class APIRouter
     private readonly RecipeController recipeController;
     private readonly RoleController roleController;
     private readonly UserController userController;
+    private readonly AuthController authController;
+    private readonly SessionUserDTO sessionUserDto;
 
     private static readonly string defaultLimit = "10";
     private static readonly string defaultStart = "1";
@@ -23,7 +29,7 @@ public class APIRouter
 
     public APIRouter(RoleController roleController, UserController userController,
         CuisineController cuisineController, RecipeController recipeController,
-        FavoriteController favoriteController, RatingController ratingController)
+        FavoriteController favoriteController, RatingController ratingController, AuthController authController, SessionUserDTO sessionUserDto)
     {
         this.roleController = roleController;
         this.userController = userController;
@@ -31,6 +37,8 @@ public class APIRouter
         this.recipeController = recipeController;
         this.favoriteController = favoriteController;
         this.ratingController = ratingController;
+        this.authController = authController;
+        this.sessionUserDto = sessionUserDto;
     }
 
     public string Route(HttpListenerRequest request)
@@ -43,18 +51,30 @@ public class APIRouter
             if (path.StartsWith("/api/rest/"))
             {
                 path = path.Replace("/api/rest", "");
+                
+                
+                if (path.Contains("/auth")) return Auth(path, request);
 
-                if (path.Contains("/roles")) return Role(path, request);
+                if (sessionUserDto.Authenticated)
+                {
+                    
+                    if (path.Contains("/roles")) return Role(path, request);
 
-                if (path.Contains("/users")) return User(path, request);
+                    if (path.Contains("/users")) return User(path, request);
 
-                if (path.Contains("/cuisines")) return Cuisine(path, request);
+                    if (path.Contains("/cuisines")) return Cuisine(path, request);
 
-                if (path.Contains("/recipes")) return Recipe(path, request);
+                    if (path.Contains("/recipes")) return Recipe(path, request);
 
-                if (path.Contains("/favorites")) return Favorite(path, request);
+                    if (path.Contains("/favorites")) return Favorite(path, request);
 
-                if (path.Contains("/ratings")) return Rating(path, request);
+                    if (path.Contains("/ratings")) return Rating(path, request);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+                
             }
 
             return NotFound();
@@ -66,6 +86,18 @@ public class APIRouter
         }
     }
 
+    public string Auth(string path, HttpListenerRequest request)
+    {
+        Console.WriteLine("Role requesting path: " + path);
+
+        if (Regex.IsMatch(path, @"^/auth/login(?:&.*)?$"))
+        {
+            if (request.HttpMethod.Equals("POST")) return authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
+        }
+
+        return NotFound();
+    }
+    
     public string Role(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Role requesting path: " + path);
@@ -266,5 +298,11 @@ public class APIRouter
     {
         Console.WriteLine("Returning 404 Not Found");
         return BaseController.ToJsonResponse(new ServerResponse(null, "404 Not Found", 404));
+    }
+    
+    public string Unauthorized()
+    {
+        Console.WriteLine("Returning 401 Not Found");
+        return BaseController.ToJsonResponse(new ServerResponse(null, "401 Unauthorized", 401));
     }
 }
