@@ -15,53 +15,46 @@ public class RecipeController : BaseController
         _recipeService = recipeService;
     }
 
-    public string GetAll(int start, int limit)
+    public ServerResponse GetAll(int start, int limit)
     {
         try
         {
             PaginatedResponse<RecipeResponse> response = _recipeService.GetAll(start, limit);
-            ServerResponse serverResponse = new ServerResponse(response, null, 200);
-            return ToJsonResponse(serverResponse);
+            return new ServerResponse(response, null, 200);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error in RecipeController.GetAll: {ex}");
-            return ToJsonResponse(new ServerResponse(null, "Failed to retrieve recipe.", 500, ex.Message));
+            return new ServerResponse(null, "Failed to retrieve recipe.", 500, ex.Message);
         }
     }
 
-    public string GetById(int id)
+    public ServerResponse GetById(int id)
     {
-        var serverResponse = new ServerResponse(_recipeService.GetById(id), "Recipe found!", 200);
-        return ToJsonResponse(serverResponse);
+        return new ServerResponse(_recipeService.GetById(id), "Recipe found!", 200);
+    }
+    
+    public ServerResponse GetByTitle(string title)
+    {
+        return new ServerResponse(_recipeService.GetByTitle(title), "Recipe found by title!", 200);
     }
 
-    public string GetByTitle(string title)
-    {
-        var serverResponse =
-            new ServerResponse(_recipeService.GetByTitle(title), "Recipe found by title!", 200);
-        return ToJsonResponse(serverResponse);
-    }
-
-    public string Save(CreateRecipeRequest request)
+    public ServerResponse Save(CreateRecipeRequest request)
     {
         var success = _recipeService.Save(request);
-        if (success) return ToJsonResponse(new ServerResponse(null, "Recipe has been created!", 201));
-
-        return ToJsonResponse(new ServerResponse(null, "Recipe creation failed!", 400));
+        if (success) return new ServerResponse(null, "Recipe has been created!", 201);
+        return new ServerResponse(null, "Recipe creation failed!", 400);
     }
 
-    public string Update(UpdateRecipeRequest request)
+    public ServerResponse Update(UpdateRecipeRequest request)
     {
         var success = _recipeService.Update(request);
-        if (success) return ToJsonResponse(new ServerResponse(null, "Recipe has been updated!", 200));
-
-        return ToJsonResponse(new ServerResponse(null, "Recipe update failed!", 400));
+        if (success) return new ServerResponse(null, "Recipe has been updated!", 200);
+        return new ServerResponse(null, "Recipe update failed!", 400);
     }
 
-    public string DeleteById(int id)
+    public ServerResponse DeleteById(int id)
     {
-        var serverRespose = new ServerResponse(_recipeService.DeleteById(id), "Recipe deleted!", 200);
-        return ToJsonResponse(serverRespose);
+        return new ServerResponse(_recipeService.DeleteById(id), "Recipe deleted!", 200);
     }
 }

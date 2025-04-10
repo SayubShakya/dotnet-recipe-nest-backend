@@ -31,9 +31,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
 
     public Role GetById(int id)
     {
-        Role role;
-        role = DatabaseConnector.QueryOne(IQueryConstant.IRole.GetById, new RoleRowMapper(), id);
-        return role;
+        return DatabaseConnector.QueryOne(IQueryConstant.IRole.GetById, new RoleRowMapper(), id);;
     }
 
     public bool Save(Role role)

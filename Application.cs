@@ -119,14 +119,14 @@ internal class Application
                 User user = userRepository.GetByEmail(claimsMap["_email"]);
                 sessionUserDto.User = user;
                 sessionUserDto.Authenticated = true;
-                var responseString = router.Route(request);
+                ServerResponse serverResponse =  router.Route(request);
 
-                ResponseBuilder(response, responseString);
+                ResponseBuilder(response, serverResponse);
             }
             else
             {
-                var responseString = router.Route(request);
-                ResponseBuilder(response, responseString);
+                ServerResponse serverResponse = router.Route(request);
+                ResponseBuilder(response, serverResponse);
             }
         }
         catch (Exception e)

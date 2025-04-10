@@ -33,16 +33,12 @@ public class UserRepositoryDatabaseImpl : IUserRepository
 
     public User GetByEmail(string email)
     {
-        User user;
-        user = DatabaseConnector.QueryOne(IQueryConstant.IUser.GET_BY_EMAIL, new UserRowMapper(), email);
-        return user;
+        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GET_BY_EMAIL, new UserRowMapper(), email);
     }
 
     public User GetById(int id)
     {
-        User user;
-        user = DatabaseConnector.QueryOne(IQueryConstant.IUser.GET_BY_ID, new UserRowMapper(), id);
-        return user;
+        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GET_BY_ID, new UserRowMapper(), id);
     }
 
     public bool Save(User user)

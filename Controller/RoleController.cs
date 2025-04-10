@@ -1,5 +1,6 @@
 // RoleController.cs
 
+using RecipeNest.CustomExceptionl;
 using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Service;
@@ -14,47 +15,35 @@ public class RoleController : BaseController
     {
         _roleService = roleService;
     }
-    
-    public string GetAll(int start, int limit)
+
+    public ServerResponse GetAll(int start, int limit)
     {
-        try
-        {
-            PaginatedResponse<RoleResponse> response = _roleService.GetAll(start, limit);
-            ServerResponse serverResponse = new ServerResponse(response, null, 200);
-            return ToJsonResponse(serverResponse);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error in RoleController.GetAll: {ex}");
-            return ToJsonResponse(new ServerResponse(null, "Failed to retrieve roles.", 500, ex.Message));
-        }
+        PaginatedResponse<RoleResponse> response = _roleService.GetAll(start, limit);
+        ServerResponse serverResponse = new ServerResponse(response, null, 200);
+        return serverResponse;
     }
 
-    public string GetById(int id)
+    public ServerResponse GetById(int id)
     {
-        var serverRespose = new ServerResponse(_roleService.GetById(id), "Role found!", 200);
-        return ToJsonResponse(serverRespose);
+        return new ServerResponse(_roleService.GetById(id), "Role found!", 200);
     }
 
-    public string Save(CreateRoleRequest request)
+    public ServerResponse Save(CreateRoleRequest request)
     {
         var success = _roleService.Save(request);
-        if (success) return ToJsonResponse(new ServerResponse(null, "Role has been created!", 201));
-
-        return ToJsonResponse(new ServerResponse(null, "Role creation failed!", 400));
+        if (success) return new ServerResponse(null, "Role has been created!", 201);
+        throw new ApplicationExceptionCustomeException(500, "Failed to save role!", null);
     }
 
-    public string Update(UpdateRoleRequest request)
+    public ServerResponse Update(UpdateRoleRequest request)
     {
         var success = _roleService.Update(request);
-        if (success) return ToJsonResponse(new ServerResponse(null, "Role has been updated!", 200));
-
-        return ToJsonResponse(new ServerResponse(null, "Role has update failed!", 400));
+        if (success) return new ServerResponse(null, "Role has been updated!", 200);
+        throw new ApplicationExceptionCustomeException(500, "Failed to update role!", null);
     }
 
-    public string DeleteById(int id)
+    public ServerResponse DeleteById(int id)
     {
-        var serverRespose = new ServerResponse(_roleService.DeleteById(id), "Role deleted!", 200);
-        return ToJsonResponse(serverRespose);
+        return new ServerResponse(_roleService.DeleteById(id), "Role deleted!", 200);
     }
 }

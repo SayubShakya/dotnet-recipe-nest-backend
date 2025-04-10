@@ -44,7 +44,7 @@ public class APIRouter
     private static readonly string defaultLimit = "10";
     private static readonly string defaultStart = "1";
     
-    public string Route(HttpListenerRequest request)
+    public ServerResponse Route(HttpListenerRequest request)
     {
         try
         {
@@ -76,21 +76,20 @@ public class APIRouter
                 }
                 else
                 {
-                    return Unauthorized();
+                    return ResponseUtil.Unauthorized();
                 }
                 
             }
 
-            return NotFound();
+            return ResponseUtil.NotFound();
         }
         catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return BaseController.ToJsonResponse(new ServerResponse(null, "Internal Server Error", 500, e.Message));
-        }
+    {
+        Console.WriteLine(e);
+        return new ServerResponse(null, "Internal Server Error", 500, e.Message);
     }
-
-    public string Auth(string path, HttpListenerRequest request)
+}
+    public ServerResponse Auth(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Role requesting path: " + path);
 
@@ -99,10 +98,10 @@ public class APIRouter
             if (request.HttpMethod.Equals("POST")) return _authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
         }
 
-        return NotFound();
+        return ResponseUtil.NotFound();
     }
     
-    public string Role(string path, HttpListenerRequest request)
+    public ServerResponse Role(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Role requesting path: " + path);
 
@@ -128,10 +127,10 @@ public class APIRouter
             if (request.HttpMethod.Equals("DELETE")) return _roleController.DeleteById(id);
         }
 
-        return NotFound();
+        return ResponseUtil.NotFound();
     }
 
-    public string User(string path, HttpListenerRequest request)
+    public ServerResponse User(string path, HttpListenerRequest request)
     {
         Console.WriteLine("User requesting path: " + path);
 
@@ -162,11 +161,11 @@ public class APIRouter
             if (request.HttpMethod.Equals("GET")) return _userController.GetByEmail(email);
         }
 
-        return NotFound();
+        return ResponseUtil.NotFound();
     }
 
 
-    public string Cuisine(string path, HttpListenerRequest request)
+    public ServerResponse Cuisine(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Cuisine path check: " + path);
 
@@ -201,11 +200,11 @@ public class APIRouter
             }
         }
 
-        return NotFound();
+        return ResponseUtil.NotFound();
     }
 
 
-    public string Recipe(string path, HttpListenerRequest request)
+    public ServerResponse Recipe(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Recipe path check: " + path);
 
@@ -238,11 +237,11 @@ public class APIRouter
             }
         }
 
-        return NotFound();
+        return ResponseUtil.NotFound();
     }
 
 
-    public string Favorite(string path, HttpListenerRequest request)
+    public ServerResponse Favorite(string path, HttpListenerRequest request)
     {
         Console.WriteLine("requesting Favorite path: " + path);
         if (Regex.IsMatch(path, @"^/favorites/?$"))
@@ -259,11 +258,11 @@ public class APIRouter
             if (request.HttpMethod.Equals("DELETE")) return _favoriteController.DeleteByUserAndRecipe(userId, recipeId);
         }
 
-        return NotFound();
+        return ResponseUtil.NotFound();
     }
 
 
-    public string Rating(string path, HttpListenerRequest request)
+    public ServerResponse Rating(string path, HttpListenerRequest request)
     {
         Console.WriteLine("requesting Rating path: " + path);
 

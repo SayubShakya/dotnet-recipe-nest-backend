@@ -32,16 +32,12 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 
     public Cuisine GetById(int id)
     {
-        Cuisine cuisine;
-        cuisine = DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_ID, new CuisineRowMapper(), id);
-        return cuisine;
+        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_ID, new CuisineRowMapper(), id);
     }
 
     public Cuisine GetByName(string name)
     {
-        Cuisine cuisine;
-        cuisine = DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_NAME, new CuisineRowMapper(), name);
-        return cuisine;
+        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_NAME, new CuisineRowMapper(), name);;
     }
 
 

@@ -67,10 +67,7 @@ public interface IQueryConstant
             "UPDATE recipes SET image_url=@param1, title=@param2, description=@param3, recipe=@param4, ingredients=@param5, recipe_by=@param6, cuisine=@param7 WHERE is_active=1 AND id=@param8";
 
         public const string GET_BY_ID = "SELECT * FROM recipes WHERE id=@param1 AND is_active=1";
-
-
-        /*public const string GET_ALL =
-    "SELECT * FROM recipes r LEFT JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1";*/
+        
 
         public const string GET_ALL_FAVORITES =
             "SELECT * FROM recipes r INNER JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 AND f.user_id=@param1";
