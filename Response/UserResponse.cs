@@ -2,7 +2,7 @@
 
 using MessagePack;
 
-namespace RecipeNest.Reponse;
+namespace RecipeNest.Response;
 
 [MessagePackObject]
 public class UserResponse

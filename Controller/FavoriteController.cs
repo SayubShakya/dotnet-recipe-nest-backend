@@ -1,4 +1,4 @@
-﻿using RecipeNest.Reponse;
+﻿using RecipeNest.Response;
 using RecipeNest.Request;
 using RecipeNest.Service;
 

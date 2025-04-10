@@ -2,7 +2,7 @@
 
 using MessagePack;
 
-namespace RecipeNest.Reponse;
+namespace RecipeNest.Response;
 
 [MessagePackObject]
 public class FavoriteResponse
@@ -23,9 +23,4 @@ public class FavoriteResponse
     [Key("user_id")] public int UserId { get; set; }
 
     [Key("recipe_id")] public int RecipeId { get; set; }
-
-    public override string ToString()
-    {
-        return $"FavoriteResponse: ID: {Id}, User ID: {UserId}, Recipe ID: {RecipeId}";
-    }
 }

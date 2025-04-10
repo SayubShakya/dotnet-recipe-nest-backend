@@ -1,5 +1,5 @@
 ﻿using RecipeNest.Model;
-using RecipeNest.Reponse;
+using RecipeNest.Response;
 using RecipeNest.Repository;
 using RecipeNest.Request;
 

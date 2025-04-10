@@ -21,9 +21,4 @@ public class CuisineResponse
     [Key("name")] public string Name { get; set; }
 
     [Key("image_url")] public string? ImageUrl { get; set; }
-
-    public override string ToString()
-    {
-        return $"CuisineResponse(Id={Id}, Name='{Name}', ImageUrl='{ImageUrl}";
-    }
 }

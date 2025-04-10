@@ -2,7 +2,7 @@
 
 using MessagePack;
 
-namespace RecipeNest.Reponse;
+namespace RecipeNest.Response;
 
 [MessagePackObject]
 public class ServerResponse
@@ -11,7 +11,7 @@ public class ServerResponse
     {
     }
 
-    public ServerResponse(object? objectz = null, string? msg = "Internal Server Error", int? statusCode = 500,
+    public ServerResponse(object? objectz = null, string? msg = "Internal Server Error", int statusCode = 500,
         string? detail = "")
     {
         Object = objectz;
@@ -26,5 +26,5 @@ public class ServerResponse
 
     [Key("detail")] public string? Detail { get; set; }
 
-    [Key("statusCode")] [IgnoreMember] public int? StatusCode { get; set; }
+    [Key("statusCode")] public int StatusCode { get; set; }
 }

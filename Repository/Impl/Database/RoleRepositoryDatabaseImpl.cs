@@ -32,7 +32,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
     public Role GetById(int id)
     {
         Role role;
-        role = DatabaseConnector.QueryOne(IQueryConstant.IRole.GET_BY_ID, new RoleRowMapper(), id);
+        role = DatabaseConnector.QueryOne(IQueryConstant.IRole.GetById, new RoleRowMapper(), id);
         return role;
     }
 
@@ -40,7 +40,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
     {
         if (role == null) return false;
 
-        DatabaseConnector.Update(IQueryConstant.IRole.SAVE, role.Name);
+        DatabaseConnector.Update(IQueryConstant.IRole.Save, role.Name);
         return true;
     }
 
@@ -48,7 +48,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
     {
         if (role == null) return false;
 
-        DatabaseConnector.Update(IQueryConstant.IRole.UPDATE, role.Name, role.Id);
+        DatabaseConnector.Update(IQueryConstant.IRole.Update, role.Name, role.Id);
         return true;
     }
 }

@@ -2,7 +2,7 @@
 
 using MessagePack;
 
-namespace RecipeNest.Reponse;
+namespace RecipeNest.Response;
 
 [MessagePackObject]
 public class RoleResponse
@@ -20,9 +20,4 @@ public class RoleResponse
     [Key("id")] public int Id { get; set; }
 
     [Key("name")] public string Name { get; set; }
-
-    public override string ToString()
-    {
-        return $"Role ID: {Id}, Name: {Name}";
-    }
 }

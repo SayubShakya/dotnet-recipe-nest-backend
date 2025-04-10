@@ -1,12 +1,11 @@
 //APIRouter.cs
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
+using Autofac;
 using RecipeNest.Controller;
 using RecipeNest.Dto;
-using RecipeNest.Reponse;
+using RecipeNest.Response;
 using RecipeNest.Request;
 using RecipeNest.Util.Impl;
 
@@ -14,33 +13,37 @@ namespace RecipeNest.Router;
 
 public class APIRouter
 {
-    private readonly CuisineController cuisineController;
-    private readonly FavoriteController favoriteController;
-    private readonly RatingController ratingController;
-    private readonly RecipeController recipeController;
-    private readonly RoleController roleController;
-    private readonly UserController userController;
-    private readonly AuthController authController;
-    private readonly SessionUserDTO sessionUserDto;
+    private readonly RoleController _roleController;
+    private readonly UserController _userController;
+    private readonly CuisineController _cuisineController;
+    private readonly RecipeController _recipeController;
+    private readonly FavoriteController _favoriteController;
+    private readonly RatingController _ratingController;
+    private readonly AuthController _authController;
+    private readonly ILifetimeScope _lifetimeScope;
 
+    public APIRouter(RoleController roleController,
+        UserController userController,
+        CuisineController cuisineController,
+        RecipeController recipeController,
+        FavoriteController favoriteController,
+        RatingController ratingController,
+        AuthController authController,
+        ILifetimeScope lifetimeScope)
+    {
+        _roleController = roleController;
+        _userController = userController;
+        _cuisineController = cuisineController;
+        _recipeController = recipeController;
+        _favoriteController = favoriteController;
+        _ratingController = ratingController;
+        _authController = authController;
+        _lifetimeScope = lifetimeScope;
+    }
+    
     private static readonly string defaultLimit = "10";
     private static readonly string defaultStart = "1";
     
-
-    public APIRouter(RoleController roleController, UserController userController,
-        CuisineController cuisineController, RecipeController recipeController,
-        FavoriteController favoriteController, RatingController ratingController, AuthController authController, SessionUserDTO sessionUserDto)
-    {
-        this.roleController = roleController;
-        this.userController = userController;
-        this.cuisineController = cuisineController;
-        this.recipeController = recipeController;
-        this.favoriteController = favoriteController;
-        this.ratingController = ratingController;
-        this.authController = authController;
-        this.sessionUserDto = sessionUserDto;
-    }
-
     public string Route(HttpListenerRequest request)
     {
         try
@@ -52,9 +55,10 @@ public class APIRouter
             {
                 path = path.Replace("/api/rest", "");
                 
-                
                 if (path.Contains("/auth")) return Auth(path, request);
-
+                
+                var sessionUserDto = _lifetimeScope.Resolve<SessionUserDTO>();
+                
                 if (sessionUserDto.Authenticated)
                 {
                     
@@ -92,7 +96,7 @@ public class APIRouter
 
         if (Regex.IsMatch(path, @"^/auth/login(?:&.*)?$"))
         {
-            if (request.HttpMethod.Equals("POST")) return authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
+            if (request.HttpMethod.Equals("POST")) return _authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
         }
 
         return NotFound();
@@ -107,21 +111,21 @@ public class APIRouter
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
             
-            if (request.HttpMethod.Equals("GET")) return roleController.GetAll(start, limit);
+            if (request.HttpMethod.Equals("GET")) return _roleController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
-                return roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
+                return _roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
 
             if (request.HttpMethod.Equals("PUT"))
-                return roleController.Update(BaseController.JsonRequestBody<UpdateRoleRequest>(request));
+                return _roleController.Update(BaseController.JsonRequestBody<UpdateRoleRequest>(request));
         }
         else if (Regex.IsMatch(path, @"^/roles\?id=\d+$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
 
-            if (request.HttpMethod.Equals("GET")) return roleController.GetById(id);
+            if (request.HttpMethod.Equals("GET")) return _roleController.GetById(id);
 
-            if (request.HttpMethod.Equals("DELETE")) return roleController.DeleteById(id);
+            if (request.HttpMethod.Equals("DELETE")) return _roleController.DeleteById(id);
         }
 
         return NotFound();
@@ -136,26 +140,26 @@ public class APIRouter
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
             
-            if (request.HttpMethod.Equals("GET")) return userController.GetAll(start, limit);
+            if (request.HttpMethod.Equals("GET")) return _userController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
-                return userController.Save(BaseController.JsonRequestBody<CreateUserRequest>(request));
+                return _userController.Save(BaseController.JsonRequestBody<CreateUserRequest>(request));
 
             if (request.HttpMethod.Equals("PUT"))
-                return userController.Update(BaseController.JsonRequestBody<UpdateUserRequest>(request));
+                return _userController.Update(BaseController.JsonRequestBody<UpdateUserRequest>(request));
         }
         else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
 
-            if (request.HttpMethod.Equals("GET")) return userController.GetById(id);
+            if (request.HttpMethod.Equals("GET")) return _userController.GetById(id);
 
-            if (request.HttpMethod.Equals("DELETE")) return userController.DeleteById(id);
+            if (request.HttpMethod.Equals("DELETE")) return _userController.DeleteById(id);
         }
         else if (Regex.IsMatch(path, @"^/users\?email=[^&]+$"))
         {
             var email = request.QueryString["email"];
-            if (request.HttpMethod.Equals("GET")) return userController.GetByEmail(email);
+            if (request.HttpMethod.Equals("GET")) return _userController.GetByEmail(email);
         }
 
         return NotFound();
@@ -171,23 +175,21 @@ public class APIRouter
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
             
-            if (request.HttpMethod.Equals("GET")) return cuisineController.GetAll(start, limit);
+            if (request.HttpMethod.Equals("GET")) return _cuisineController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
-                return cuisineController.Save(BaseController.JsonRequestBody<CreateCuisineRequest>(request));
+                return _cuisineController.Save(BaseController.JsonRequestBody<CreateCuisineRequest>(request));
 
             if (request.HttpMethod.Equals("PUT"))
-                return cuisineController.Update(BaseController.JsonRequestBody<UpdateCuisineRequest>(request));
+                return _cuisineController.Update(BaseController.JsonRequestBody<UpdateCuisineRequest>(request));
         }
         else if (Regex.IsMatch(path, @"^/cuisines\?id=\d+$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
 
-            if (request.HttpMethod.Equals("GET")) return cuisineController.GetById(id);
+            if (request.HttpMethod.Equals("GET")) return _cuisineController.GetById(id);
 
-            if (request.HttpMethod.Equals("DELETE")) return cuisineController.DeleteById(id);
-
-            return NotFound();
+            if (request.HttpMethod.Equals("DELETE")) return _cuisineController.DeleteById(id);
         }
         else if (Regex.IsMatch(path, @"^/cuisines\?name=.+$"))
         {
@@ -195,7 +197,7 @@ public class APIRouter
             if (name != null && request.HttpMethod.Equals("GET"))
             {
                 Console.WriteLine("Attempting to get cuisine by name: " + name);
-                return cuisineController.GetByName(name);
+                return _cuisineController.GetByName(name);
             }
         }
 
@@ -212,20 +214,19 @@ public class APIRouter
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
         
-            if (request.HttpMethod.Equals("GET")) return recipeController.GetAll(start, limit);
+            if (request.HttpMethod.Equals("GET")) return _recipeController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
-                return recipeController.Save(BaseController.JsonRequestBody<CreateRecipeRequest>(request));
+                return _recipeController.Save(BaseController.JsonRequestBody<CreateRecipeRequest>(request));
 
             if (request.HttpMethod.Equals("PUT"))
-                return recipeController.Update(BaseController.JsonRequestBody<UpdateRecipeRequest>(request));
+                return _recipeController.Update(BaseController.JsonRequestBody<UpdateRecipeRequest>(request));
         }
         else if (Regex.IsMatch(path, @"^/recipes\?id=\d+(?:&.*)?$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
-            if (request.HttpMethod.Equals("GET")) return recipeController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return recipeController.DeleteById(id);
+            if (request.HttpMethod.Equals("GET")) return _recipeController.GetById(id);
+            if (request.HttpMethod.Equals("DELETE")) return _recipeController.DeleteById(id);
         }
         else if (Regex.IsMatch(path, @"^/recipes\?title=[^&]+(?:&.*)?$"))
         {
@@ -233,7 +234,7 @@ public class APIRouter
             if (title != null && request.HttpMethod.Equals("GET"))
             {
                 Console.WriteLine("Attempting to get recipe by name: " + title);
-                return recipeController.GetByTitle(title);
+                return _recipeController.GetByTitle(title);
             }
         }
 
@@ -247,16 +248,15 @@ public class APIRouter
         if (Regex.IsMatch(path, @"^/favorites/?$"))
         {
             if (request.HttpMethod.Equals("POST"))
-                return favoriteController.Save(BaseController.JsonRequestBody<CreateFavoriteRequest>(request));
+                return _favoriteController.Save(BaseController.JsonRequestBody<CreateFavoriteRequest>(request));
         }
         else if (Regex.IsMatch(path, @"^/favorites\?user_id=\d+&recipe_id=\d+$"))
         {
             var userId = Convert.ToInt32(request.QueryString["user_id"]);
             var recipeId = Convert.ToInt32(request.QueryString["recipe_id"]);
 
-            if (request.HttpMethod.Equals("GET")) return favoriteController.GetByUserAndRecipe(userId, recipeId);
-
-            if (request.HttpMethod.Equals("DELETE")) return favoriteController.DeleteByUserAndRecipe(userId, recipeId);
+            if (request.HttpMethod.Equals("GET")) return _favoriteController.GetByUserAndRecipe(userId, recipeId);
+            if (request.HttpMethod.Equals("DELETE")) return _favoriteController.DeleteByUserAndRecipe(userId, recipeId);
         }
 
         return NotFound();
@@ -270,7 +270,7 @@ public class APIRouter
         if (Regex.IsMatch(path, @"^/ratings/?$"))
         {
             if (request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
-                return ratingController.Save(BaseController.JsonRequestBody<CreateRatingRequest>(request));
+                return _ratingController.Save(BaseController.JsonRequestBody<CreateRatingRequest>(request));
         }
         else if (Regex.IsMatch(path, @"^/ratings\?user_id=\d+&recipe_id=\d+$"))
         {
@@ -280,29 +280,13 @@ public class APIRouter
                 && int.TryParse(request.QueryString["recipe_id"], out var recipeId))
             {
                 if (request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase))
-                    return ratingController.GetByUserAndRecipe(userId, recipeId);
+                    return _ratingController.GetByUserAndRecipe(userId, recipeId);
 
                 if (request.HttpMethod.Equals("DELETE", StringComparison.OrdinalIgnoreCase))
-                    return ratingController.DeleteByUserAndRecipe(userId, recipeId);
-            }
-            else
-            {
-                Console.WriteLine("Failed to parse user_id or recipe_id from rating query string.");
+                    return _ratingController.DeleteByUserAndRecipe(userId, recipeId);
             }
         }
 
-        return NotFound();
-    }
-
-    public string NotFound()
-    {
-        Console.WriteLine("Returning 404 Not Found");
-        return BaseController.ToJsonResponse(new ServerResponse(null, "404 Not Found", 404));
-    }
-    
-    public string Unauthorized()
-    {
-        Console.WriteLine("Returning 401 Not Found");
-        return BaseController.ToJsonResponse(new ServerResponse(null, "401 Unauthorized", 401));
+        return ResponseUtil.NotFound();
     }
 }

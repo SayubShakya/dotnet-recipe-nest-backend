@@ -1,6 +1,5 @@
 // RoleController.cs
 
-using RecipeNest.Reponse;
 using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Service;

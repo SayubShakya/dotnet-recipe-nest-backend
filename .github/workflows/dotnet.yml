@@ -16,11 +16,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
+    - name: Installing Dotnet
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
+    - name: Building project
       run: dotnet build --no-restore

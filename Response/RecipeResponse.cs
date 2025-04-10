@@ -2,7 +2,7 @@
 
 using MessagePack;
 
-namespace RecipeNest.Reponse;
+namespace RecipeNest.Response;
 
 [MessagePackObject]
 public class RecipeResponse
@@ -39,9 +39,4 @@ public class RecipeResponse
     [Key("recipe_by")] public int? RecipeByUserId { get; set; }
 
     [Key("cuisine")] public int? CuisineId { get; set; }
-
-    public override string ToString()
-    {
-        return $"RecipeResponse ID: {Id}, Title: {Title}";
-    }
 }

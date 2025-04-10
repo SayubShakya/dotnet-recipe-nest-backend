@@ -1,7 +1,7 @@
 ﻿using MessagePack;
 using RecipeNest.Model;
 
-namespace RecipeNest.Reponse;
+namespace RecipeNest.Response;
 
 [MessagePackObject]
 public class RatingResponse
@@ -25,9 +25,4 @@ public class RatingResponse
     [Key("recipe_id")] public int RecipeId { get; set; }
 
     [Key("rating")] public RatingScore Score { get; set; }
-
-    public override string ToString()
-    {
-        return $"RatingResponse: ID: {Id}, UserID: {UserId}, RecipeID: {RecipeId}, Score: {Score}";
-    }
 }

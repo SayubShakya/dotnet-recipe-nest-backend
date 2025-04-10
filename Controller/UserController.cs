@@ -1,6 +1,5 @@
 ﻿// UserController.cs
 
-using RecipeNest.Reponse;
 using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Service;
@@ -16,18 +15,16 @@ public class UserController : BaseController
         _userService = userService;
     }
     
-    public string GetAll(int start, int limit)
+    public ServerResponse GetAll(int start, int limit)
     {
         try
         {
             PaginatedResponse<UserResponse> response = _userService.GetAll(start, limit);
-            ServerResponse serverResponse = new ServerResponse(response, null, 200);
-            return ToJsonResponse(serverResponse);
+            return new ServerResponse(response, null, 200);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error in UserController.GetAll: {ex}");
-            return ToJsonResponse(new ServerResponse(null, "Failed to retrieve users.", 500, ex.Message));
+            throw new ApplicationException("Error occured while getting all users", ex);
         }
     }
 
