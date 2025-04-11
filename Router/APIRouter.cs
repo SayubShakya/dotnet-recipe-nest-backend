@@ -15,29 +15,29 @@ namespace RecipeNest.Router;
 public class APIRouter
 {
     private readonly RoleRouter _roleRouter;
-    private readonly UserController _userController;
-    private readonly CuisineController _cuisineController;
-    private readonly RecipeController _recipeController;
-    private readonly FavoriteController _favoriteController;
-    private readonly RatingController _ratingController;
-    private readonly AuthController _authController;
+    private readonly UserRouter _userRouter;
+    private readonly CuisineRouter _cuisineRouter;
+    private readonly RecipeRouter _recipeRouter; 
+    private readonly FavoriteRouter _favoriteRouter;
+    private readonly RatingRouter _ratingRouter;
+    private readonly AuthRouter _authRouter;
 
     public APIRouter(RoleRouter roleRouter,
-        UserController userController,
-        CuisineController cuisineController,
-        RecipeController recipeController,
-        FavoriteController favoriteController,
-        RatingController ratingController,
-        AuthController authController
+        UserRouter userRouter,
+        CuisineRouter cuisineRouter,
+        RecipeRouter recipeRouter,
+        FavoriteRouter favoriteRouter,
+        RatingRouter ratingRouter,
+        AuthRouter authRouter
     )
     {
         _roleRouter = roleRouter;
-        _userController = userController;
-        _cuisineController = cuisineController;
-        _recipeController = recipeController;
-        _favoriteController = favoriteController;
-        _ratingController = ratingController;
-        _authController = authController;
+        _userRouter = userRouter; 
+        _cuisineRouter = cuisineRouter;
+        _recipeRouter = recipeRouter;
+        _favoriteRouter = favoriteRouter;
+        _ratingRouter = ratingRouter;
+        _authRouter = authRouter;
     }
 
     private static readonly string defaultLimit = "10";
@@ -54,21 +54,21 @@ public class APIRouter
             {
                 path = path.Replace("/api/rest", "");
 
-                if (path.Contains("/auth")) return Auth(path, request);
+                if (path.Contains("/auth")) return _authRouter.Auth(path, request);
                 
                 if (true)
                 {
                     if (path.Contains("/roles")) return _roleRouter.Role(path, request);
 
-                    if (path.Contains("/users")) return User(path, request);
+                    if (path.Contains("/users")) return _userRouter.User(path, request);
 
-                    if (path.Contains("/cuisines")) return Cuisine(path, request);
+                    if (path.Contains("/cuisines")) return _cuisineRouter.Cuisine(path, request);
 
-                    if (path.Contains("/recipes")) return Recipe(path, request);
+                    if (path.Contains("/recipes")) return _recipeRouter.Recipe(path, request);
 
-                    if (path.Contains("/favorites")) return Favorite(path, request);
+                    if (path.Contains("/favorites")) return _favoriteRouter.Favorite(path, request);
 
-                    if (path.Contains("/ratings")) return Rating(path, request);
+                    if (path.Contains("/ratings")) return _ratingRouter.Rating(path, request);
                 }
                 else
                 {
@@ -84,182 +84,5 @@ public class APIRouter
             return new ServerResponse(null, "Internal Server Error", 500, e.Message);
         }
     }
-
-    public ServerResponse Auth(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("Role requesting path: " + path);
-
-        if (Regex.IsMatch(path, @"^/auth/login(?:&.*)?$"))
-        {
-            if (request.HttpMethod.Equals("POST"))
-                return _authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/auth/register/?(?:\?.*)?$"))
-        {
-            if (request.HttpMethod.Equals("POST"))
-                return _authController.Register(BaseController.JsonRequestBody<RegisterRequest>(request));
-        }
-
-        return ResponseUtil.NotFound();
-    }
-
-
-    public ServerResponse User(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("User requesting path: " + path);
-
-        if (Regex.IsMatch(path, @"^/users/?(?:\?.*)?"))
-        {
-            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
-            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-
-            if (request.HttpMethod.Equals("GET")) return _userController.GetAll(start, limit);
-
-            if (request.HttpMethod.Equals("POST"))
-                return _userController.Save(BaseController.JsonRequestBody<CreateUserRequest>(request));
-
-            if (request.HttpMethod.Equals("PUT"))
-                return _userController.Update(BaseController.JsonRequestBody<UpdateUserRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
-        {
-            int id = int.Parse(request.QueryString["id"]!);
-
-            if (request.HttpMethod.Equals("GET")) return _userController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return _userController.DeleteById(id);
-        }
-        else if (Regex.IsMatch(path, @"^/users\?email=[^&]+$"))
-        {
-            var email = request.QueryString["email"];
-            if (request.HttpMethod.Equals("GET")) return _userController.GetByEmail(email);
-        }
-
-        return ResponseUtil.NotFound();
-    }
-
-
-    public ServerResponse Cuisine(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("Cuisine path check: " + path);
-
-        if (Regex.IsMatch(path, @"^/cuisines/?(?:\?.*)?"))
-        {
-            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
-            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-
-            if (request.HttpMethod.Equals("GET")) return _cuisineController.GetAll(start, limit);
-
-            if (request.HttpMethod.Equals("POST"))
-                return _cuisineController.Save(BaseController.JsonRequestBody<CreateCuisineRequest>(request));
-
-            if (request.HttpMethod.Equals("PUT"))
-                return _cuisineController.Update(BaseController.JsonRequestBody<UpdateCuisineRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/cuisines\?id=\d+$"))
-        {
-            int id = int.Parse(request.QueryString["id"]!);
-
-            if (request.HttpMethod.Equals("GET")) return _cuisineController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return _cuisineController.DeleteById(id);
-        }
-        else if (Regex.IsMatch(path, @"^/cuisines\?name=.+$"))
-        {
-            var name = request.QueryString["name"];
-            if (name != null && request.HttpMethod.Equals("GET"))
-            {
-                Console.WriteLine("Attempting to get cuisine by name: " + name);
-                return _cuisineController.GetByName(name);
-            }
-        }
-
-        return ResponseUtil.NotFound();
-    }
-
-
-    public ServerResponse Recipe(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("Recipe path check: " + path);
-
-        if (Regex.IsMatch(path, @"^/recipes/?(?:\?.*)?$"))
-        {
-            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
-            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-
-            if (request.HttpMethod.Equals("GET")) return _recipeController.GetAll(start, limit);
-
-            if (request.HttpMethod.Equals("POST"))
-                return _recipeController.Save(BaseController.JsonRequestBody<CreateRecipeRequest>(request));
-
-            if (request.HttpMethod.Equals("PUT"))
-                return _recipeController.Update(BaseController.JsonRequestBody<UpdateRecipeRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/recipes\?id=\d+(?:&.*)?$"))
-        {
-            int id = int.Parse(request.QueryString["id"]!);
-            if (request.HttpMethod.Equals("GET")) return _recipeController.GetById(id);
-            if (request.HttpMethod.Equals("DELETE")) return _recipeController.DeleteById(id);
-        }
-        else if (Regex.IsMatch(path, @"^/recipes\?title=[^&]+(?:&.*)?$"))
-        {
-            var title = request.QueryString["title"];
-            if (title != null && request.HttpMethod.Equals("GET"))
-            {
-                Console.WriteLine("Attempting to get recipe by name: " + title);
-                return _recipeController.GetByTitle(title);
-            }
-        }
-
-        return ResponseUtil.NotFound();
-    }
-
-
-    public ServerResponse Favorite(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("requesting Favorite path: " + path);
-        if (Regex.IsMatch(path, @"^/favorites/?$"))
-        {
-            if (request.HttpMethod.Equals("POST"))
-                return _favoriteController.Save(BaseController.JsonRequestBody<CreateFavoriteRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/favorites\?user_id=\d+&recipe_id=\d+$"))
-        {
-            var userId = Convert.ToInt32(request.QueryString["user_id"]);
-            var recipeId = Convert.ToInt32(request.QueryString["recipe_id"]);
-
-            if (request.HttpMethod.Equals("GET")) return _favoriteController.GetByUserAndRecipe(userId, recipeId);
-            if (request.HttpMethod.Equals("DELETE")) return _favoriteController.DeleteByUserAndRecipe(userId, recipeId);
-        }
-
-        return ResponseUtil.NotFound();
-    }
-
-
-    public ServerResponse Rating(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("requesting Rating path: " + path);
-
-        if (Regex.IsMatch(path, @"^/ratings/?$"))
-        {
-            if (request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
-                return _ratingController.Save(BaseController.JsonRequestBody<CreateRatingRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/ratings\?user_id=\d+&recipe_id=\d+$"))
-        {
-            if (request.QueryString["user_id"] != null
-                && int.TryParse(request.QueryString["user_id"], out var userId)
-                && request.QueryString["recipe_id"] != null
-                && int.TryParse(request.QueryString["recipe_id"], out var recipeId))
-            {
-                if (request.HttpMethod.Equals("GET", StringComparison.OrdinalIgnoreCase))
-                    return _ratingController.GetByUserAndRecipe(userId, recipeId);
-
-                if (request.HttpMethod.Equals("DELETE", StringComparison.OrdinalIgnoreCase))
-                    return _ratingController.DeleteByUserAndRecipe(userId, recipeId);
-            }
-        }
-
-        return ResponseUtil.NotFound();
-    }
+    
 }

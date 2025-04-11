@@ -23,8 +23,8 @@ public class RoleRouter
 
         if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
         {
-            int start = int.Parse(request.QueryString["start"] ?? ApplicationConstant.DefaultStart);
-            int limit = int.Parse(request.QueryString["limit"] ?? ApplicationConstant.DefaultLimit);
+            int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+            int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
             
             if (request.HttpMethod.Equals("GET")) return _roleController.GetAll(start, limit);
 
