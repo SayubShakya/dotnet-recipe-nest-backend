@@ -9,7 +9,7 @@ namespace RecipeNest.Db;
 public class DatabaseConnector
 {
     private static readonly string ConnectionString =
-        "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
+        "Server=localhost;Database=recipe_nest;User ID=root;Password=Root@12345;Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
 
     private static MySqlConnection GetConnection()
     {

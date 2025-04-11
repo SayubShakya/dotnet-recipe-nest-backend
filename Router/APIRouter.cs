@@ -7,43 +7,42 @@ using RecipeNest.Controller;
 using RecipeNest.Dto;
 using RecipeNest.Response;
 using RecipeNest.Request;
+using RecipeNest.Util;
 using RecipeNest.Util.Impl;
 
 namespace RecipeNest.Router;
 
 public class APIRouter
 {
-    private readonly RoleController _roleController;
+    private readonly RoleRouter _roleRouter;
     private readonly UserController _userController;
     private readonly CuisineController _cuisineController;
     private readonly RecipeController _recipeController;
     private readonly FavoriteController _favoriteController;
     private readonly RatingController _ratingController;
     private readonly AuthController _authController;
-    private readonly ILifetimeScope _lifetimeScope;
 
-    public APIRouter(RoleController roleController,
+    public APIRouter(RoleRouter roleRouter,
         UserController userController,
         CuisineController cuisineController,
         RecipeController recipeController,
         FavoriteController favoriteController,
         RatingController ratingController,
-        AuthController authController,
-        ILifetimeScope lifetimeScope)
+        AuthController authController
+    )
     {
-        _roleController = roleController;
+        _roleRouter = roleRouter;
         _userController = userController;
         _cuisineController = cuisineController;
         _recipeController = recipeController;
         _favoriteController = favoriteController;
         _ratingController = ratingController;
         _authController = authController;
-        _lifetimeScope = lifetimeScope;
     }
-    
+
     private static readonly string defaultLimit = "10";
     private static readonly string defaultStart = "1";
-    
+
     public ServerResponse Route(HttpListenerRequest request)
     {
         try
@@ -54,15 +53,12 @@ public class APIRouter
             if (path.StartsWith("/api/rest/"))
             {
                 path = path.Replace("/api/rest", "");
-                
+
                 if (path.Contains("/auth")) return Auth(path, request);
                 
-                var sessionUserDto = _lifetimeScope.Resolve<SessionUserDTO>();
-                
-                if (sessionUserDto.Authenticated)
+                if (true)
                 {
-                    
-                    if (path.Contains("/roles")) return Role(path, request);
+                    if (path.Contains("/roles")) return _roleRouter.Role(path, request);
 
                     if (path.Contains("/users")) return User(path, request);
 
@@ -78,61 +74,35 @@ public class APIRouter
                 {
                     return ResponseUtil.Unauthorized();
                 }
-                
             }
 
             return ResponseUtil.NotFound();
         }
         catch (Exception e)
-    {
-        Console.WriteLine(e);
-        return new ServerResponse(null, "Internal Server Error", 500, e.Message);
+        {
+            Console.WriteLine(e);
+            return new ServerResponse(null, "Internal Server Error", 500, e.Message);
+        }
     }
-}
+
     public ServerResponse Auth(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Role requesting path: " + path);
 
         if (Regex.IsMatch(path, @"^/auth/login(?:&.*)?$"))
         {
-            if (request.HttpMethod.Equals("POST")) return _authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/auth/register/?(?:\?.*)?$")) 
-        {
-            if (request.HttpMethod.Equals("POST")) return _authController.Register(BaseController.JsonRequestBody<RegisterRequest>(request));
-        }
-
-        return ResponseUtil.NotFound();
-    }
-    
-    public ServerResponse Role(string path, HttpListenerRequest request)
-    {
-        Console.WriteLine("Role requesting path: " + path);
-
-        if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
-        {
-            int start = int.Parse(request.QueryString["start"] ?? defaultStart);
-            int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-            
-            if (request.HttpMethod.Equals("GET")) return _roleController.GetAll(start, limit);
-
             if (request.HttpMethod.Equals("POST"))
-                return _roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
-
-            if (request.HttpMethod.Equals("PUT"))
-                return _roleController.Update(BaseController.JsonRequestBody<UpdateRoleRequest>(request));
+                return _authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
         }
-        else if (Regex.IsMatch(path, @"^/roles\?id=\d+$"))
+        else if (Regex.IsMatch(path, @"^/auth/register/?(?:\?.*)?$"))
         {
-            int id = int.Parse(request.QueryString["id"]!);
-
-            if (request.HttpMethod.Equals("GET")) return _roleController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return _roleController.DeleteById(id);
+            if (request.HttpMethod.Equals("POST"))
+                return _authController.Register(BaseController.JsonRequestBody<RegisterRequest>(request));
         }
 
         return ResponseUtil.NotFound();
     }
+
 
     public ServerResponse User(string path, HttpListenerRequest request)
     {
@@ -142,7 +112,7 @@ public class APIRouter
         {
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-            
+
             if (request.HttpMethod.Equals("GET")) return _userController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
@@ -177,7 +147,7 @@ public class APIRouter
         {
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-            
+
             if (request.HttpMethod.Equals("GET")) return _cuisineController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))
@@ -216,7 +186,7 @@ public class APIRouter
         {
             int start = int.Parse(request.QueryString["start"] ?? defaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? defaultLimit);
-        
+
             if (request.HttpMethod.Equals("GET")) return _recipeController.GetAll(start, limit);
 
             if (request.HttpMethod.Equals("POST"))

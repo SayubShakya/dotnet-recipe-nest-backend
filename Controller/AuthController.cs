@@ -1,6 +1,4 @@
-﻿// UserController.cs
-
-using RecipeNest.Repository;
+﻿using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Util;
@@ -21,28 +19,21 @@ public class AuthController : BaseController
 
     public ServerResponse Login(LoginRequest request)
     {
-        try
+        var user = _userRepository.GetByEmail(request.Email);
+        if (user != null)
         {
-            var user = _userRepository.GetByEmail(request.Email);
-            if (user != null)
+            string hashedPassword = user.Password;
+            if (_hashingUtil.Verify(hashedPassword, request.Password))
             {
-                string hashedPassword = user.Password;
-                if (_hashingUtil.Verify(hashedPassword, request.Password))
-                {
-                    return new ServerResponse(TokenUtil.GenerateToken(user.Email), "Login Successful", 200);
-                }
+                return new ServerResponse(TokenUtil.GenerateToken(user.Email), "Login Successful", 200);
             }
+        }
 
-            return new ServerResponse(null, "Email/Password is incorrect", 401);
-        }
-        catch (Exception ex)
-        {
-            throw;
-        }
+        return new ServerResponse(null, "Email/Password is incorrect", 401);
     }
-    
-    
-    public ServerResponse Register(CreateUserRequest request)
+
+
+    public ServerResponse Register(RegisterRequest request)
     {
         return new ServerResponse(null, "try garey tara lekhna aayenaaaaaaaaaaa", 401);
     }

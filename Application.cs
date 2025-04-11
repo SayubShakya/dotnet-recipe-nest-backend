@@ -94,37 +94,45 @@ internal class Application
         var request = context.Request;
         response = context.Response;
 
-        var router = container.Resolve<APIRouter>();
-        var userRepository = container.Resolve<UserRepositoryDatabaseImpl>();
+
 
         try
         {
             Console.WriteLine(
                 $"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Environment.CurrentManagedThreadId}");
 
-            Console.WriteLine("router: " + router.GetHashCode());
+
 
             string? token = request.Headers["Authorization"];
 
             if (token != null)
             {
-                using var scope = container.BeginLifetimeScope();
+                using (var scope = container.BeginLifetimeScope())
+                {
+                    var sessionUserDto = scope.Resolve<SessionUserDTO>();
+                    Console.WriteLine("sessionUserDto: " + sessionUserDto.GetHashCode());
 
-                var sessionUserDto = scope.Resolve<SessionUserDTO>();
-                Console.WriteLine("sessionUserDto: " + sessionUserDto.GetHashCode());
+                    ClaimsPrincipal claimsPrincipal = TokenUtil.ValidateToken(token);
+                    Dictionary<string, string> claimsMap = claimsPrincipal.Claims
+                        .ToDictionary(c => c.Type, c => c.Value);
 
-                ClaimsPrincipal claimsPrincipal = TokenUtil.ValidateToken(token);
-                Dictionary<string, string> claimsMap = claimsPrincipal.Claims
-                    .ToDictionary(c => c.Type, c => c.Value);
-                User user = userRepository.GetByEmail(claimsMap["_email"]);
-                sessionUserDto.User = user;
-                sessionUserDto.Authenticated = true;
-                ServerResponse serverResponse =  router.Route(request);
+                    var router = scope.Resolve<APIRouter>();
+                    Console.WriteLine("router: " + router.GetHashCode());
+                    var userRepository = scope.Resolve<UserRepositoryDatabaseImpl>();
 
-                ResponseBuilder(response, serverResponse);
+                    User user = userRepository.GetByEmail(claimsMap["_email"]);
+                    sessionUserDto.User = user;
+                    sessionUserDto.Authenticated = true;
+
+                    ServerResponse serverResponse = router.Route(request);
+
+                    ResponseBuilder(response, serverResponse);
+                }
             }
             else
             {
+                var router = container.Resolve<APIRouter>();
+                Console.WriteLine("router: " + router.GetHashCode());
                 ServerResponse serverResponse = router.Route(request);
                 ResponseBuilder(response, serverResponse);
             }
