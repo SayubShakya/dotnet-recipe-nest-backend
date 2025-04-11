@@ -41,4 +41,9 @@ public class AuthController : BaseController
         }
     }
     
+    
+    public ServerResponse Register(CreateUserRequest request)
+    {
+        return new ServerResponse(null, "try garey tara lekhna aayenaaaaaaaaaaa", 401);
+    }
 }

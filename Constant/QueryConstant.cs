@@ -17,6 +17,7 @@ public interface IQueryConstant
             "SELECT count(*) as count FROM roles WHERE is_active=1";
 
         public const string DELETE_BY_ID = "UPDATE roles set is_active=0 WHERE id=@param1 And is_active = 1";
+        
     }
 
     public interface IUser
