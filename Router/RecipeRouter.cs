@@ -10,14 +10,12 @@ namespace RecipeNest.Router;
 
 public class RecipeRouter
 {
-    
     private readonly RecipeController _recipeController;
 
     public RecipeRouter(RecipeController recipeController)
     {
         _recipeController = recipeController;
     }
-    
     
     public ServerResponse Recipe(string path, HttpListenerRequest request)
     {
@@ -51,8 +49,15 @@ public class RecipeRouter
                 return _recipeController.GetByTitle(title);
             }
         }
-
+        else if (Regex.IsMatch(path, @"^/recipes/favorites\?user_id=\d+(?:&.*)?$") && request.HttpMethod.Equals("GET"))
+        {
+            int userId = int.Parse(request.QueryString["user_id"]!);
+            int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+            int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
+            
+            return _recipeController.GetAllFavorites(userId, start, limit);
+        }
+        
         return ResponseUtil.NotFound();
     }
-
 }

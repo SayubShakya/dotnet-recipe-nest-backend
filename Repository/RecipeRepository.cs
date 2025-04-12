@@ -9,5 +9,7 @@ public interface IRecipeRepository : IBaseRepository<Recipe>
 {
     Recipe? GetByTitle(string title);
     Paged<Recipe> GetAllPaginated(int start, int limit);
+    Paged<Recipe> GetFavoriteRecipes(int userId, int start, int limit);
+
 
 }

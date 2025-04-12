@@ -9,7 +9,7 @@ namespace RecipeNest.Db;
 public class DatabaseConnector
 {
     private static readonly string ConnectionString =
-        "Server=localhost;Database=recipe_nest;User ID=root;Password=Root@12345;Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
+        "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
 
     private static MySqlConnection GetConnection()
     {
@@ -204,6 +204,52 @@ public class DatabaseConnector
 
         return new Paged<T>(start, limit, count, dataList);
     }
+    
+    
+    public static Paged<T> QueryAllFavorites<T>(string sql, string countSql, int start, int limit, IRowMapper<T> rowMapper, params object[] parameters)
+    {
+        int count = 0;
+        int offset = (start - 1) * limit;
+        sql += $" LIMIT {limit} OFFSET {offset}";
+    
+        Console.WriteLine(sql);
+        List<T> dataList = [];
+        MySqlConnection? sqlConnection = null;
+        MySqlCommand? command = null;
+    
+        try
+        {
+            sqlConnection = GetConnection();
+            command = GetPreparedStatement(sqlConnection, sql);
+        
+            MapParams(parameters, command);
+
+            var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var data = rowMapper.Map(reader);
+                dataList.Add(data);
+            }
+
+            sqlConnection = GetConnection();
+            command = GetPreparedStatement(sqlConnection, countSql);
+            MapParams(parameters, command);
+            count = Convert.ToInt32(command.ExecuteScalar());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+            throw;
+        }
+        finally
+        {
+            Disconnect(sqlConnection);
+        }
+
+        return new Paged<T>(start, limit, count, dataList);
+    }
+
 
     private static void MapParams(object[] parameters, MySqlCommand mySqlCommand)
     {

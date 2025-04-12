@@ -21,7 +21,7 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
                 return false;
             }
 
-            DatabaseConnector.Update(IQueryConstant.IFavorite.SAVE, favorite.UserId, favorite.RecipeId);
+            DatabaseConnector.Update(IQueryConstant.IFavorite.Save, favorite.UserId, favorite.RecipeId);
             return true;
         }
         catch (Exception ex)
@@ -36,7 +36,7 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
     {
         try
         {
-            return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GET_BY_ID, new FavoriteRowMapper(), userId,
+            return DatabaseConnector.QueryOne(IQueryConstant.IFavorite.GetById, new FavoriteRowMapper(), userId,
                 recipeId);
         }
         catch (Exception ex)
@@ -50,7 +50,7 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
     {
         try
         {
-            return DatabaseConnector.Update(IQueryConstant.IFavorite.DELETE_BY_ID, userId, recipeId) > 0;
+            return DatabaseConnector.Update(IQueryConstant.IFavorite.DeleteById, userId, recipeId) > 0;
         }
         catch (Exception ex)
         {

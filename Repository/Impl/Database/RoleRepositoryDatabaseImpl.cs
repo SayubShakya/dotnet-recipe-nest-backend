@@ -13,20 +13,20 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
     
     public Paged<Role> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, IQueryConstant.IRole.ALL_ACTIVE_COUNT, start, limit, new RoleRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GetAllActiveOrderByCreatedDate, IQueryConstant.IRole.AllActiveCount, start, limit, new RoleRowMapper());
     }
     public bool DeleteById(int id)
     {
         var role = GetById(id);
         if (role == null) return false;
 
-        DatabaseConnector.Update(IQueryConstant.IRole.DELETE_BY_ID, id);
+        DatabaseConnector.Update(IQueryConstant.IRole.DeleteById, id);
         return true;
     }
     
     public List<Role> GetAll()
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, new RoleRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GetAllActiveOrderByCreatedDate, new RoleRowMapper());
     }
 
     public Role GetById(int id)

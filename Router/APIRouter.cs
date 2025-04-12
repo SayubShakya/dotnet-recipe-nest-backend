@@ -70,10 +70,6 @@ public class APIRouter
 
                     if (path.Contains("/ratings")) return _ratingRouter.Rating(path, request);
                 }
-                else
-                {
-                    return ResponseUtil.Unauthorized();
-                }
             }
 
             return ResponseUtil.NotFound();

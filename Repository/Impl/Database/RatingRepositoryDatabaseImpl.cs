@@ -11,7 +11,7 @@ public class RatingRepositoryDatabaseImpl : IRatingRepository
     {
         try
         {
-            return DatabaseConnector.QueryOne(IQueryConstant.IRating.GET_BY_ID, new RatingRowMapper(), userId,
+            return DatabaseConnector.QueryOne(IQueryConstant.IRating.GetById, new RatingRowMapper(), userId,
                 recipeId);
         }
         catch (Exception ex)
@@ -26,7 +26,7 @@ public class RatingRepositoryDatabaseImpl : IRatingRepository
     {
         try
         {
-            DatabaseConnector.Update(IQueryConstant.IRating.DELETE_BY_ID, userId, recipeId);
+            DatabaseConnector.Update(IQueryConstant.IRating.DeleteById, userId, recipeId);
             return true;
         }
         catch (Exception ex)
@@ -64,7 +64,7 @@ public class RatingRepositoryDatabaseImpl : IRatingRepository
                 $"--- DEBUG: Saving Rating - Original: {rating.Score.Value}, Storing Enum: {scoreToStore}, Storing Byte: {scoreByte} ---");
 
 
-            DatabaseConnector.Update(IQueryConstant.IRating.SAVE, rating.UserId.Value, rating.RecipeId.Value,
+            DatabaseConnector.Update(IQueryConstant.IRating.Save, rating.UserId.Value, rating.RecipeId.Value,
                 scoreByte);
             return true;
         }

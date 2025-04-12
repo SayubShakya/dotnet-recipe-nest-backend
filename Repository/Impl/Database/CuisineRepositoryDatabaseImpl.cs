@@ -13,7 +13,7 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 
     public Paged<Cuisine> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, IQueryConstant.ICuisine.ALL_ACTIVE_COUNT, start, limit, new CuisineRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate, IQueryConstant.ICuisine.AllActiveCount, start, limit, new CuisineRowMapper());
     }
 
     public bool DeleteById(int id)
@@ -21,23 +21,23 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
         var cuisine = GetById(id);
         if (cuisine == null) return false;
 
-        DatabaseConnector.Update(IQueryConstant.ICuisine.DELETE_BY_ID, id);
+        DatabaseConnector.Update(IQueryConstant.ICuisine.DeleteById, id);
         return true;
     }
 
     public List<Cuisine> GetAll()
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GET_ALL_ACTIVE_ORDER_BY_CREATED_DATE, new CuisineRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate, new CuisineRowMapper());
     }
 
     public Cuisine GetById(int id)
     {
-        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_ID, new CuisineRowMapper(), id);
+        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GetById, new CuisineRowMapper(), id);
     }
 
     public Cuisine GetByName(string name)
     {
-        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GET_BY_NAME, new CuisineRowMapper(), name);;
+        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GetByName, new CuisineRowMapper(), name);;
     }
 
 
@@ -45,7 +45,7 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
     {
         if (cuisine == null) return false;
 
-        DatabaseConnector.Update(IQueryConstant.ICuisine.SAVE, cuisine.Name, cuisine.ImageUrl);
+        DatabaseConnector.Update(IQueryConstant.ICuisine.Save, cuisine.Name, cuisine.ImageUrl);
         return true;
     }
 
@@ -53,7 +53,7 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
     {
         if (cuisine == null) return false;
 
-        DatabaseConnector.Update(IQueryConstant.ICuisine.UPDATE, cuisine.Name, cuisine.ImageUrl, cuisine.Id);
+        DatabaseConnector.Update(IQueryConstant.ICuisine.Update, cuisine.Name, cuisine.ImageUrl, cuisine.Id);
         return true;
     }
 }

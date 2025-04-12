@@ -119,4 +119,30 @@ public class RecipeService
     {
         return _recipeRepository.DeleteById(id);
     }
+    
+    public PaginatedResponse<RecipeResponse> GetAllFavorites(int userId, int start, int limit)
+    {
+        Paged<Recipe> pagedFavorites = _recipeRepository.GetFavoriteRecipes(userId, start, limit);
+
+        List<RecipeResponse> items = pagedFavorites.Items.Select(recipe => new RecipeResponse(
+            recipe.Id,
+            recipe.ImageUrl,
+            recipe.Title,
+            recipe.Description,
+            recipe.RecipeDetail,
+            recipe.Ingredients,
+            recipe.RecipeByUserId,
+            recipe.CuisineId
+        )).ToList();
+
+        PaginatedResponse<RecipeResponse> paginatedResponse = new()
+        {
+            Items = items,
+            Count = pagedFavorites.Count,
+            Limit = pagedFavorites.Limit,
+            Start = pagedFavorites.Start
+        };
+
+        return paginatedResponse;
+    }
 }
