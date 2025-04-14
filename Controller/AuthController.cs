@@ -1,4 +1,5 @@
-﻿using RecipeNest.Repository;
+﻿using RecipeNest.Model;
+using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Util;
@@ -35,6 +36,54 @@ public class AuthController : BaseController
 
     public ServerResponse Register(RegisterRequest request)
     {
-        return new ServerResponse(null, "try garey tara lekhna aayenaaaaaaaaaaa", 401);
+        if (string.IsNullOrWhiteSpace(request.FirstName) ||
+            string.IsNullOrWhiteSpace(request.LastName) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password) ||
+            string.IsNullOrWhiteSpace(request.PhoneNumber))
+        {
+             return new ServerResponse(null, "Required fields (FirstName, LastName, Email, Password, PhoneNumber) cannot be empty.", 400);
+        }
+
+        var existingUser = _userRepository.GetByEmail(request.Email);
+        if (existingUser != null)
+        {
+            return new ServerResponse(null, "An account with this email already exists.", 409);
+        }
+
+        try
+        {
+            string hashedPassword = _hashingUtil.Hash(request.Password);
+
+            var newUser = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber,
+                Email = request.Email,
+                Password = hashedPassword,
+                RoleId =request.RoleId,
+                ImageUrl = null,
+                About = null,
+            };
+
+            bool saved = _userRepository.Save(newUser);
+
+            if (saved)
+            {
+                return new ServerResponse(null, "Registration successful. Please log in.", 201);
+            }
+            else
+            {
+                Console.WriteLine($"Registration failed for email {request.Email} during the final save operation.");
+                return new ServerResponse(null, "Registration failed due to an internal server error.", 500);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during registration for email {request.Email}: {ex.Message}");
+            Console.WriteLine(ex.StackTrace);
+            return new ServerResponse(null, "An unexpected error occurred during registration.", 500);
+        }
     }
 }
