@@ -1,5 +1,3 @@
-// DatabaseConnector.cs
-
 using MySql.Data.MySqlClient;
 using RecipeNest.Db.Query;
 using RecipeNest.Dto;
@@ -8,8 +6,9 @@ namespace RecipeNest.Db;
 
 public class DatabaseConnector
 {
+    
     private static readonly string ConnectionString =
-        "Server=localhost;Database=recipe_nest;User ID=root;Password=9828807288;Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
+        $"Server={Environment.GetEnvironmentVariable("DATABASE_URL")};Database={Environment.GetEnvironmentVariable("DATABASE_NAME")};User ID={Environment.GetEnvironmentVariable("DATABASE_USERNAME")};Password={Environment.GetEnvironmentVariable("DATABASE_PASSWORD")};Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
 
     private static MySqlConnection GetConnection()
     {
@@ -174,7 +173,7 @@ public class DatabaseConnector
         int count = 0;
         int offset = (start - 1) * limit;
         sql += $" LIMIT {limit} OFFSET {offset}";
-        
+
         Console.WriteLine(sql);
         List<T> dataList = [];
         MySqlConnection? sqlConnection = null;
@@ -204,24 +203,25 @@ public class DatabaseConnector
 
         return new Paged<T>(start, limit, count, dataList);
     }
-    
-    
-    public static Paged<T> QueryAllFavorites<T>(string sql, string countSql, int start, int limit, IRowMapper<T> rowMapper, params object[] parameters)
+
+
+    public static Paged<T> QueryAllFavorites<T>(string sql, string countSql, int start, int limit,
+        IRowMapper<T> rowMapper, params object[] parameters)
     {
         int count = 0;
         int offset = (start - 1) * limit;
         sql += $" LIMIT {limit} OFFSET {offset}";
-    
+
         Console.WriteLine(sql);
         List<T> dataList = [];
         MySqlConnection? sqlConnection = null;
         MySqlCommand? command = null;
-    
+
         try
         {
             sqlConnection = GetConnection();
             command = GetPreparedStatement(sqlConnection, sql);
-        
+
             MapParams(parameters, command);
 
             var reader = command.ExecuteReader();

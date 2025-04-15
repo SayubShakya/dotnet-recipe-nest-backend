@@ -1,6 +1,6 @@
 // RoleController.cs
 
-using RecipeNest.CustomExceptionl;
+using RecipeNest.CustomException;
 using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Service;
@@ -32,14 +32,14 @@ public class RoleController : BaseController
     {
         var success = _roleService.Save(request);
         if (success) return new ServerResponse(null, "Role has been created!", 201);
-        throw new ApplicationExceptionCustomeException(500, "Failed to save role!", null);
+        throw new CustomApplicationException(500, "Failed to save role!", null);
     }
 
     public ServerResponse Update(UpdateRoleRequest request)
     {
         var success = _roleService.Update(request);
         if (success) return new ServerResponse(null, "Role has been updated!", 200);
-        throw new ApplicationExceptionCustomeException(500, "Failed to update role!", null);
+        throw new CustomApplicationException(500, "Failed to update role!", null);
     }
 
     public ServerResponse DeleteById(int id)

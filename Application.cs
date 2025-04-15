@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Autofac;
+using DotNetEnv;
 using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Repository.Impl.Database;
@@ -16,6 +17,7 @@ internal class Application
 {
     private static void Main()
     {
+        Env.Load();
         var container = GetContainer();
         var listener = GetHttpListener();
 
@@ -35,15 +37,19 @@ internal class Application
 
     private static HttpListener GetHttpListener()
     {
-        var url = "http://localhost:9000/";
-
+   
+        string? url = Environment.GetEnvironmentVariable("APPLICATION_URL");
+        string? port = Environment.GetEnvironmentVariable("APPLICATION_PORT");
+        
+        string? fullUrl = $"{url}:{port}/";
+        
+        Console.WriteLine($"Listening on: {fullUrl}");
+        
         var listener = new HttpListener();
 
-        listener.Prefixes.Add(url);
+        listener.Prefixes.Add(fullUrl);
 
         listener.Start();
-
-        Console.WriteLine("Listening on " + url);
 
         return listener;
     }
@@ -94,14 +100,10 @@ internal class Application
         var request = context.Request;
         response = context.Response;
 
-
-
         try
         {
             Console.WriteLine(
                 $"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Environment.CurrentManagedThreadId}");
-
-
 
             string? token = request.Headers["Authorization"];
 

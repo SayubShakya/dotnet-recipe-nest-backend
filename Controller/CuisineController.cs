@@ -2,7 +2,7 @@
 using RecipeNest.Response;
 using RecipeNest.Service;
 using System;
-using RecipeNest.CustomExceptionl;
+using RecipeNest.CustomException;
 
 namespace RecipeNest.Controller;
 
@@ -77,7 +77,7 @@ public class CuisineController : BaseController
         catch (Exception ex)
         {
             Console.WriteLine($"Error in CuisineController.Save: {ex}");
-            throw new ApplicationExceptionCustomeException(500, "Failed to save cuisine!", null);
+            throw new CustomApplicationException(500, "Failed to save cuisine!", null);
         }
     }
 
