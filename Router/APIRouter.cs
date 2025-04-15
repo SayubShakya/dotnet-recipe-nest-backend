@@ -21,6 +21,7 @@ public class APIRouter
     private readonly FavoriteRouter _favoriteRouter;
     private readonly RatingRouter _ratingRouter;
     private readonly AuthRouter _authRouter;
+    private readonly SessionUserDTO _sessionUserDto;
 
     public APIRouter(RoleRouter roleRouter,
         UserRouter userRouter,
@@ -28,7 +29,8 @@ public class APIRouter
         RecipeRouter recipeRouter,
         FavoriteRouter favoriteRouter,
         RatingRouter ratingRouter,
-        AuthRouter authRouter
+        AuthRouter authRouter,
+        SessionUserDTO sessionUserDto
     )
     {
         _roleRouter = roleRouter;
@@ -38,6 +40,7 @@ public class APIRouter
         _favoriteRouter = favoriteRouter;
         _ratingRouter = ratingRouter;
         _authRouter = authRouter;
+        _sessionUserDto = sessionUserDto;
     }
 
     private static readonly string defaultLimit = "10";
@@ -48,6 +51,7 @@ public class APIRouter
         try
         {
             var path = request.Url.AbsolutePath + request.Url.Query;
+            
             Console.WriteLine("requesting path: " + path);
 
             if (path.StartsWith("/api/rest/"))
@@ -56,8 +60,10 @@ public class APIRouter
 
                 if (path.Contains("/auth")) return _authRouter.Auth(path, request);
                 
-                if (true)
+                if (_sessionUserDto.Authenticated)
                 {
+                    Console.WriteLine("Session user role: " + _sessionUserDto?.Role?.Name);
+                    
                     if (path.Contains("/roles")) return _roleRouter.Role(path, request);
 
                     if (path.Contains("/users")) return _userRouter.User(path, request);
@@ -69,6 +75,10 @@ public class APIRouter
                     if (path.Contains("/favorites")) return _favoriteRouter.Favorite(path, request);
 
                     if (path.Contains("/ratings")) return _ratingRouter.Rating(path, request);
+                }
+                else
+                {
+                    return ResponseUtil.Unauthorized();
                 }
             }
 

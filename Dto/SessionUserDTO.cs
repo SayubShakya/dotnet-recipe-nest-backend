@@ -4,15 +4,23 @@ namespace RecipeNest.Dto;
 
 public class SessionUserDTO
 {
+    
+    private User? user;
+    private Role? role;
+    private bool authenticated;
+
     public User? User
     {
         get => user;
         set => user = value;
     }
-
-    private User? user;
-    private bool authenticated;
-
+    
+    public Role? Role
+    {
+        get => role;
+        set => role = value;
+    }
+    
     public bool Authenticated
     {
         get => authenticated;

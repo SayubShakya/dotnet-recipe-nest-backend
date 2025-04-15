@@ -1,4 +1,5 @@
-﻿using RecipeNest.Model;
+﻿using RecipeNest.Dto;
+using RecipeNest.Model;
 using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Response;
@@ -11,11 +12,13 @@ public class AuthController : BaseController
 {
     private readonly IUserRepository _userRepository;
     private readonly IHashingUtil _hashingUtil;
+    private readonly SessionUserDTO _sessionUserDto;
 
-    public AuthController(IUserRepository userRepository, IHashingUtil hashingUtil)
+    public AuthController(IUserRepository userRepository, IHashingUtil hashingUtil, SessionUserDTO sessionUserDto)
     {
         _userRepository = userRepository;
         _hashingUtil = hashingUtil;
+        _sessionUserDto = sessionUserDto;
     }
 
     public ServerResponse Login(LoginRequest request)
@@ -33,7 +36,6 @@ public class AuthController : BaseController
         return new ServerResponse(null, "Email/Password is incorrect", 401);
     }
 
-
     public ServerResponse Register(RegisterRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.FirstName) ||
@@ -42,7 +44,8 @@ public class AuthController : BaseController
             string.IsNullOrWhiteSpace(request.Password) ||
             string.IsNullOrWhiteSpace(request.PhoneNumber))
         {
-             return new ServerResponse(null, "Required fields (FirstName, LastName, Email, Password, PhoneNumber) cannot be empty.", 400);
+            return new ServerResponse(null,
+                "Required fields (FirstName, LastName, Email, Password, PhoneNumber) cannot be empty.", 400);
         }
 
         var existingUser = _userRepository.GetByEmail(request.Email);
@@ -62,7 +65,7 @@ public class AuthController : BaseController
                 PhoneNumber = request.PhoneNumber,
                 Email = request.Email,
                 Password = hashedPassword,
-                RoleId =request.RoleId,
+                RoleId = request.RoleId,
                 ImageUrl = null,
                 About = null,
             };
@@ -85,5 +88,15 @@ public class AuthController : BaseController
             Console.WriteLine(ex.StackTrace);
             return new ServerResponse(null, "An unexpected error occurred during registration.", 500);
         }
+    }
+
+
+    public ServerResponse Authorized()
+    {
+        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(
+            _sessionUserDto?.User?.FirstName + " " + _sessionUserDto?.User?.LastName,
+            _sessionUserDto?.Role?.Name
+        );
+        return new ServerResponse(authorizedUserResponse, null, 200);
     }
 }

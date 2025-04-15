@@ -85,7 +85,7 @@ internal class Application
                 return pathFound > 0;
             })
             .AsImplementedInterfaces()
-            .SingleInstance()
+            .InstancePerLifetimeScope()
             .AsSelf();
 
         builder.RegisterType<SessionUserDTO>().InstancePerLifetimeScope();
@@ -109,21 +109,27 @@ internal class Application
 
             if (token != null)
             {
+                if (token.StartsWith("Bearer "))
+                {
+                    token = token.Replace("Bearer ", "");
+                }
+                
                 using (var scope = container.BeginLifetimeScope())
                 {
                     var sessionUserDto = scope.Resolve<SessionUserDTO>();
-                    Console.WriteLine("sessionUserDto: " + sessionUserDto.GetHashCode());
 
                     ClaimsPrincipal claimsPrincipal = TokenUtil.ValidateToken(token);
                     Dictionary<string, string> claimsMap = claimsPrincipal.Claims
                         .ToDictionary(c => c.Type, c => c.Value);
 
                     var router = scope.Resolve<APIRouter>();
-                    Console.WriteLine("router: " + router.GetHashCode());
                     var userRepository = scope.Resolve<UserRepositoryDatabaseImpl>();
+                    var roleRepository = scope.Resolve<RoleRepositoryDatabaseImpl>();
 
                     User user = userRepository.GetByEmail(claimsMap["_email"]);
+                    Role role = roleRepository.GetById(user.RoleId);
                     sessionUserDto.User = user;
+                    sessionUserDto.Role = role;
                     sessionUserDto.Authenticated = true;
 
                     ServerResponse serverResponse = router.Route(request);
