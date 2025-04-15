@@ -205,7 +205,7 @@ public class DatabaseConnector
     }
 
 
-    public static Paged<T> QueryAllFavorites<T>(string sql, string countSql, int start, int limit,
+    public static Paged<T> QueryAllWithParams<T>(string sql, string countSql, int start, int limit,
         IRowMapper<T> rowMapper, params object[] parameters)
     {
         int count = 0;
@@ -233,6 +233,7 @@ public class DatabaseConnector
             }
 
             sqlConnection = GetConnection();
+            Console.WriteLine(countSql);
             command = GetPreparedStatement(sqlConnection, countSql);
             MapParams(parameters, command);
             count = Convert.ToInt32(command.ExecuteScalar());

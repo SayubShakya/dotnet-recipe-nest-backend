@@ -2,7 +2,7 @@
 
 namespace RecipeNest.Model;
 
-public enum RatingScore : byte
+public enum RatingScore : int
 {
     Zero = 0,
     One = 1,

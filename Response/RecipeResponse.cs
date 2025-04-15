@@ -12,7 +12,7 @@ public class RecipeResponse
     }
 
     public RecipeResponse(int id, string? imageUrl, string title, string? description, string recipeDetail,
-        string ingredients, int? recipeByUserId, int? cuisineId)
+        string ingredients, int? recipeByUserId, int? cuisineId, bool? isFavorite, int? rating)
     {
         Id = id;
         ImageUrl = imageUrl;
@@ -22,6 +22,8 @@ public class RecipeResponse
         Ingredients = ingredients;
         RecipeByUserId = recipeByUserId;
         CuisineId = cuisineId;
+        IsFavorite = isFavorite;
+        Rating = rating;
     }
 
     [Key("id")] public int Id { get; set; }
@@ -39,4 +41,8 @@ public class RecipeResponse
     [Key("recipe_by")] public int? RecipeByUserId { get; set; }
 
     [Key("cuisine")] public int? CuisineId { get; set; }
+    
+    [Key("is_favorite")] public bool? IsFavorite { get; set; }
+    
+    [Key("rating")] public int? Rating { get; set; }
 }

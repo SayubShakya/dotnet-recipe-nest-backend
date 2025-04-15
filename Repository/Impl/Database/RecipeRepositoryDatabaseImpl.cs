@@ -5,23 +5,30 @@ using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl;
 using RecipeNest.Dto;
 using RecipeNest.Model;
+using RecipeNest.Projection;
 
 namespace RecipeNest.Repository.Impl.Database;
 
 public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 {
-
     public Paged<Recipe> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllActiveOrderByCreatedDate, IQueryConstant.IRecipe.AllActiveCount, start, limit, new RecipeRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllActiveOrderByCreatedDate,
+            IQueryConstant.IRecipe.AllActiveCount, start, limit, new RecipeRowMapper());
+    }
+
+    public Paged<RecipeAuthorized> GetAllAuthorizedPaginated(int start, int limit, int userId)
+    {
+        return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllActiveAuthorized,
+            IQueryConstant.IRecipe.GetAllActiveAuthorizedCount, start, limit, new RecipeAuthorizedRowMapper(), userId, userId);
     }
 
 
     public Paged<Recipe> GetFavoriteRecipes(int userId, int start, int limit)
     {
-        return DatabaseConnector.QueryAllFavorites(IQueryConstant.IRecipe.GetAllFavorites, IQueryConstant.IRecipe.CountAllFavorites, start, limit, new RecipeRowMapper(), userId);
+        return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllFavorites,
+            IQueryConstant.IRecipe.CountAllFavorites, start, limit, new RecipeRowMapper(), userId);
     }
-
 
 
     public bool DeleteById(int id)

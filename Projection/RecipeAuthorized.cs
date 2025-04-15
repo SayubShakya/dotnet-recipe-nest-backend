@@ -1,15 +1,15 @@
 ﻿// Model/Recipe.cs
 
-namespace RecipeNest.Model;
+namespace RecipeNest.Projection;
 
-public class Recipe
+public class RecipeAuthorized
 {
-    public Recipe()
+    public RecipeAuthorized()
     {
     }
 
-    public Recipe(int id, string? imageUrl, string title, string? description, string recipeDetail,
-        string ingredients, int? recipeByUserId, int? cuisineId)
+    public RecipeAuthorized(int id, string? imageUrl, string title, string? description, string recipeDetail,
+        string ingredients, int? recipeByUserId, int? cuisineId, bool? isFavorite, int? rating)
     {
         Id = id;
         ImageUrl = imageUrl;
@@ -19,6 +19,8 @@ public class Recipe
         Ingredients = ingredients;
         RecipeByUserId = recipeByUserId;
         CuisineId = cuisineId;
+        IsFavorite = isFavorite;
+        Rating = rating;
     }
 
     public int Id { get; set; }
@@ -36,6 +38,9 @@ public class Recipe
     public int? RecipeByUserId { get; set; }
 
     public int? CuisineId { get; set; }
+    
+    public int? Rating { get; set; }
+    public bool? IsFavorite { get; set; }
 
     public override string ToString()
     {
