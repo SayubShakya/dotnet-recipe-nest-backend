@@ -1,4 +1,5 @@
-﻿using RecipeNest.Dto;
+﻿using RecipeNest.CustomException;
+using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Repository;
 using RecipeNest.Request;
@@ -39,7 +40,7 @@ public class CuisineService
     public CuisineResponse? GetById(int id)
     {
         var cuisine = _cuisineRepository.GetById(id);
-        if (cuisine == null) return null;
+        if (cuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
 
         return new CuisineResponse(
             cuisine.Id,
@@ -53,7 +54,7 @@ public class CuisineService
         if (string.IsNullOrWhiteSpace(name)) return null;
 
         var cuisine = _cuisineRepository.GetByName(name);
-        if (cuisine == null) return null;
+        if (cuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
 
         return new CuisineResponse(
             cuisine.Id,
@@ -77,7 +78,7 @@ public class CuisineService
     public bool Update(UpdateCuisineRequest request)
     {
         var existingCuisine = _cuisineRepository.GetById(request.Id);
-        if (existingCuisine == null) throw new KeyNotFoundException($"Cuisine with ID {request.Id} not found.");
+        if (existingCuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
 
 
         var cuisineToUpdate = new Cuisine
@@ -93,6 +94,8 @@ public class CuisineService
 
     public bool DeleteById(int id)
     {
+        var existingCuisine = _cuisineRepository.GetById(id);
+        if (existingCuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
         return _cuisineRepository.DeleteById(id);
     }
 }
