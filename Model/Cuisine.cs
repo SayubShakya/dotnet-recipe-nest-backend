@@ -4,7 +4,6 @@ using MessagePack;
 
 namespace RecipeNest.Model;
 
-[MessagePackObject]
 public class Cuisine
 {
     public Cuisine()
@@ -18,11 +17,11 @@ public class Cuisine
         ImageUrl = imageUrl;
     }
 
-    [Key("id")] public int Id { get; set; }
+    public int Id { get; set; }
 
-    [Key("name")] public string Name { get; set; }
+    public string Name { get; set; }
 
-    [Key("image_url")] public string? ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
 
     public override string ToString()
     {

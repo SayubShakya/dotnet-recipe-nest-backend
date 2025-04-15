@@ -4,7 +4,6 @@ using MessagePack;
 
 namespace RecipeNest.Model;
 
-[MessagePackObject]
 public class Role
 {
     public Role()
@@ -17,9 +16,9 @@ public class Role
         Name = name;
     }
 
-    [Key("id")] public int Id { get; set; }
+    public int Id { get; set; }
 
-    [Key("name")] public string Name { get; set; }
+    public string Name { get; set; }
 
     public override string ToString()
     {

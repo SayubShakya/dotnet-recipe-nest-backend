@@ -6,7 +6,6 @@ using MessagePack;
 
 namespace RecipeNest.Model;
 
-[MessagePackObject]
 public class Favorite
 {
     public Favorite()
@@ -20,11 +19,11 @@ public class Favorite
         UserId = userId;
     }
 
-    [Key("id")] public int Id { get; set; }
+    public int Id { get; set; }
 
-    [Key("recipe_id")] public int RecipeId { get; set; }
+    public int RecipeId { get; set; }
 
-    [Key("user_id")] public int UserId { get; set; }
+    public int UserId { get; set; }
 
     public override string ToString()
     {

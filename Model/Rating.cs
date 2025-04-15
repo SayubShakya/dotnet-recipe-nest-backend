@@ -17,7 +17,6 @@ public enum RatingScore : int
     Ten = 10
 }
 
-[MessagePackObject]
 public class Rating
 {
     public Rating()
@@ -32,13 +31,13 @@ public class Rating
         UserId = userId;
     }
 
-    [Key("id")] public int Id { get; set; }
+    public int Id { get; set; }
 
-    [Key("rating")] public RatingScore? Score { get; set; }
+    public RatingScore? Score { get; set; }
 
-    [Key("recipe_id")] public int? RecipeId { get; set; }
+    public int? RecipeId { get; set; }
 
-    [Key("user_id")] public int? UserId { get; set; }
+    public int? UserId { get; set; }
 
     public override string ToString()
     {
