@@ -32,7 +32,8 @@ public class UserService
                 user.ImageUrl,
                 user.About,
                 user.Email,
-                user.RoleId
+                user.RoleId,
+                user.IsActive
         )).ToList();
 
         PaginatedResponse<UserResponse> paginatedResponse = new()
@@ -58,7 +59,8 @@ public class UserService
             user.ImageUrl,
             user.About,
             user.Email,
-            user.RoleId
+            user.RoleId,
+            user.IsActive
         );
     }
 
@@ -119,7 +121,8 @@ public class UserService
             user.ImageUrl,
             user.About,
             user.Email,
-            user.RoleId
+            user.RoleId,
+            user.IsActive
         );
     }
 }

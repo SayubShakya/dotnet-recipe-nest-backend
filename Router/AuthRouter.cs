@@ -20,17 +20,22 @@ public class AuthRouter
     {
         Console.WriteLine("Role requesting path: " + path);
 
-        if (Regex.IsMatch(path, @"^/auth/login(?:&.*)?$"))
+        if (Regex.IsMatch(path, @"^/auth/login/?$"))
         {
             if (request.HttpMethod.Equals("POST"))
                 return _authController.Login(BaseController.JsonRequestBody<LoginRequest>(request));
         }
-        else if (Regex.IsMatch(path, @"^/auth/register/?(?:\?.*)?$"))
+        else if (Regex.IsMatch(path, @"^/auth/register/?$"))
         {
             if (request.HttpMethod.Equals("POST"))
                 return _authController.Register(BaseController.JsonRequestBody<RegisterRequest>(request));
         }
-
+        else if (Regex.IsMatch(path, @"^/auth/authorized/?$"))
+        {
+            if (request.HttpMethod.Equals("POST"))
+                return _authController.Register(BaseController.JsonRequestBody<RegisterRequest>(request));
+        }
+        
         return ResponseUtil.NotFound();
     }
 }

@@ -21,8 +21,20 @@ public class UserRouter
     public ServerResponse User(string path, HttpListenerRequest request)
     {
         Console.WriteLine("User requesting path: " + path);
+        if (Regex.IsMatch(path, @"^/users\?email=[^&]+$"))
+        {
+            var email = request.QueryString["email"];
+            if (request.HttpMethod.Equals("GET")) return _userController.GetByEmail(email);
+        }
+        else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
+        {
+            int id = int.Parse(request.QueryString["id"]!);
 
-        if (Regex.IsMatch(path, @"^/users/?(?:\?.*)?"))
+            if (request.HttpMethod.Equals("GET")) return _userController.GetById(id);
+
+            if (request.HttpMethod.Equals("DELETE")) return _userController.DeleteById(id);
+        }
+        else if (Regex.IsMatch(path, @"^/users/?(?:\?.*)?"))
         {
             int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
@@ -35,20 +47,6 @@ public class UserRouter
             if (request.HttpMethod.Equals("PUT"))
                 return _userController.Update(BaseController.JsonRequestBody<UpdateUserRequest>(request));
         }
-        else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
-        {
-            int id = int.Parse(request.QueryString["id"]!);
-
-            if (request.HttpMethod.Equals("GET")) return _userController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return _userController.DeleteById(id);
-        }
-        else if (Regex.IsMatch(path, @"^/users\?email=[^&]+$"))
-        {
-            var email = request.QueryString["email"];
-            if (request.HttpMethod.Equals("GET")) return _userController.GetByEmail(email);
-        }
-
         return ResponseUtil.NotFound();
     }
 }

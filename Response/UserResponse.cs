@@ -12,7 +12,7 @@ public class UserResponse
     }
 
     public UserResponse(int id, string firstName, string lastName, string phoneNumber, string? imageUrl,
-        string? about, string email, int roleId)
+        string? about, string email, int roleId, bool isActive)
     {
         Id = id;
         FirstName = firstName;
@@ -22,6 +22,7 @@ public class UserResponse
         About = about;
         Email = email;
         RoleId = roleId;
+        IsActive = isActive;
     }
 
     [Key("id")] public int Id { get; set; }
@@ -39,6 +40,7 @@ public class UserResponse
     [Key("email")] public string Email { get; set; }
 
     [Key("role_id")] public int RoleId { get; set; }
+    [Key("is_active")] public bool IsActive { get; set; }
 
     public override string ToString()
     {

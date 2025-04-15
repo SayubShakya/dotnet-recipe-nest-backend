@@ -27,7 +27,9 @@ public class UserRowMapper : IRowMapper<User>
         string? about = reader.IsDBNull(aboutOrdinal)
             ? null
             : reader.GetString(aboutOrdinal);
+        
+        var isActive = reader.GetBoolean("is_active");
 
-        return new User(id, firstName, lastName, phoneNumber, imageUrl, about, email, password, roleId);
+        return new User(id, firstName, lastName, phoneNumber, imageUrl, about, email, password, roleId,isActive);
     }
 }

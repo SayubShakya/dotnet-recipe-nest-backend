@@ -149,6 +149,9 @@ internal class Application
         response.ContentLength64 = buffer.Length;
         response.StatusCode = serverResponse.StatusCode;
         response.ContentType = "application/json";
+        response.Headers.Add("Access-Control-Allow-Origin", "*");
+        response.Headers.Add("Access-Control-Allow-Credentials", "true");
+        response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.OutputStream.Write(buffer, 0, buffer.Length);
         response.OutputStream.Close();
     }

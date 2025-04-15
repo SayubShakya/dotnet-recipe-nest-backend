@@ -20,8 +20,16 @@ public class RoleRouter
     public ServerResponse Role(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Role requesting path: " + path);
+        if (Regex.IsMatch(path, @"^/roles\?id=\d+$"))
+        {
+            int id = int.Parse(request.QueryString["id"]!);
 
-        if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
+            if (request.HttpMethod.Equals("GET")) return _roleController.GetById(id);
+
+            if (request.HttpMethod.Equals("DELETE")) return _roleController.DeleteById(id);
+        }
+
+        else if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
         {
             int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
@@ -34,15 +42,6 @@ public class RoleRouter
             if (request.HttpMethod.Equals("PUT"))
                 return _roleController.Update(BaseController.JsonRequestBody<UpdateRoleRequest>(request));
         }
-        else if (Regex.IsMatch(path, @"^/roles\?id=\d+$"))
-        {
-            int id = int.Parse(request.QueryString["id"]!);
-
-            if (request.HttpMethod.Equals("GET")) return _roleController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return _roleController.DeleteById(id);
-        }
-
         return ResponseUtil.NotFound();
     }
 }

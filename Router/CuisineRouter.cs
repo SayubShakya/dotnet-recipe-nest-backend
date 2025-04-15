@@ -21,21 +21,7 @@ public class CuisineRouter
     public ServerResponse Cuisine(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Cuisine path check: " + path);
-
-        if (Regex.IsMatch(path, @"^/cuisines/?(?:\?.*)?"))
-        {
-            int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
-            int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
-
-            if (request.HttpMethod.Equals("GET")) return _cuisineController.GetAll(start, limit);
-
-            if (request.HttpMethod.Equals("POST"))
-                return _cuisineController.Save(BaseController.JsonRequestBody<CreateCuisineRequest>(request));
-
-            if (request.HttpMethod.Equals("PUT"))
-                return _cuisineController.Update(BaseController.JsonRequestBody<UpdateCuisineRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/cuisines\?id=\d+$"))
+        if (Regex.IsMatch(path, @"^/cuisines\?id=\d+$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
 
@@ -52,7 +38,19 @@ public class CuisineRouter
                 return _cuisineController.GetByName(name);
             }
         }
+        else if (Regex.IsMatch(path, @"^/cuisines/?(?:\?.*)?"))
+        {
+            int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+            int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
 
+            if (request.HttpMethod.Equals("GET")) return _cuisineController.GetAll(start, limit);
+
+            if (request.HttpMethod.Equals("POST"))
+                return _cuisineController.Save(BaseController.JsonRequestBody<CreateCuisineRequest>(request));
+
+            if (request.HttpMethod.Equals("PUT"))
+                return _cuisineController.Update(BaseController.JsonRequestBody<UpdateCuisineRequest>(request));
+        }
         return ResponseUtil.NotFound();
     }
 

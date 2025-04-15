@@ -12,7 +12,7 @@ public class User
     }
 
     public User(int id, string firstName, string lastName, string phoneNumber, string? imageUrl, string? about,
-        string email, string password, int roleId)
+        string email, string password, int roleId, bool isActive)
     {
         Id = id;
         FirstName = firstName;
@@ -23,6 +23,7 @@ public class User
         Email = email;
         Password = password;
         RoleId = roleId;
+        IsActive = isActive;
     }
 
     [Key("id")] public int Id { get; set; }
@@ -42,6 +43,7 @@ public class User
     [Key("password")] public string Password { get; set; }
 
     [Key("role_id")] public int RoleId { get; set; }
+    [Key("is_active")] public bool IsActive { get; set; }
 
     public override string ToString()
     {

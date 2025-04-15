@@ -21,13 +21,8 @@ public class RatingRouter
     public ServerResponse Rating(string path, HttpListenerRequest request)
     {
         Console.WriteLine("requesting Rating path: " + path);
-
-        if (Regex.IsMatch(path, @"^/ratings/?$"))
-        {
-            if (request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
-                return _ratingController.Save(BaseController.JsonRequestBody<CreateRatingRequest>(request));
-        }
-        else if (Regex.IsMatch(path, @"^/ratings\?user_id=\d+&recipe_id=\d+$"))
+        
+        if (Regex.IsMatch(path, @"^/ratings\?user_id=\d+&recipe_id=\d+$"))
         {
             if (request.QueryString["user_id"] != null
                 && int.TryParse(request.QueryString["user_id"], out var userId)
@@ -41,6 +36,13 @@ public class RatingRouter
                     return _ratingController.DeleteByUserAndRecipe(userId, recipeId);
             }
         }
+
+        else if (Regex.IsMatch(path, @"^/ratings/?$"))
+        {
+            if (request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
+                return _ratingController.Save(BaseController.JsonRequestBody<CreateRatingRequest>(request));
+        }
+        
 
         return ResponseUtil.NotFound();
     }
