@@ -1,4 +1,4 @@
-namespace RecipeNest.Consta;
+namespace RecipeNest.Constant;
 
 public interface IApplicationConstant
 {

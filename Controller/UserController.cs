@@ -14,67 +14,21 @@ public class UserController : BaseController
     {
         _userService = userService;
     }
-    
+
     public ServerResponse GetAll(int start, int limit)
     {
-        try
-        {
-            PaginatedResponse<UserResponse> response = _userService.GetAll(start, limit);
-            return new ServerResponse(response, null, 200);
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationException("Error occured while getting all users", ex);
-        }
+        return new ServerResponse(_userService.GetAll(start, limit), null, 200);
     }
-    
-    // public ServerResponse GetUsersWithRoles(int start, int limit)
-    // {
-    //     try
-    //     {
-    //         PaginatedResponse<UserRoleResponse> response = _userService.GetUsersWithRoles(start, limit);
-    //         return new ServerResponse(response, null, 200);
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         throw new ApplicationException("Error occured while getting all users and roles", ex);
-    //     }
-    // }
-    
 
     public ServerResponse GetById(int id)
     {
-        try
-        {
-            var userResponse = _userService.GetById(id);
-            if (userResponse != null)
-            {
-                return new ServerResponse(userResponse, "User found!", 200);
-            }
-            else
-            {
-                return new ServerResponse(null, "User not found.", 404);
-            }
-        }
-        catch (Exception ex)
-        {
-            return new ServerResponse(null, "Failed to retrieve user.", 500, ex.Message);
-        }
+        return new ServerResponse(_userService.GetById(id), null, 200);
     }
 
     public ServerResponse Save(CreateUserRequest request)
     {
-        try
-        {
-            var success = _userService.Save(request);
-            if (success) return new ServerResponse(null, "User has been created!", 201);
-
-            return new ServerResponse(null, "User creation failed. Email might already exist.", 400);
-        }
-        catch (Exception ex)
-        {
-            return new ServerResponse(null, "User creation failed due to an internal error.", 500, ex.Message);
-        }
+       _userService.Save(request);
+       return new ServerResponse(null, "User has been created!", 201);
     }
 
     public ServerResponse Update(UpdateUserRequest request)
@@ -104,27 +58,4 @@ public class UserController : BaseController
             return new ServerResponse(null, "User deletion failed due to an internal error.", 500, ex.Message);
         }
     }
-    
-    public ServerResponse GetByEmail(string email)
-    {
-        try
-        {
-            Console.WriteLine($"Searching for email: '{email}'");
-            var userResponse = _userService.GetByEmail(email);
-            if (userResponse != null)
-            {
-                return new ServerResponse(userResponse, "User found!", 200);
-            }
-            else
-            {
-                return new ServerResponse(null, "User not found.", 404);
-            }
-        }
-        catch (Exception ex)
-        {
-            return new ServerResponse(null, "Failed to retrieve user.", 500, ex.Message);
-        }
-    }
-    
-    
 }

@@ -1,11 +1,15 @@
 ﻿using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Projection;
+using RecipeNest.Response;
 
 namespace RecipeNest.Repository;
 
 public interface IUserRepository : IBaseRepository<User>
 {
     User? GetByEmail(string email);
-    Paged<User> GetAllPaginated(int start, int limit);
+
+    UserDetailProjection? GetUserDetailProjectionById(int id);
+    
+    Paged<UserTableProjection> GetAllPaginated(int start, int limit);
 }

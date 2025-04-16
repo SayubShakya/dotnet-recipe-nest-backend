@@ -1,10 +1,11 @@
 ﻿// Repository/Impl/Database/RecipeRepositoryDatabaseImpl.cs
 
-using RecipeNest.Consta;
+using RecipeNest.Constant;
 using RecipeNest.Db;
-using RecipeNest.Db.Query.Impl;
+using RecipeNest.Db.Query.Impl.Entity;
+using RecipeNest.Db.Query.Impl.Projection;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Projection;
 
 namespace RecipeNest.Repository.Impl.Database;
@@ -17,10 +18,10 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
             IQueryConstant.IRecipe.AllActiveCount, start, limit, new RecipeRowMapper());
     }
 
-    public Paged<RecipeAuthorized> GetAllAuthorizedPaginated(int start, int limit, int userId)
+    public Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId)
     {
         return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllActiveAuthorized,
-            IQueryConstant.IRecipe.GetAllActiveAuthorizedCount, start, limit, new RecipeAuthorizedRowMapper(), userId, userId);
+            IQueryConstant.IRecipe.GetAllActiveAuthorizedCount, start, limit, new RecipeProjectionRowMapper(), userId, userId);
     }
 
 

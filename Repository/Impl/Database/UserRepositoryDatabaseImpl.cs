@@ -1,26 +1,25 @@
-﻿// UserRepositoryDatabaseImpl.cs
-
-using RecipeNest.Consta;
+﻿using RecipeNest.Constant;
 using RecipeNest.Db;
-using RecipeNest.Db.Query.Impl;
+using RecipeNest.Db.Query.Impl.Entity;
+using RecipeNest.Db.Query.Impl.Projection;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
+using RecipeNest.Projection;
+using RecipeNest.Response;
 
 namespace RecipeNest.Repository.Impl.Database;
 
 public class UserRepositoryDatabaseImpl : IUserRepository
 {
-    
-    public Paged<User> GetAllPaginated(int start, int limit)
+    public Paged<UserTableProjection> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetAllActiveOrderByCreatedDate, IQueryConstant.IUser.AllActiveCount, start, limit, new UserRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetUsersWithRoles, IQueryConstant.IUser.GetUsersWithRolesCount,
+            start, limit, new UserTableProjectionRowMapper());
     }
 
     public bool DeleteById(int id)
     {
         var user = GetById(id);
-        if (user == null) return false;
-
         DatabaseConnector.Update(IQueryConstant.IUser.DeleteById, id);
         return true;
     }
@@ -31,9 +30,16 @@ public class UserRepositoryDatabaseImpl : IUserRepository
     }
 
 
-    public User GetByEmail(string email)
+    public User? GetByEmail(string email)
     {
-        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetByEmail, new UserRowMapper(), email);
+        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetByEmail,
+            new UserRowMapper(), email);
+    }
+
+    public UserDetailProjection? GetUserDetailProjectionById(int id)
+    {
+        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetUserDetailByIdProjection,
+            new UserDetailProjectionRowMapper(), id);
     }
 
     public User GetById(int id)
@@ -43,36 +49,30 @@ public class UserRepositoryDatabaseImpl : IUserRepository
 
     public bool Save(User user)
     {
-        if (user == null) return false;
-
-        DatabaseConnector.Update(IQueryConstant.IUser.Save,
+        return DatabaseConnector.Update(IQueryConstant.IUser.Save,
             user.FirstName,
             user.LastName,
             user.PhoneNumber,
-            user.ImageUrl,
-            user.About,
+            user.ImageUrl!,
+            user.About!,
             user.Email,
             user.Password,
             user.RoleId
-        );
-        return true;
+        ) == 1;
     }
 
     public bool Update(User user)
     {
-        if (user == null) return false;
-
-        DatabaseConnector.Update(IQueryConstant.IUser.Update,
+        return DatabaseConnector.Update(IQueryConstant.IUser.Update,
             user.FirstName,
             user.LastName,
             user.PhoneNumber,
-            user.ImageUrl,
-            user.About,
+            user.ImageUrl!,
+            user.About!,
             user.Email,
             user.Password,
             user.RoleId,
             user.Id
-        );
-        return true;
+        ) == 1;
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using Autofac;
 using DotNetEnv;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Repository.Impl.Database;
 using RecipeNest.Response;
 using RecipeNest.Router;

@@ -1,14 +1,11 @@
-﻿// Db/Query/Impl/RecipeRowMapper.cs
-
-using MySql.Data.MySqlClient;
-using RecipeNest.Model;
+﻿using MySql.Data.MySqlClient;
 using RecipeNest.Projection;
 
-namespace RecipeNest.Db.Query.Impl;
+namespace RecipeNest.Db.Query.Impl.Projection;
 
-public class RecipeAuthorizedRowMapper : IRowMapper<RecipeAuthorized>
+public class RecipeProjectionRowMapper : IRowMapper<RecipeProjection>
 {
-    public RecipeAuthorized Map(MySqlDataReader reader)
+    public RecipeProjection Map(MySqlDataReader reader)
     {
         var id = reader.GetInt32("id");
         var imageUrl = reader.IsDBNull(reader.GetOrdinal("image_url")) ? null : reader.GetString("image_url");
@@ -22,6 +19,7 @@ public class RecipeAuthorizedRowMapper : IRowMapper<RecipeAuthorized>
         int? cuisineId = reader.IsDBNull(reader.GetOrdinal("cuisine")) ? null : reader.GetInt32("cuisine");
         int? rating = reader.IsDBNull(reader.GetOrdinal("rating")) ? null : reader.GetInt32("rating");
         bool? isFavorite = reader.IsDBNull(reader.GetOrdinal("is_favorite")) ? null : reader.GetBoolean("is_favorite");
-        return new RecipeAuthorized(id, imageUrl, title, description, recipeDetail, ingredients, recipeByUserId, cuisineId, isFavorite, rating);
+        return new RecipeProjection(id, imageUrl, title, description, recipeDetail, ingredients, recipeByUserId,
+            cuisineId, isFavorite, rating);
     }
 }

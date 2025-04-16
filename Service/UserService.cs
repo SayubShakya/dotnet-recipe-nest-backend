@@ -1,6 +1,6 @@
 ﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Projection;
 using RecipeNest.Repository;
 using RecipeNest.Request;
@@ -13,32 +13,20 @@ public class UserService
 {
     private readonly IHashingUtil _hashingUtil;
     private readonly IUserRepository _userRepository;
-    private readonly IUserRepository _userRoleRepository;
 
-    public UserService(IUserRepository userRepository, IHashingUtil hashingUtil, IUserRepository userRoleRepository)
+    public UserService(IUserRepository userRepository, IHashingUtil hashingUtil)
     {
         _userRepository = userRepository;
         _hashingUtil = hashingUtil;
-        _userRoleRepository = userRoleRepository;
     }
 
-    public PaginatedResponse<UserResponse> GetAll(int start, int limit)
+    public PaginatedResponse<UserTableResponse> GetAll(int start, int limit)
     {
-        Paged<User> pagedUsers = _userRepository.GetAllPaginated(start, limit);
+        Paged<UserTableProjection> pagedUsers = _userRepository.GetAllPaginated(start, limit);
 
-        List<UserResponse> items = pagedUsers.Items.Select(user => new UserResponse(
-            user.Id,
-            user.FirstName,
-            user.LastName,
-            user.PhoneNumber,
-            user.ImageUrl,
-            user.About,
-            user.Email,
-            user.RoleId,
-            user.IsActive
-        )).ToList();
+        List<UserTableResponse> items = pagedUsers.Items.Select(MapUserTableResponse).ToList();
 
-        PaginatedResponse<UserResponse> paginatedResponse = new()
+        PaginatedResponse<UserTableResponse> paginatedResponse = new()
         {
             Items = items,
             Count = pagedUsers.Count,
@@ -48,52 +36,46 @@ public class UserService
 
         return paginatedResponse;
     }
-    
-    // public PaginatedResponse<UserRoleResponse> GetUsersWithRoles(int start, int limit)
-    // {
-    //     Paged<UserRole> pagedUsers = _userRoleRepository.GetAllWithRolesPaginated(start, limit);
-    //
-    //     List<UserRoleResponse> items = pagedUsers.Items.Select(user => new UserRoleResponse(
-    //         user.Id,
-    //         user.FirstName,
-    //         user.LastName,
-    //         user.PhoneNumber,
-    //         user.ImageUrl,
-    //         user.About,
-    //         user.Email,
-    //         user.Role,  
-    //         user.IsActive
-    //     )).ToList();
-    //
-    //     return new PaginatedResponse<UserRoleResponse>
-    //     {
-    //         Items = items,
-    //         Count = pagedUsers.Count,
-    //         Limit = pagedUsers.Limit,
-    //         Start = pagedUsers.Start
-    //     };
-    // }
+
+    private static UserTableResponse MapUserTableResponse(UserTableProjection user)
+    {
+        return new UserTableResponse
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Email = user.Email,
+            Role = user.Role,
+            IsActive = user.IsActive
+        };
+    }
 
     public UserResponse GetById(int id)
     {
-        var user = _userRepository.GetById(id);
-        if (user == null) throw new CustomApplicationException(404, "Users not found", null);
+        UserDetailProjection? userDetailProjection = _userRepository.GetUserDetailProjectionById(id);
+        if (userDetailProjection == null) throw new CustomApplicationException(404, "Users not found", null);
 
-        return new UserResponse(
-            user.Id,
-            user.FirstName,
-            user.LastName,
-            user.PhoneNumber,
-            user.ImageUrl,
-            user.About,
-            user.Email,
-            user.RoleId,
-            user.IsActive
-        );
+        return new UserResponse{
+            Id = userDetailProjection.Id,
+            FirstName = userDetailProjection.FirstName,
+            LastName = userDetailProjection.LastName,
+            PhoneNumber = userDetailProjection.PhoneNumber,
+            ImageUrl = userDetailProjection.ImageUrl,
+            About = userDetailProjection.About,
+            Email = userDetailProjection.Email,
+            Role = userDetailProjection.Role,
+            IsActive = userDetailProjection.IsActive,
+        };
     }
 
-    public bool Save(CreateUserRequest request)
+    public void Save(CreateUserRequest request)
     {
+        if (_userRepository.GetByEmail(request.Email) != null)
+        {
+            throw new CustomApplicationException(400, "Email already exists", null);
+        }
+        
         var user = new User
         {
             FirstName = request.FirstName,
@@ -106,7 +88,7 @@ public class UserService
             Password = _hashingUtil.Hash(request.Password)
         };
 
-        return _userRepository.Save(user);
+        _userRepository.Save(user);
     }
 
     public bool Update(UpdateUserRequest request)
@@ -135,23 +117,5 @@ public class UserService
         var existingUser = _userRepository.GetById(id);
         if (existingUser == null) throw new CustomApplicationException(404, "Users not found", null);
         return _userRepository.DeleteById(id);
-    }
-
-    public UserResponse? GetByEmail(string email)
-    {
-        var user = _userRepository.GetByEmail(email);
-        if (user == null) throw new CustomApplicationException(404, "Users not found", null);
-
-        return new UserResponse(
-            user.Id,
-            user.FirstName,
-            user.LastName,
-            user.PhoneNumber,
-            user.ImageUrl,
-            user.About,
-            user.Email,
-            user.RoleId,
-            user.IsActive
-        );
     }
 }

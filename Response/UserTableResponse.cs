@@ -3,9 +3,9 @@
 namespace RecipeNest.Response;
 
 [MessagePackObject]
-public class UserResponse
+public class UserTableResponse
 {
-    public UserResponse()
+    public UserTableResponse()
     {
     }
 
@@ -13,8 +13,6 @@ public class UserResponse
     [Key("first_name")] public required string FirstName;
     [Key("last_name")] public required string LastName;
     [Key("phone_number")] public required string PhoneNumber;
-    [Key("image_url")] public required string ImageUrl;
-    [Key("about")] public required string About;
     [Key("email")] public required string Email;
     [Key("role")] public required string Role;
     [Key("is_active")] public required bool IsActive;

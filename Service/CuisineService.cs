@@ -1,6 +1,6 @@
 ﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Response;

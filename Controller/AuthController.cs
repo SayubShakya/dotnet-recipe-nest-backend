@@ -1,5 +1,5 @@
 ﻿using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Response;
@@ -23,17 +23,24 @@ public class AuthController : BaseController
 
     public ServerResponse Login(LoginRequest request)
     {
-        var user = _userRepository.GetByEmail(request.Email);
-        if (user != null)
+        User? user = _userRepository.GetByEmail(request.Email);
+
+        if (user == null)
         {
-            string hashedPassword = user.Password;
-            if (_hashingUtil.Verify(hashedPassword, request.Password))
-            {
-                return new ServerResponse(TokenUtil.GenerateToken(user.Email), "Login Successful", 200);
-            }
+            return new ServerResponse(null, "Email/Password is incorrect", 401);
         }
 
-        return new ServerResponse(null, "Email/Password is incorrect", 401);
+        if (!user.IsActive)
+        {
+            return new ServerResponse(null, "Your account is disabled", 401);
+        }
+
+        if (!_hashingUtil.Verify(user.Password, request.Password))
+        {
+            return new ServerResponse(null, "Email/Password is incorrect", 401);
+        }
+
+        return new ServerResponse(TokenUtil.GenerateToken(user.Email), "Login Successful", 200);
     }
 
     public ServerResponse Register(RegisterRequest request)
@@ -48,29 +55,25 @@ public class AuthController : BaseController
         {
             string hashedPassword = _hashingUtil.Hash(request.Password);
 
-            var newUser = new User
+            User user = new User
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 PhoneNumber = request.PhoneNumber,
                 Email = request.Email,
                 Password = hashedPassword,
-                RoleId = request.RoleId,
-                ImageUrl = null,
-                About = null,
+                RoleId = request.RoleId
             };
 
-            bool saved = _userRepository.Save(newUser);
+            bool saved = _userRepository.Save(user);
 
             if (saved)
             {
                 return new ServerResponse(null, "Registration successful. Please log in.", 201);
             }
-            else
-            {
-                Console.WriteLine($"Registration failed for email {request.Email} during the final save operation.");
-                return new ServerResponse(null, "Registration failed due to an internal server error.", 500);
-            }
+
+            Console.WriteLine($"Registration failed for email {request.Email} during the final save operation.");
+            return new ServerResponse(null, "Registration failed due to an internal server error.", 500);
         }
         catch (Exception ex)
         {
@@ -83,7 +86,8 @@ public class AuthController : BaseController
 
     public ServerResponse Authorized()
     {
-        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(_sessionUserDto?.User?.Id,_sessionUserDto?.User?.FirstName + " " + _sessionUserDto?.User?.LastName, _sessionUserDto?.Role?.Name
+        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(_sessionUserDto?.User?.Id,
+            _sessionUserDto?.User?.FirstName + " " + _sessionUserDto?.User?.LastName, _sessionUserDto?.Role?.Name
         );
         return new ServerResponse(authorizedUserResponse, null, 200);
     }

@@ -1,6 +1,6 @@
 //QueryConstant.cs
 
-namespace RecipeNest.Consta;
+namespace RecipeNest.Constant;
 
 public interface IQueryConstant
 {
@@ -33,13 +33,16 @@ public interface IQueryConstant
             "SELECT * FROM users WHERE is_active=1 ORDER BY created_date";
 
         public const string GetUsersWithRoles =
-            "SELECT u.id, u.first_name, u.last_name, u.phone_number, u.email, r.name as role, u.is_active\n            FROM users u\n        LEFT JOIN roles r ON u.role_id = r.id ORDER BY created_date";
+            "SELECT u.id, u.first_name, u.last_name, u.phone_number, u.email, r.name as role, u.is_active FROM users u LEFT JOIN roles r ON u.role_id = r.id ORDER BY u.created_date";
 
-        public const string AllActiveCount =
-            "SELECT count(*) as count FROM users WHERE is_active=1";
+        public const string GetUsersWithRolesCount =
+            "SELECT count(*) as count FROM users u LEFT JOIN roles r ON u.role_id = r.id ORDER BY u.created_date";
+
+        public const string GetUserDetailByIdProjection =
+            "SELECT u.id, u.first_name, u.last_name, u.phone_number, u.email, r.name as role, u.is_active, u.about, u.image_url FROM users u LEFT JOIN roles r ON u.role_id = r.id WHERE u.id=@param1 AND u.is_active=1 ORDER BY u.created_date";
 
         public const string DeleteById = "UPDATE users SET is_active=0 WHERE id=@param1 AND is_active = 1";
-        public const string GetByEmail = "SELECT * FROM users WHERE email=@param1 AND is_active=1";
+        public const string GetByEmail = "SELECT * FROM users WHERE email=@param1";
     }
 
     public interface ICuisine

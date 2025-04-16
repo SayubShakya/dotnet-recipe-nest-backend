@@ -1,5 +1,5 @@
 ﻿using RecipeNest.CustomException;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Response;
 using RecipeNest.Repository;
 using RecipeNest.Request;

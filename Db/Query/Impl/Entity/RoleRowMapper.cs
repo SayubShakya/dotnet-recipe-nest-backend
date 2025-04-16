@@ -1,9 +1,9 @@
 // RoleRowMapper.cs
 
 using MySql.Data.MySqlClient;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 
-namespace RecipeNest.Db.Query.Impl;
+namespace RecipeNest.Db.Query.Impl.Entity;
 
 public class RoleRowMapper : IRowMapper<Role>
 {

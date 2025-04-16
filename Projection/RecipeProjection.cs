@@ -2,13 +2,13 @@
 
 namespace RecipeNest.Projection;
 
-public class RecipeAuthorized
+public class RecipeProjection
 {
-    public RecipeAuthorized()
+    public RecipeProjection()
     {
     }
 
-    public RecipeAuthorized(int id, string? imageUrl, string title, string? description, string recipeDetail,
+    public RecipeProjection(int id, string? imageUrl, string title, string? description, string recipeDetail,
         string ingredients, int? recipeByUserId, int? cuisineId, bool? isFavorite, int? rating)
     {
         Id = id;

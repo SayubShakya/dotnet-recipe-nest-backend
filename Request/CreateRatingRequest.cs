@@ -1,5 +1,5 @@
 ﻿using MessagePack;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 
 namespace RecipeNest.Request;
 

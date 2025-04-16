@@ -1,7 +1,7 @@
 ﻿// RoleRepository.cs
 
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 
 namespace RecipeNest.Repository;
 

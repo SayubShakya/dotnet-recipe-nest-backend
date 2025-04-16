@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Autofac;
 using RecipeNest.Controller;
+using RecipeNest.CustomException;
 using RecipeNest.Dto;
 using RecipeNest.Response;
 using RecipeNest.Request;
@@ -84,11 +85,15 @@ public class APIRouter
 
             return ResponseUtil.NotFound();
         }
+        catch (CustomApplicationException e)
+        {
+            Console.WriteLine(e);
+            return new ServerResponse(null, e.Message, e.StatusCode, null);
+        }
         catch (Exception e)
         {
             Console.WriteLine(e);
             return new ServerResponse(null, "Internal Server Error", 500, e.Message);
         }
     }
-    
 }

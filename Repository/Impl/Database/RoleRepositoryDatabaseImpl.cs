@@ -1,10 +1,11 @@
 // RoleRepositoryDatabaseImpl.cs
 
-using RecipeNest.Consta;
+using RecipeNest.Constant;
 using RecipeNest.Db;
-using RecipeNest.Db.Query.Impl;
+using RecipeNest.Db.Query.Impl.Entity;
+using RecipeNest.Db.Query.Impl.Projection;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 
 namespace RecipeNest.Repository.Impl.Database;
 

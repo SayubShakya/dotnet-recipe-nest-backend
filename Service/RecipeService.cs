@@ -1,6 +1,6 @@
 ﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
-using RecipeNest.Model;
+using RecipeNest.Entity;
 using RecipeNest.Projection;
 using RecipeNest.Repository;
 using RecipeNest.Request;
@@ -26,24 +26,21 @@ public class RecipeService
 
     public PaginatedResponse<RecipeResponse> GetAll(int start, int limit)
     {
-        Paged<RecipeAuthorized> pagedRecipes =
+        Paged<RecipeProjection> pagedRecipes =
             _recipeRepository.GetAllAuthorizedPaginated(start, limit, _sessionUserDto.User.Id);
 
-        List<RecipeResponse> items = pagedRecipes.Items.Select(recipe =>
-        {
-            return new RecipeResponse(
-                recipe.Id,
-                recipe.ImageUrl,
-                recipe.Title,
-                recipe.Description,
-                recipe.RecipeDetail,
-                recipe.Ingredients,
-                recipe.RecipeByUserId,
-                recipe.CuisineId,
-                recipe.IsFavorite,
-                recipe.Rating
-            );
-        }).ToList();
+        List<RecipeResponse> items = pagedRecipes.Items.Select(recipe => new RecipeResponse(
+            recipe.Id,
+            recipe.ImageUrl,
+            recipe.Title,
+            recipe.Description,
+            recipe.RecipeDetail,
+            recipe.Ingredients,
+            recipe.RecipeByUserId,
+            recipe.CuisineId,
+            recipe.IsFavorite,
+            recipe.Rating
+        )).ToList();
 
         PaginatedResponse<RecipeResponse> paginatedResponse = new()
         {

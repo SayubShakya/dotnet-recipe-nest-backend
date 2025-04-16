@@ -2,7 +2,7 @@
 
 using MessagePack;
 
-namespace RecipeNest.Model;
+namespace RecipeNest.Entity;
 
 public class Role
 {

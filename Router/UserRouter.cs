@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
-using RecipeNest.Consta;
+using RecipeNest.Constant;
 using RecipeNest.Controller;
 using RecipeNest.Request;
 using RecipeNest.Response;
@@ -21,12 +21,7 @@ public class UserRouter
     public ServerResponse User(string path, HttpListenerRequest request)
     {
         Console.WriteLine("User requesting path: " + path);
-        if (Regex.IsMatch(path, @"^/users\?email=[^&]+$"))
-        {
-            var email = request.QueryString["email"];
-            if (request.HttpMethod.Equals("GET")) return _userController.GetByEmail(email);
-        }
-        else if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
+        if (Regex.IsMatch(path, @"^/users\?id=\d+$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
 

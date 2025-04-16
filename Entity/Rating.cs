@@ -1,6 +1,6 @@
 ﻿using MessagePack;
 
-namespace RecipeNest.Model;
+namespace RecipeNest.Entity;
 
 public enum RatingScore : int
 {

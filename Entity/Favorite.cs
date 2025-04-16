@@ -4,7 +4,7 @@ using MessagePack;
 
 // Required for DateTime
 
-namespace RecipeNest.Model;
+namespace RecipeNest.Entity;
 
 public class Favorite
 {

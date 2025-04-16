@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
-using RecipeNest.Consta;
+using RecipeNest.Constant;
 using RecipeNest.Controller;
 using RecipeNest.Request;
 using RecipeNest.Response;

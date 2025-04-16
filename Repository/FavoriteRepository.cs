@@ -1,4 +1,4 @@
-﻿using RecipeNest.Model;
+﻿using RecipeNest.Entity;
 
 namespace RecipeNest.Repository;
 
