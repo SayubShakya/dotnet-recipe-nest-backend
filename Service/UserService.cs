@@ -1,6 +1,7 @@
 ﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
 using RecipeNest.Model;
+using RecipeNest.Projection;
 using RecipeNest.Repository;
 using RecipeNest.Request;
 using RecipeNest.Response;
@@ -12,11 +13,13 @@ public class UserService
 {
     private readonly IHashingUtil _hashingUtil;
     private readonly IUserRepository _userRepository;
+    private readonly IUserRepository _userRoleRepository;
 
-    public UserService(IUserRepository userRepository, IHashingUtil hashingUtil)
+    public UserService(IUserRepository userRepository, IHashingUtil hashingUtil, IUserRepository userRoleRepository)
     {
         _userRepository = userRepository;
         _hashingUtil = hashingUtil;
+        _userRoleRepository = userRoleRepository;
     }
 
     public PaginatedResponse<UserResponse> GetAll(int start, int limit)
@@ -45,6 +48,31 @@ public class UserService
 
         return paginatedResponse;
     }
+    
+    // public PaginatedResponse<UserRoleResponse> GetUsersWithRoles(int start, int limit)
+    // {
+    //     Paged<UserRole> pagedUsers = _userRoleRepository.GetAllWithRolesPaginated(start, limit);
+    //
+    //     List<UserRoleResponse> items = pagedUsers.Items.Select(user => new UserRoleResponse(
+    //         user.Id,
+    //         user.FirstName,
+    //         user.LastName,
+    //         user.PhoneNumber,
+    //         user.ImageUrl,
+    //         user.About,
+    //         user.Email,
+    //         user.Role,  
+    //         user.IsActive
+    //     )).ToList();
+    //
+    //     return new PaginatedResponse<UserRoleResponse>
+    //     {
+    //         Items = items,
+    //         Count = pagedUsers.Count,
+    //         Limit = pagedUsers.Limit,
+    //         Start = pagedUsers.Start
+    //     };
+    // }
 
     public UserResponse GetById(int id)
     {

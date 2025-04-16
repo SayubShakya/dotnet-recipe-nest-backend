@@ -27,6 +27,20 @@ public class UserController : BaseController
             throw new ApplicationException("Error occured while getting all users", ex);
         }
     }
+    
+    // public ServerResponse GetUsersWithRoles(int start, int limit)
+    // {
+    //     try
+    //     {
+    //         PaginatedResponse<UserRoleResponse> response = _userService.GetUsersWithRoles(start, limit);
+    //         return new ServerResponse(response, null, 200);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         throw new ApplicationException("Error occured while getting all users and roles", ex);
+    //     }
+    // }
+    
 
     public ServerResponse GetById(int id)
     {

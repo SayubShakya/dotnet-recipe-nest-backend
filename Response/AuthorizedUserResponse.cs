@@ -5,11 +5,14 @@ namespace RecipeNest.Response;
 [MessagePackObject]
 public class AuthorizedUserResponse
 {
-    public AuthorizedUserResponse(string name, string? role)
+    public AuthorizedUserResponse(int? id, string name, string? role)
     {
+        Id = id;
         Name = name;
         Role = role;
     }
+    
+    [Key("id")] public int? Id { get; set; }
 
     [Key("name")] public string Name { get; set; }
 

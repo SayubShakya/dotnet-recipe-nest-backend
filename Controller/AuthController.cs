@@ -83,9 +83,7 @@ public class AuthController : BaseController
 
     public ServerResponse Authorized()
     {
-        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(
-            _sessionUserDto?.User?.FirstName + " " + _sessionUserDto?.User?.LastName,
-            _sessionUserDto?.Role?.Name
+        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(_sessionUserDto?.User?.Id,_sessionUserDto?.User?.FirstName + " " + _sessionUserDto?.User?.LastName, _sessionUserDto?.Role?.Name
         );
         return new ServerResponse(authorizedUserResponse, null, 200);
     }

@@ -32,6 +32,9 @@ public interface IQueryConstant
         public const string GetAllActiveOrderByCreatedDate =
             "SELECT * FROM users WHERE is_active=1 ORDER BY created_date";
 
+        public const string GetUsersWithRoles =
+            "SELECT u.id, u.first_name, u.last_name, u.phone_number, u.email, r.name as role, u.is_active\n            FROM users u\n        LEFT JOIN roles r ON u.role_id = r.id ORDER BY created_date";
+
         public const string AllActiveCount =
             "SELECT count(*) as count FROM users WHERE is_active=1";
 
@@ -67,19 +70,19 @@ public interface IQueryConstant
             "UPDATE recipes SET image_url=@param1, title=@param2, description=@param3, recipe=@param4, ingredients=@param5, recipe_by=@param6, cuisine=@param7 WHERE is_active=1 AND id=@param8";
 
         public const string GetById = "SELECT * FROM recipes WHERE id=@param1 AND is_active=1";
-        
+
         public const string GetAllFavorites =
-            "SELECT r.* FROM recipes r INNER JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 AND f.user_id=@param1 ORDER BY r.created_date"; 
+            "SELECT r.* FROM recipes r INNER JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 AND f.user_id=@param1 ORDER BY r.created_date";
 
         public const string CountAllFavorites =
             "SELECT count(*) as count FROM recipes r INNER JOIN favorites f ON r.id=f.recipe_id WHERE r.is_active=1 AND f.is_active=1 AND f.user_id=@param1";
-        
+
         public const string GetAllActiveOrderByCreatedDate =
             "SELECT * FROM recipes WHERE is_active=1 ORDER BY created_date";
-        
+
         public const string GetAllActiveAuthorized =
             "SELECT r.*, ra.rating, fa.is_active as is_favorite\nFROM recipes r\n         LEFT JOIN (SELECT * FROM ratings WHERE is_active=1 AND user_id=@param1) ra ON r.id = ra.recipe_id\n         LEFT JOIN (SELECT * FROM favorites WHERE is_active=1 AND user_id=@param2) fa ON r.id = fa.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
-    
+
         public const string GetAllActiveAuthorizedCount =
             "SELECT count(*) as count FROM recipes r\n         LEFT JOIN (SELECT * FROM ratings WHERE is_active=1 AND user_id=@param1) ra ON r.id = ra.recipe_id\n         LEFT JOIN (SELECT * FROM favorites WHERE is_active=1 AND user_id=@param2) fa ON r.id = fa.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
 
