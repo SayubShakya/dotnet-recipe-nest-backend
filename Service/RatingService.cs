@@ -1,4 +1,5 @@
-﻿using RecipeNest.Model;
+﻿using RecipeNest.CustomException;
+using RecipeNest.Model;
 using RecipeNest.Response;
 using RecipeNest.Repository;
 using RecipeNest.Request;
@@ -22,14 +23,11 @@ public class RatingService
     public RatingResponse GetByUserAndRecipe(int userId, int recipeId)
     {
         var ratingModel = _ratingRepository.GetByUserAndRecipe(userId, recipeId);
-
-        if (ratingModel == null) return null;
+        if (ratingModel == null) throw new CustomApplicationException(404, "Rating not found", null);
 
         if (ratingModel.UserId == null || ratingModel.RecipeId == null || ratingModel.Score == null)
         {
-            Console.WriteLine(
-                $"Warning: Fetched rating (ID: {ratingModel.Id}) has unexpected null values for required fields.");
-            return null;
+            throw new CustomApplicationException(500, "Invalid rating data", null);
         }
 
         return new RatingResponse(
@@ -44,22 +42,25 @@ public class RatingService
     {
         if (request == null)
         {
-            Console.WriteLine("RatingService.Save: Request is null.");
-            return false;
+            throw new CustomApplicationException(400, "Rating request cannot be null", null);
         }
 
         var user = _userRepository.GetById(request.UserId);
         if (user == null)
         {
-            Console.WriteLine($"RatingService.Save: User not found for ID: {request.UserId}");
-            return false;
+            throw new CustomApplicationException(404, $"User not found for ID: {request.UserId}", null);
         }
 
         var recipe = _recipeRepository.GetById(request.RecipeId);
         if (recipe == null)
         {
-            Console.WriteLine($"RatingService.Save: Recipe not found for ID: {request.RecipeId}");
-            return false;
+            throw new CustomApplicationException(404, $"Recipe not found for ID: {request.RecipeId}", null);
+        }
+
+        var existingRating = _ratingRepository.GetByUserAndRecipe(request.UserId, request.RecipeId);
+        if (existingRating != null)
+        {
+            throw new CustomApplicationException(409, "Rating already exists for this user and recipe", null);
         }
 
         var ratingModel = new Rating
@@ -71,18 +72,26 @@ public class RatingService
 
         var success = _ratingRepository.Save(ratingModel);
         if (!success)
-            Console.WriteLine(
-                $"RatingService.Save: Repository failed to save rating for UserID: {request.UserId}, RecipeID: {request.RecipeId}.");
+        {
+            throw new CustomApplicationException(500, "Failed to save rating", null);
+        }
 
         return success;
     }
 
     public bool DeleteByUserAndRecipe(int userId, int recipeId)
     {
+        var existingRating = _ratingRepository.GetByUserAndRecipe(userId, recipeId);
+        if (existingRating == null)
+        {
+            throw new CustomApplicationException(404, "Rating not found", null);
+        }
+
         var success = _ratingRepository.DeleteByUserAndRecipe(userId, recipeId);
         if (!success)
-            Console.WriteLine(
-                $"RatingService.Delete: Repository failed to delete rating for UserID: {userId}, RecipeID: {recipeId}.");
+        {
+            throw new CustomApplicationException(500, "Failed to delete rating", null);
+        }
 
         return success;
     }

@@ -1,5 +1,4 @@
-﻿// Service/RecipeService.cs
-
+﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Projection;
@@ -16,7 +15,8 @@ public class RecipeService
     private readonly IRatingRepository _ratingRepository;
     private readonly SessionUserDTO _sessionUserDto;
 
-    public RecipeService(IRecipeRepository recipeRepository, IFavoriteRepository favoriteRepository, IRatingRepository ratingRepository, SessionUserDTO sessionUserDto)
+    public RecipeService(IRecipeRepository recipeRepository, IFavoriteRepository favoriteRepository,
+        IRatingRepository ratingRepository, SessionUserDTO sessionUserDto)
     {
         _recipeRepository = recipeRepository;
         _favoriteRepository = favoriteRepository;
@@ -24,30 +24,26 @@ public class RecipeService
         _sessionUserDto = sessionUserDto;
     }
 
-
     public PaginatedResponse<RecipeResponse> GetAll(int start, int limit)
     {
-        Paged<RecipeAuthorized> pagedRecipes = _recipeRepository.GetAllAuthorizedPaginated(start, limit,_sessionUserDto.User.Id);
-        
-        List<RecipeResponse> items =  pagedRecipes.Items.Select(recipe =>
-            {
-                return new RecipeResponse(
-                    recipe.Id,
-                    recipe.ImageUrl,
-                    recipe.Title,
-                    recipe.Description,
-                    recipe.RecipeDetail,
-                    recipe.Ingredients,
-                    recipe.RecipeByUserId,
-                    recipe.CuisineId,
-                    recipe.IsFavorite,
-                    recipe.Rating
-                );
-            }
-            
-            
-           
-        ).ToList();
+        Paged<RecipeAuthorized> pagedRecipes =
+            _recipeRepository.GetAllAuthorizedPaginated(start, limit, _sessionUserDto.User.Id);
+
+        List<RecipeResponse> items = pagedRecipes.Items.Select(recipe =>
+        {
+            return new RecipeResponse(
+                recipe.Id,
+                recipe.ImageUrl,
+                recipe.Title,
+                recipe.Description,
+                recipe.RecipeDetail,
+                recipe.Ingredients,
+                recipe.RecipeByUserId,
+                recipe.CuisineId,
+                recipe.IsFavorite,
+                recipe.Rating
+            );
+        }).ToList();
 
         PaginatedResponse<RecipeResponse> paginatedResponse = new()
         {
@@ -59,13 +55,14 @@ public class RecipeService
 
         return paginatedResponse;
     }
-    
-    public RecipeResponse? GetById(int id)
+
+    public RecipeResponse GetById(int id)
     {
         var recipe = _recipeRepository.GetById(id);
-        if (recipe == null) return null;
-        Rating rating =  _ratingRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
-        Favorite favorite =  _favoriteRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
+        if (recipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
+
+        Rating rating = _ratingRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
+        Favorite favorite = _favoriteRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
         return new RecipeResponse(
             recipe.Id,
             recipe.ImageUrl,
@@ -75,19 +72,20 @@ public class RecipeService
             recipe.Ingredients,
             recipe.RecipeByUserId,
             recipe.CuisineId,
-            favorite !=null,
-            rating !=null? (int) rating.Score: 0
+            favorite != null,
+            rating != null ? (int)rating.Score : 0
         );
     }
 
-    public RecipeResponse? GetByTitle(string title)
+    public RecipeResponse GetByTitle(string title)
     {
-        if (string.IsNullOrWhiteSpace(title)) return null;
+        if (string.IsNullOrWhiteSpace(title)) throw new CustomApplicationException(400, "Title cannot be empty", null);
 
         var recipe = _recipeRepository.GetByTitle(title);
-        if (recipe == null) return null;
-        Rating rating =  _ratingRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
-        Favorite favorite =  _favoriteRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
+        if (recipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
+
+        Rating rating = _ratingRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
+        Favorite favorite = _favoriteRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
         return new RecipeResponse(
             recipe.Id,
             recipe.ImageUrl,
@@ -97,8 +95,8 @@ public class RecipeService
             recipe.Ingredients,
             recipe.RecipeByUserId,
             recipe.CuisineId,
-            favorite !=null,
-            rating !=null? (int) rating.Score: 0
+            favorite != null,
+            rating != null ? (int)rating.Score : 0
         );
     }
 
@@ -121,7 +119,7 @@ public class RecipeService
     public bool Update(UpdateRecipeRequest request)
     {
         var existingRecipe = _recipeRepository.GetById(request.Id);
-        if (existingRecipe == null) return false;
+        if (existingRecipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
 
         var recipeToUpdate = new Recipe
         {
@@ -140,17 +138,22 @@ public class RecipeService
 
     public bool DeleteById(int id)
     {
+        var existingRecipe = _recipeRepository.GetById(id);
+        if (existingRecipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
         return _recipeRepository.DeleteById(id);
     }
-    
+
     public PaginatedResponse<RecipeResponse> GetAllFavorites(int userId, int start, int limit)
     {
         Paged<Recipe> pagedFavorites = _recipeRepository.GetFavoriteRecipes(userId, start, limit);
 
+        if (pagedFavorites == null || pagedFavorites.Count == 0)
+            throw new CustomApplicationException(404, "No favorite recipes found", null);
+
         List<RecipeResponse> items = pagedFavorites.Items.Select(recipe =>
         {
-            Rating rating =  _ratingRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
-            Favorite favorite =  _favoriteRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
+            Rating rating = _ratingRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
+            Favorite favorite = _favoriteRepository.GetByUserAndRecipe(_sessionUserDto.User.Id, recipe.Id);
             return new RecipeResponse(
                 recipe.Id,
                 recipe.ImageUrl,
@@ -160,8 +163,8 @@ public class RecipeService
                 recipe.Ingredients,
                 recipe.RecipeByUserId,
                 recipe.CuisineId,
-                favorite !=null,
-                rating !=null? (int) rating.Score: 0
+                favorite != null,
+                rating != null ? (int)rating.Score : 0
             );
         }).ToList();
 

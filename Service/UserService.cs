@@ -1,5 +1,4 @@
-﻿// UserService.cs
-
+﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Repository;
@@ -19,21 +18,21 @@ public class UserService
         _userRepository = userRepository;
         _hashingUtil = hashingUtil;
     }
-    
+
     public PaginatedResponse<UserResponse> GetAll(int start, int limit)
     {
         Paged<User> pagedUsers = _userRepository.GetAllPaginated(start, limit);
-        
-        List<UserResponse> items =  pagedUsers.Items.Select(user => new UserResponse(
-                user.Id,
-                user.FirstName,
-                user.LastName,
-                user.PhoneNumber,
-                user.ImageUrl,
-                user.About,
-                user.Email,
-                user.RoleId,
-                user.IsActive
+
+        List<UserResponse> items = pagedUsers.Items.Select(user => new UserResponse(
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.PhoneNumber,
+            user.ImageUrl,
+            user.About,
+            user.Email,
+            user.RoleId,
+            user.IsActive
         )).ToList();
 
         PaginatedResponse<UserResponse> paginatedResponse = new()
@@ -50,6 +49,7 @@ public class UserService
     public UserResponse GetById(int id)
     {
         var user = _userRepository.GetById(id);
+        if (user == null) throw new CustomApplicationException(404, "Users not found", null);
 
         return new UserResponse(
             user.Id,
@@ -83,7 +83,8 @@ public class UserService
 
     public bool Update(UpdateUserRequest request)
     {
-        var existingUser = _userRepository.GetById(request.Id) ?? throw new ArgumentNullException(nameof(request));
+        var existingUser = _userRepository.GetById(request.Id);
+        if (existingUser == null) throw new CustomApplicationException(404, "Users not found", null);
 
         var user = new User
         {
@@ -98,20 +99,20 @@ public class UserService
             Password = !string.IsNullOrEmpty(request.Password) ? request.Password : existingUser.Password
         };
 
-
         return _userRepository.Update(user);
     }
 
     public bool DeleteById(int id)
     {
+        var existingUser = _userRepository.GetById(id);
+        if (existingUser == null) throw new CustomApplicationException(404, "Users not found", null);
         return _userRepository.DeleteById(id);
     }
-
 
     public UserResponse? GetByEmail(string email)
     {
         var user = _userRepository.GetByEmail(email);
-        if (user == null) return null;
+        if (user == null) throw new CustomApplicationException(404, "Users not found", null);
 
         return new UserResponse(
             user.Id,

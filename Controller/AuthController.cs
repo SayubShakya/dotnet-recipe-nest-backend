@@ -38,16 +38,6 @@ public class AuthController : BaseController
 
     public ServerResponse Register(RegisterRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.FirstName) ||
-            string.IsNullOrWhiteSpace(request.LastName) ||
-            string.IsNullOrWhiteSpace(request.Email) ||
-            string.IsNullOrWhiteSpace(request.Password) ||
-            string.IsNullOrWhiteSpace(request.PhoneNumber))
-        {
-            return new ServerResponse(null,
-                "Required fields (FirstName, LastName, Email, Password, PhoneNumber) cannot be empty.", 400);
-        }
-
         var existingUser = _userRepository.GetByEmail(request.Email);
         if (existingUser != null)
         {

@@ -1,5 +1,4 @@
-// RoleService.cs
-
+using RecipeNest.CustomException;
 using RecipeNest.Dto;
 using RecipeNest.Model;
 using RecipeNest.Repository;
@@ -11,17 +10,18 @@ namespace RecipeNest.Service;
 public class RoleService
 {
     private readonly IRoleRepository _roleRepository;
+
     public RoleService(IRoleRepository roleRepository)
     {
         _roleRepository = roleRepository;
     }
-    
-    
+
+
     public PaginatedResponse<RoleResponse> GetAll(int start, int limit)
     {
         Paged<Role> pagedRoles = _roleRepository.GetAllPaginated(start, limit);
-        
-        List<RoleResponse> items =  pagedRoles.Items.Select(role => new RoleResponse(
+
+        List<RoleResponse> items = pagedRoles.Items.Select(role => new RoleResponse(
             role.Id,
             role.Name
         )).ToList();
@@ -40,7 +40,7 @@ public class RoleService
     public RoleResponse GetById(int id)
     {
         var role = _roleRepository.GetById(id);
-
+        if (role == null) throw new CustomApplicationException(404, "Roles not found", null);
         return new RoleResponse(role.Id, role.Name);
     }
 
@@ -55,14 +55,20 @@ public class RoleService
 
     public bool Update(UpdateRoleRequest request)
     {
+        var existingRole = _roleRepository.GetById(request.Id);
+        if (existingRole == null) throw new CustomApplicationException(404, "Roles not found", null);
+
         var role = new Role();
         role.Id = request.Id;
         role.Name = request.Name;
         return _roleRepository.Update(role);
     }
 
+
     public bool DeleteById(int id)
     {
+        var existingRole = _roleRepository.GetById(id);
+        if (existingRole == null) throw new CustomApplicationException(404, "Roles not found", null);
         return _roleRepository.DeleteById(id);
     }
 }

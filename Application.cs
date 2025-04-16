@@ -100,6 +100,18 @@ internal class Application
         var request = context.Request;
         response = context.Response;
 
+        if (request.HttpMethod == "OPTIONS")
+        {
+            response.StatusCode = 204;
+            response.Headers.Add("Access-Control-Allow-Origin", "*");
+            response.Headers.Add("Access-Control-Allow-Credentials", "true");
+            response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.Headers.Add("Access-Control-Allow-Headers", "*");
+            response.Headers.Add("Access-Control-Max-Age", "86400");
+            response.OutputStream.Close();
+            return;
+        }
+
         try
         {
             Console.WriteLine(
@@ -160,6 +172,8 @@ internal class Application
         response.Headers.Add("Access-Control-Allow-Origin", "*");
         response.Headers.Add("Access-Control-Allow-Credentials", "true");
         response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        response.Headers.Add("Access-Control-Allow-Headers", "*");
+        response.Headers.Add("Access-Control-Max-Age", "86400");
         response.OutputStream.Write(buffer, 0, buffer.Length);
         response.OutputStream.Close();
     }
