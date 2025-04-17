@@ -11,12 +11,12 @@ namespace RecipeNest.Router;
 public class AuthRouter
 {
     private readonly AuthController _authController;
-    private readonly SessionUserDTO _sessionUserDto;
+    private readonly SessionUser _sessionUser;
 
-    public AuthRouter(AuthController authController, SessionUserDTO sessionUserDto)
+    public AuthRouter(AuthController authController, SessionUser sessionUser)
     {
         _authController = authController;
-        _sessionUserDto = sessionUserDto;
+        _sessionUser = sessionUser;
     }
     
     public ServerResponse Auth(string path, HttpListenerRequest request)
@@ -35,7 +35,7 @@ public class AuthRouter
         }
         else if (Regex.IsMatch(path, @"^/auth/authorized/?$"))
         {
-            if (_sessionUserDto.Authenticated)
+            if (_sessionUser.Authenticated)
             {
                 if (request.HttpMethod.Equals("GET"))
                     return _authController.Authorized();

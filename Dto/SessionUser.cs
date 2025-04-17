@@ -2,7 +2,7 @@
 
 namespace RecipeNest.Dto;
 
-public class SessionUserDTO
+public class SessionUser
 {
     
     private User? user;

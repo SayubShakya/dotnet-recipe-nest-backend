@@ -12,13 +12,13 @@ public class AuthController : BaseController
 {
     private readonly IUserRepository _userRepository;
     private readonly IHashingUtil _hashingUtil;
-    private readonly SessionUserDTO _sessionUserDto;
+    private readonly SessionUser _sessionUser;
 
-    public AuthController(IUserRepository userRepository, IHashingUtil hashingUtil, SessionUserDTO sessionUserDto)
+    public AuthController(IUserRepository userRepository, IHashingUtil hashingUtil, SessionUser sessionUser)
     {
         _userRepository = userRepository;
         _hashingUtil = hashingUtil;
-        _sessionUserDto = sessionUserDto;
+        _sessionUser = sessionUser;
     }
 
     public ServerResponse Login(LoginRequest request)
@@ -86,8 +86,8 @@ public class AuthController : BaseController
 
     public ServerResponse Authorized()
     {
-        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(_sessionUserDto?.User?.Id,
-            _sessionUserDto?.User?.FirstName + " " + _sessionUserDto?.User?.LastName, _sessionUserDto?.Role?.Name
+        AuthorizedUserResponse authorizedUserResponse = new AuthorizedUserResponse(_sessionUser?.User?.Id,
+            _sessionUser?.User?.FirstName + " " + _sessionUser?.User?.LastName, _sessionUser?.Role?.Name
         );
         return new ServerResponse(authorizedUserResponse, null, 200);
     }
