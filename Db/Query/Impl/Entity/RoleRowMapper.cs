@@ -9,8 +9,10 @@ public class RoleRowMapper : IRowMapper<Role>
 {
     public Role Map(MySqlDataReader reader)
     {
-        var id = reader.GetInt32("id");
-        var name = reader.GetString("name");
-        return new Role(id, name);
+        return new Role
+        {
+            Id = reader.GetInt32("id"),
+            Name = reader.GetString("name")
+        };
     }
 }

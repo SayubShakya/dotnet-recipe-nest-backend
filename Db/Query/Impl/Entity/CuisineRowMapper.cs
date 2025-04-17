@@ -8,9 +8,11 @@ public class CuisineRowMapper : IRowMapper<Cuisine>
 {
     public Cuisine Map(MySqlDataReader reader)
     {
-        var id = reader.GetInt32("id");
-        var Name = reader.GetString("name");
-        var ImageUrl = reader.GetString("image_url");
-        return new Cuisine(id, Name, ImageUrl);
+        return new Cuisine
+        {
+            Id = reader.GetInt32("id"),
+            Name = reader.GetString("name"),
+            ImageUrl = reader.GetString("image_url"),
+        };
     }
 }
