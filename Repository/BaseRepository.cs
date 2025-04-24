@@ -8,9 +8,10 @@ public interface IBaseRepository<T>
 
     bool Update(T obj);
 
-    T GetById(int id);
+    T GetActiveById(int id);
 
     List<T> GetAll();
 
     bool DeleteById(int id);
+    
 }

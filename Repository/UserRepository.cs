@@ -12,4 +12,10 @@ public interface IUserRepository : IBaseRepository<User>
     UserDetailProjection? GetUserDetailProjectionById(int id);
     
     Paged<UserTableProjection> GetAllPaginated(int start, int limit);
+    
+    bool RestoreById(int id);
+
+    public User GetInactiveById(int id);
+
+    public User GetById(int id);
 }

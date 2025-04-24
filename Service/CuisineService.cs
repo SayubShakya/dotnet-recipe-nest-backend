@@ -39,7 +39,7 @@ public class CuisineService
 
     public CuisineResponse? GetById(int id)
     {
-        var cuisine = _cuisineRepository.GetById(id);
+        var cuisine = _cuisineRepository.GetActiveById(id);
         if (cuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
 
         return new CuisineResponse(
@@ -77,7 +77,7 @@ public class CuisineService
 
     public bool Update(UpdateCuisineRequest request)
     {
-        var existingCuisine = _cuisineRepository.GetById(request.Id);
+        var existingCuisine = _cuisineRepository.GetActiveById(request.Id);
         if (existingCuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
 
 
@@ -94,7 +94,7 @@ public class CuisineService
 
     public bool DeleteById(int id)
     {
-        var existingCuisine = _cuisineRepository.GetById(id);
+        var existingCuisine = _cuisineRepository.GetActiveById(id);
         if (existingCuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
         return _cuisineRepository.DeleteById(id);
     }

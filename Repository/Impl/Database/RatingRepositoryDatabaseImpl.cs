@@ -82,7 +82,7 @@ public class RatingRepositoryDatabaseImpl : IRatingRepository
         throw new NotImplementedException();
     }
 
-    public Rating GetById(int id)
+    public Rating GetActiveById(int id)
     {
         throw new NotImplementedException();
     }

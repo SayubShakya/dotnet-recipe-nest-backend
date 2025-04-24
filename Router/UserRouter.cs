@@ -10,14 +10,13 @@ namespace RecipeNest.Router;
 
 public class UserRouter
 {
-    
     private readonly UserController _userController;
 
     public UserRouter(UserController userController)
     {
         _userController = userController;
     }
-    
+
     public ServerResponse User(string path, HttpListenerRequest request)
     {
         Console.WriteLine("User requesting path: " + path);
@@ -26,8 +25,13 @@ public class UserRouter
             int id = int.Parse(request.QueryString["id"]!);
 
             if (request.HttpMethod.Equals("GET")) return _userController.GetById(id);
-
-            if (request.HttpMethod.Equals("DELETE")) return _userController.DeleteById(id);
+        }
+        else if (Regex.IsMatch(path, @"^/users/status-toggle/?$"))
+        {
+            if (request.HttpMethod.Equals("POST"))
+            {
+                if (request.HttpMethod.Equals("POST")) return _userController.ToggleUserActivation(BaseController.JsonRequestBody<ToggleUserStatusRequest>(request));
+            }
         }
         else if (Regex.IsMatch(path, @"^/users/?(?:\?.*)?"))
         {
@@ -42,6 +46,7 @@ public class UserRouter
             if (request.HttpMethod.Equals("PUT"))
                 return _userController.Update(BaseController.JsonRequestBody<UpdateUserRequest>(request));
         }
+
         return ResponseUtil.NotFound();
     }
 }

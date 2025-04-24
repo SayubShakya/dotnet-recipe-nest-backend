@@ -55,7 +55,7 @@ public class RecipeService
 
     public RecipeResponse GetById(int id)
     {
-        var recipe = _recipeRepository.GetById(id);
+        var recipe = _recipeRepository.GetActiveById(id);
         if (recipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
 
         Rating rating = _ratingRepository.GetByUserAndRecipe(_sessionUser.User.Id, recipe.Id);
@@ -115,7 +115,7 @@ public class RecipeService
 
     public bool Update(UpdateRecipeRequest request)
     {
-        var existingRecipe = _recipeRepository.GetById(request.Id);
+        var existingRecipe = _recipeRepository.GetActiveById(request.Id);
         if (existingRecipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
 
         var recipeToUpdate = new Recipe
@@ -135,7 +135,7 @@ public class RecipeService
 
     public bool DeleteById(int id)
     {
-        var existingRecipe = _recipeRepository.GetById(id);
+        var existingRecipe = _recipeRepository.GetActiveById(id);
         if (existingRecipe == null) throw new CustomApplicationException(404, "Recipe not found", null);
         return _recipeRepository.DeleteById(id);
     }

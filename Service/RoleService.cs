@@ -39,7 +39,7 @@ public class RoleService
 
     public RoleResponse GetById(int id)
     {
-        var role = _roleRepository.GetById(id);
+        var role = _roleRepository.GetActiveById(id);
         if (role == null) throw new CustomApplicationException(404, "Roles not found", null);
         return new RoleResponse(role.Id, role.Name);
     }
@@ -55,7 +55,7 @@ public class RoleService
 
     public bool Update(UpdateRoleRequest request)
     {
-        var existingRole = _roleRepository.GetById(request.Id);
+        var existingRole = _roleRepository.GetActiveById(request.Id);
         if (existingRole == null) throw new CustomApplicationException(404, "Roles not found", null);
 
         var role = new Role();
@@ -67,7 +67,7 @@ public class RoleService
 
     public bool DeleteById(int id)
     {
-        var existingRole = _roleRepository.GetById(id);
+        var existingRole = _roleRepository.GetActiveById(id);
         if (existingRole == null) throw new CustomApplicationException(404, "Roles not found", null);
         return _roleRepository.DeleteById(id);
     }

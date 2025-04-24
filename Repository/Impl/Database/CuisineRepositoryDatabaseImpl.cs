@@ -19,7 +19,7 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 
     public bool DeleteById(int id)
     {
-        var cuisine = GetById(id);
+        var cuisine = GetActiveById(id);
         if (cuisine == null) return false;
 
         DatabaseConnector.Update(IQueryConstant.ICuisine.DeleteById, id);
@@ -31,7 +31,7 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
         return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate, new CuisineRowMapper());
     }
 
-    public Cuisine GetById(int id)
+    public Cuisine GetActiveById(int id)
     {
         return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GetById, new CuisineRowMapper(), id);
     }

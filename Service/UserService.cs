@@ -51,12 +51,13 @@ public class UserService
         };
     }
 
-    public UserResponse GetById(int id)
+    public UserResponse GetActiveById(int id)
     {
         UserDetailProjection? userDetailProjection = _userRepository.GetUserDetailProjectionById(id);
         if (userDetailProjection == null) throw new CustomApplicationException(404, "Users not found", null);
 
-        return new UserResponse{
+        return new UserResponse
+        {
             Id = userDetailProjection.Id,
             FirstName = userDetailProjection.FirstName,
             LastName = userDetailProjection.LastName,
@@ -75,7 +76,7 @@ public class UserService
         {
             throw new CustomApplicationException(400, "Email already exists", null);
         }
-        
+
         var user = new User
         {
             FirstName = request.FirstName,
@@ -93,7 +94,7 @@ public class UserService
 
     public bool Update(UpdateUserRequest request)
     {
-        var existingUser = _userRepository.GetById(request.Id);
+        var existingUser = _userRepository.GetActiveById(request.Id);
         if (existingUser == null) throw new CustomApplicationException(404, "Users not found", null);
 
         var user = new User
@@ -112,10 +113,24 @@ public class UserService
         return _userRepository.Update(user);
     }
 
-    public bool DeleteById(int id)
+    public bool Deactivate(int id)
     {
-        var existingUser = _userRepository.GetById(id);
-        if (existingUser == null) throw new CustomApplicationException(404, "Users not found", null);
+        var user = FindById(id);
+        if (!user.IsActive) throw new CustomApplicationException(409, "Users is already deactivated!", null);
         return _userRepository.DeleteById(id);
+    }
+
+    public bool Activate(int id)
+    {
+        var user = FindById(id);
+        if (user.IsActive) throw new CustomApplicationException(409, "Users is already activated!", null);
+        return _userRepository.RestoreById(id);
+    }
+    
+    private User? FindById(int id)
+    {
+        User user = _userRepository.GetById(id);
+        if (user == null) throw new CustomApplicationException(404, "Users not found", null);
+        return user;
     }
 }

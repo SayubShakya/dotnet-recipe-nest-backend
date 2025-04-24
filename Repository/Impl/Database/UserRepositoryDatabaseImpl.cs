@@ -19,7 +19,7 @@ public class UserRepositoryDatabaseImpl : IUserRepository
 
     public bool DeleteById(int id)
     {
-        var user = GetById(id);
+        var user = GetActiveById(id);
         DatabaseConnector.Update(IQueryConstant.IUser.DeleteById, id);
         return true;
     }
@@ -42,9 +42,19 @@ public class UserRepositoryDatabaseImpl : IUserRepository
             new UserDetailProjectionRowMapper(), id);
     }
 
+    public User GetActiveById(int id)
+    {
+        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetActiveById, new UserRowMapper(), id);
+    }
+    
     public User GetById(int id)
     {
         return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetById, new UserRowMapper(), id);
+    }
+    
+    public User GetInactiveById(int id)
+    {
+        return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetInactiveById, new UserRowMapper(), id);
     }
 
     public bool Save(User user)
@@ -75,4 +85,12 @@ public class UserRepositoryDatabaseImpl : IUserRepository
             user.Id
         ) == 1;
     }
+
+    public bool RestoreById(int id)
+    {
+        var user = GetActiveById(id);
+        DatabaseConnector.Update(IQueryConstant.IUser.RestoreById, id);
+        return true;
+    }
+    
 }

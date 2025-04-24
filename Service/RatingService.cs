@@ -45,13 +45,13 @@ public class RatingService
             throw new CustomApplicationException(400, "Rating request cannot be null", null);
         }
 
-        var user = _userRepository.GetById(request.UserId);
+        var user = _userRepository.GetActiveById(request.UserId);
         if (user == null)
         {
             throw new CustomApplicationException(404, $"User not found for ID: {request.UserId}", null);
         }
 
-        var recipe = _recipeRepository.GetById(request.RecipeId);
+        var recipe = _recipeRepository.GetActiveById(request.RecipeId);
         if (recipe == null)
         {
             throw new CustomApplicationException(404, $"Recipe not found for ID: {request.RecipeId}", null);

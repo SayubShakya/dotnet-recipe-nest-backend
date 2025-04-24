@@ -22,13 +22,13 @@ public class UserController : BaseController
 
     public ServerResponse GetById(int id)
     {
-        return new ServerResponse(_userService.GetById(id), null, 200);
+        return new ServerResponse(_userService.GetActiveById(id), null, 200);
     }
 
     public ServerResponse Save(CreateUserRequest request)
     {
-       _userService.Save(request);
-       return new ServerResponse(null, "User has been created!", 201);
+        _userService.Save(request);
+        return new ServerResponse(null, "User has been created!", 201);
     }
 
     public ServerResponse Update(UpdateUserRequest request)
@@ -45,17 +45,19 @@ public class UserController : BaseController
         }
     }
 
-    public ServerResponse DeleteById(int id)
+    public ServerResponse ToggleUserActivation(ToggleUserStatusRequest request)
     {
-        try
+        if (request.IsActive)
         {
-            var success = _userService.DeleteById(id);
-            if (success) return new ServerResponse(null, "User has been deleted!", 200);
-            return new ServerResponse(null, "User deletion failed. User not found.", 404);
+            var success = _userService.Activate(request.Id);
+            if (success) return new ServerResponse(null, "User has been activated!", 200);
+            return new ServerResponse(null, "User deactivation failed", 500);
         }
-        catch (Exception ex)
+        else
         {
-            return new ServerResponse(null, "User deletion failed due to an internal error.", 500, ex.Message);
+            var success = _userService.Deactivate(request.Id);
+            if (success) return new ServerResponse(null, "User has been deactivated!", 200);
+            return new ServerResponse(null, "User deactivation failed", 500);
         }
     }
 }

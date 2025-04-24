@@ -46,7 +46,7 @@ public class AuthorizationFilter
             }
 
             var roleRepository = scope.Resolve<RoleRepositoryDatabaseImpl>();
-            Role role = roleRepository.GetById(user.RoleId);
+            Role role = roleRepository.GetActiveById(user.RoleId);
 
             BuildSessionUser(scope, user, role);
 

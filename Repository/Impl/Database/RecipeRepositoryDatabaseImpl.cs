@@ -34,7 +34,7 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 
     public bool DeleteById(int id)
     {
-        var recipe = GetById(id);
+        var recipe = GetActiveById(id);
         if (recipe == null) return false;
 
         DatabaseConnector.Update(IQueryConstant.IRecipe.DeleteById, id);
@@ -46,7 +46,7 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
         return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllActiveOrderByCreatedDate, new RecipeRowMapper());
     }
 
-    public Recipe GetById(int id)
+    public Recipe GetActiveById(int id)
     {
         return DatabaseConnector.QueryOne(IQueryConstant.IRecipe.GetById, new RecipeRowMapper(), id);
     }

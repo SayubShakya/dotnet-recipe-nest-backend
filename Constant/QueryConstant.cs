@@ -27,7 +27,8 @@ public interface IQueryConstant
         public const string Update =
             "UPDATE users SET first_name=@param1, last_name=@param2, phone_number=@param3,image_url=@param4, about=@param5, email=@param6, password=@param7, role_id=@param8 WHERE is_active=1 AND id=@param9";
 
-        public const string GetById = "SELECT * FROM users WHERE id=@param1 AND is_active=1";
+        public const string GetActiveById = "SELECT * FROM users WHERE id=@param1 AND is_active=1";
+        public const string GetInactiveById = "SELECT * FROM users WHERE id=@param1 AND is_active=0";
 
         public const string GetAllActiveOrderByCreatedDate =
             "SELECT * FROM users WHERE is_active=1 ORDER BY created_date";
@@ -42,6 +43,8 @@ public interface IQueryConstant
             "SELECT u.id, u.first_name, u.last_name, u.phone_number, u.email, r.name as role, u.is_active, u.about, u.image_url FROM users u LEFT JOIN roles r ON u.role_id = r.id WHERE u.id=@param1 AND u.is_active=1 ORDER BY u.created_date";
 
         public const string DeleteById = "UPDATE users SET is_active=0 WHERE id=@param1 AND is_active = 1";
+        public const string RestoreById = "UPDATE users SET is_active=1 WHERE id=@param1 AND is_active = 0";
+        public const string GetById= "SELECT * FROM users WHERE id=@param1";
         public const string GetByEmail = "SELECT * FROM users WHERE email=@param1";
     }
 

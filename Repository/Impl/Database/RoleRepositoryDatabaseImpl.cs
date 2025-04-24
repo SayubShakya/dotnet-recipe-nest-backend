@@ -18,7 +18,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
     }
     public bool DeleteById(int id)
     {
-        var role = GetById(id);
+        var role = GetActiveById(id);
         if (role == null) return false;
 
         DatabaseConnector.Update(IQueryConstant.IRole.DeleteById, id);
@@ -30,7 +30,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
         return DatabaseConnector.QueryAll(IQueryConstant.IRole.GetAllActiveOrderByCreatedDate, new RoleRowMapper());
     }
 
-    public Role GetById(int id)
+    public Role GetActiveById(int id)
     {
         return DatabaseConnector.QueryOne(IQueryConstant.IRole.GetById, new RoleRowMapper(), id);;
     }

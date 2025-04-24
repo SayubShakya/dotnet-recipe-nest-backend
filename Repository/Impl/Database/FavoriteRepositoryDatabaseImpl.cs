@@ -66,7 +66,7 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
             "Favorites are typically not updated directly, but deleted and re-added if necessary. Use specific methods.");
     }
 
-    public Favorite GetById(int id)
+    public Favorite GetActiveById(int id)
     {
         throw new NotImplementedException(
             "Use GetByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
