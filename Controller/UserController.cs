@@ -45,6 +45,13 @@ public class UserController : BaseController
         }
     }
 
+    public ServerResponse UpdateProfile(UpdateUserProfileRequest request)
+    {
+        var success = _userService.UpdateProfile(request);
+        if (success) return new ServerResponse(null, "Your profile has been updated!", 200);
+        return new ServerResponse(null, "Updating your profile failed", 400);
+    }
+
     public ServerResponse ToggleUserActivation(ToggleUserStatusRequest request)
     {
         if (request.IsActive)

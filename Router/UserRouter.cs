@@ -26,11 +26,17 @@ public class UserRouter
 
             if (request.HttpMethod.Equals("GET")) return _userController.GetById(id);
         }
+        else if (Regex.IsMatch(path, @"^/users/profile/?$") && request.HttpMethod.Equals("PUT"))
+        {
+            return _userController.UpdateProfile(BaseController.JsonRequestBody<UpdateUserProfileRequest>(request));
+        }
         else if (Regex.IsMatch(path, @"^/users/status-toggle/?$"))
         {
             if (request.HttpMethod.Equals("POST"))
             {
-                if (request.HttpMethod.Equals("POST")) return _userController.ToggleUserActivation(BaseController.JsonRequestBody<ToggleUserStatusRequest>(request));
+                if (request.HttpMethod.Equals("POST"))
+                    return _userController.ToggleUserActivation(
+                        BaseController.JsonRequestBody<ToggleUserStatusRequest>(request));
             }
         }
         else if (Regex.IsMatch(path, @"^/users/?(?:\?.*)?"))

@@ -18,4 +18,6 @@ public interface IUserRepository : IBaseRepository<User>
     public User GetInactiveById(int id);
 
     public User GetById(int id);
+
+    public bool UpdateProfile(User user);
 }

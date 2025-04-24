@@ -26,6 +26,9 @@ public interface IQueryConstant
 
         public const string Update =
             "UPDATE users SET first_name=@param1, last_name=@param2, phone_number=@param3,image_url=@param4, about=@param5, email=@param6, password=@param7, role_id=@param8 WHERE is_active=1 AND id=@param9";
+        
+        public const string UpdateProfile =
+            "UPDATE users SET first_name=@param1, last_name=@param2, phone_number=@param3,image_url=@param4, about=@param5 WHERE is_active=1 AND id=@param6";
 
         public const string GetActiveById = "SELECT * FROM users WHERE id=@param1 AND is_active=1";
         public const string GetInactiveById = "SELECT * FROM users WHERE id=@param1 AND is_active=0";

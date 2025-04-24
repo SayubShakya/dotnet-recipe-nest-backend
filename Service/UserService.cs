@@ -12,13 +12,16 @@ namespace RecipeNest.Service;
 public class UserService
 {
     private readonly IHashingUtil _hashingUtil;
+    private readonly SessionUser _sessionUser;
     private readonly IUserRepository _userRepository;
 
-    public UserService(IUserRepository userRepository, IHashingUtil hashingUtil)
+    public UserService(IHashingUtil hashingUtil, SessionUser sessionUser, IUserRepository userRepository)
     {
-        _userRepository = userRepository;
         _hashingUtil = hashingUtil;
+        _sessionUser = sessionUser;
+        _userRepository = userRepository;
     }
+
 
     public PaginatedResponse<UserTableResponse> GetAll(int start, int limit)
     {
@@ -111,6 +114,23 @@ public class UserService
         };
 
         return _userRepository.Update(user);
+    }
+    
+    public bool UpdateProfile(UpdateUserProfileRequest request)
+    {
+       int id =  _sessionUser.User.Id;
+
+        var user = new User
+        {
+            Id = id,
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            PhoneNumber = request.PhoneNumber,
+            ImageUrl = request.ImageUrl,
+            About = request.About
+        };
+
+        return _userRepository.UpdateProfile(user);
     }
 
     public bool Deactivate(int id)

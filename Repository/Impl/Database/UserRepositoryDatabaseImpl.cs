@@ -85,6 +85,18 @@ public class UserRepositoryDatabaseImpl : IUserRepository
             user.Id
         ) == 1;
     }
+    
+    public bool UpdateProfile(User user)
+    {
+        return DatabaseConnector.Update(IQueryConstant.IUser.UpdateProfile,
+            user.FirstName,
+            user.LastName,
+            user.PhoneNumber,
+            user.ImageUrl!,
+            user.About!,
+            user.Id
+        ) == 1;
+    }
 
     public bool RestoreById(int id)
     {
