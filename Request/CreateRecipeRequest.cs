@@ -12,14 +12,13 @@ public class CreateRecipeRequest
     }
 
     public CreateRecipeRequest(string title, string recipeDetail, string ingredients, string? imageUrl = null,
-        string? description = null, int? recipeByUserId = null, int? cuisineId = null)
+        string? description = null, int? cuisineId = null)
     {
         ImageUrl = imageUrl;
         Title = title;
         Description = description;
         RecipeDetail = recipeDetail;
         Ingredients = ingredients;
-        RecipeByUserId = recipeByUserId;
         CuisineId = cuisineId;
     }
 
@@ -33,12 +32,5 @@ public class CreateRecipeRequest
 
     [Key("ingredients")] public string Ingredients { get; set; }
 
-    [Key("recipe_by")] public int? RecipeByUserId { get; set; }
-
-    [Key("cuisine")] public int? CuisineId { get; set; }
-
-    public override string ToString()
-    {
-        return $"CreateRecipeRequest: Title={Title}, CuisineId={CuisineId}, UserId={RecipeByUserId}";
-    }
+    [Key("cuisine_id")] public int? CuisineId { get; set; }
 }

@@ -16,6 +16,13 @@ public class UserRepositoryDatabaseImpl : IUserRepository
         return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetUsersWithRoles, IQueryConstant.IUser.GetUsersWithRolesCount,
             start, limit, new UserTableProjectionRowMapper());
     }
+    
+    public Paged<ChefTableProjection> GetAllActiveChef(int start, int limit)
+    {
+        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetActiveChefs, IQueryConstant.IUser.GetActiveChefsCount,
+            start, limit, new ChefTableProjectionRowMapper());
+    }
+
 
     public bool DeleteById(int id)
     {

@@ -116,7 +116,7 @@ public class RecipeService
             Description = request.Description,
             RecipeDetail = request.RecipeDetail,
             Ingredients = request.Ingredients,
-            RecipeByUserId = request.RecipeByUserId,
+            RecipeByUserId = _sessionUser.User.Id,
             CuisineId = request.CuisineId
         };
 
