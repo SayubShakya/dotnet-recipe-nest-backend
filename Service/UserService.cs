@@ -25,19 +25,47 @@ public class UserService
 
     public PaginatedResponse<UserTableResponse> GetAll(int start, int limit)
     {
-        Paged<UserTableProjection> pagedUsers = _userRepository.GetAllPaginated(start, limit);
+        Paged<UserTableProjection> users = _userRepository.GetAllPaginated(start, limit);
 
-        List<UserTableResponse> items = pagedUsers.Items.Select(MapUserTableResponse).ToList();
+        List<UserTableResponse> items = users.Items.Select(MapUserTableResponse).ToList();
 
         PaginatedResponse<UserTableResponse> paginatedResponse = new()
         {
             Items = items,
-            Count = pagedUsers.Count,
-            Limit = pagedUsers.Limit,
-            Start = pagedUsers.Start
+            Count = users.Count,
+            Limit = users.Limit,
+            Start = users.Start
         };
 
         return paginatedResponse;
+    }
+    
+    public PaginatedResponse<ChefTableResponse> GetAllActiveChef(int start, int limit)
+    {
+        Paged<ChefTableProjection> users = _userRepository.GetAllActiveChef(start, limit);
+
+        List<ChefTableResponse> items = users.Items.Select(MapChefTableResponse).ToList();
+
+        PaginatedResponse<ChefTableResponse> paginatedResponse = new()
+        {
+            Items = items,
+            Count = users.Count,
+            Limit = users.Limit,
+            Start = users.Start
+        };
+
+        return paginatedResponse;
+    }
+    
+    private static ChefTableResponse MapChefTableResponse(ChefTableProjection user)
+    {
+        return new ChefTableResponse()
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Email = user.Email
+        };
     }
 
     private static UserTableResponse MapUserTableResponse(UserTableProjection user)

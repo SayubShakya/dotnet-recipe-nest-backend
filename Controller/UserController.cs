@@ -19,6 +19,11 @@ public class UserController : BaseController
     {
         return new ServerResponse(_userService.GetAll(start, limit), null, 200);
     }
+    
+    public ServerResponse GetAllChef(int start, int limit)
+    {
+        return new ServerResponse(_userService.GetAllActiveChef(start, limit), null, 200);
+    }
 
     public ServerResponse GetById(int id)
     {

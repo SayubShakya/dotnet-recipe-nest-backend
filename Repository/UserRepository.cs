@@ -10,14 +10,16 @@ public interface IUserRepository : IBaseRepository<User>
     User? GetByEmail(string email);
 
     UserDetailProjection? GetUserDetailProjectionById(int id);
-    
+
     Paged<UserTableProjection> GetAllPaginated(int start, int limit);
-    
+
     bool RestoreById(int id);
 
-    public User GetInactiveById(int id);
+    User GetInactiveById(int id);
 
-    public User GetById(int id);
+    User GetById(int id);
 
-    public bool UpdateProfile(User user);
+    bool UpdateProfile(User user);
+
+    Paged<ChefTableProjection> GetAllActiveChef(int start, int limit);
 }

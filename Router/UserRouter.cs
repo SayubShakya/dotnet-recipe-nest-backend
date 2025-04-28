@@ -36,6 +36,13 @@ public class UserRouter
             {
                 return _userController.UpdateProfile(BaseController.JsonRequestBody<UpdateUserProfileRequest>(request));
             }
+
+            else if (Regex.IsMatch(path, @"^/users/chefs/?(?:\?.*)?$") && request.HttpMethod.Equals("GET"))
+            {
+                int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+                int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
+                return _userController.GetAllChef(start, limit);
+            }
             else if (Regex.IsMatch(path, @"^/users/status-toggle/?$"))
             {
                 if (request.HttpMethod.Equals("POST"))
