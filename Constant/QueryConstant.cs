@@ -49,6 +49,9 @@ public interface IQueryConstant
         public const string RestoreById = "UPDATE users SET is_active=1 WHERE id=@param1 AND is_active = 0";
         public const string GetById= "SELECT * FROM users WHERE id=@param1";
         public const string GetByEmail = "SELECT * FROM users WHERE email=@param1";
+        
+        public const string GetChefs = "SELECT u.id, u.first_name, u.last_name, u.phone_number, u.email, r.name AS role, u.is_active FROM users u INNER JOIN roles r ON u.role_id = r.id WHERE r.name = 'Chef' AND u.is_active = 1 ORDER BY u.created_date;\n"
+        
     }
 
     public interface ICuisine
