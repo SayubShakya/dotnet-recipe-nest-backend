@@ -12,7 +12,7 @@ public class FavoriteController : BaseController
     {
         this.favoriteService = favoriteService;
     }
-    public ServerResponse GetByUserAndRecipe(int userId, int recipeId)
+    public ServerResponse GetAll(int start, int limit)
     {
         var response = favoriteService.GetByUserAndRecipe(userId, recipeId);
         if (response == null) return new ServerResponse(null, "Favorite not found", 404);
@@ -21,16 +21,9 @@ public class FavoriteController : BaseController
 
     public ServerResponse Save(CreateFavoriteRequest request)
     {
-        if (request == null) return new ServerResponse(null, "Invalid request", 400);
         var success = favoriteService.Save(request);
         if (success) return new ServerResponse(null, "Favorite created successfully", 201);
-        return new ServerResponse(null, "Failed to create favorite - recipe/user not found or favorite already exists", 400);
+        return new ServerResponse(null, "Failed to create favorite", 400);
     }
-
-    public ServerResponse DeleteByUserAndRecipe(int userId, int recipeId)
-    {
-        var success = favoriteService.DeleteByUserAndRecipe(userId, recipeId);
-        if (success) return new ServerResponse(null, "Favorite deleted", 200);
-        return new ServerResponse(null, "Favorite not found", 404);
-    }
+    
 }

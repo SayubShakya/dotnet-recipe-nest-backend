@@ -47,19 +47,6 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
         }
     }
 
-    public bool DeleteByUserAndRecipe(int userId, int recipeId)
-    {
-        try
-        {
-            return DatabaseConnector.Update(IQueryConstant.IFavorite.DeleteById, userId, recipeId) > 0;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error deleting favorite by user/recipe: {ex.Message}");
-            return false;
-        }
-    }
-
     public bool Update(Favorite obj)
     {
         throw new NotImplementedException(
@@ -81,7 +68,14 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
 
     public bool DeleteById(int id)
     {
-        throw new NotImplementedException(
-            "Use DeleteByUserAndRecipe instead. Favorites are identified by UserID and RecipeID.");
+        try
+        {
+            return DatabaseConnector.Update(IQueryConstant.IFavorite.DeleteById, id) > 0;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting favorite: {ex.Message}");
+            return false;
+        }
     }
 }

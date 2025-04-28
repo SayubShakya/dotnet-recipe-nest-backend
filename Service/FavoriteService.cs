@@ -1,4 +1,5 @@
 ﻿using RecipeNest.CustomException;
+using RecipeNest.Dto;
 using RecipeNest.Entity;
 using RecipeNest.Response;
 using RecipeNest.Repository;
@@ -11,77 +12,41 @@ public class FavoriteService
     private readonly IFavoriteRepository _favoriteRepository;
     private readonly IRecipeRepository _recipeRepository;
     private readonly IUserRepository _userRepository;
+    private readonly SessionUser _sessionUser;
 
-    public FavoriteService(IFavoriteRepository favoriteRepository, IUserRepository userRepository,
-        IRecipeRepository recipeRepository)
+    public FavoriteService(IFavoriteRepository favoriteRepository, IRecipeRepository recipeRepository, IUserRepository userRepository, SessionUser sessionUser)
     {
         _favoriteRepository = favoriteRepository;
-        _userRepository = userRepository;
         _recipeRepository = recipeRepository;
+        _userRepository = userRepository;
+        _sessionUser = sessionUser;
     }
-
-    public FavoriteResponse GetByUserAndRecipe(int userId, int recipeId)
-    {
-        var favorite = _favoriteRepository.GetByUserAndRecipe(userId, recipeId);
-        if (favorite == null) throw new CustomApplicationException(404, "Favorite not found", null);
-
-        return new FavoriteResponse(favorite.Id, favorite.UserId, favorite.RecipeId);
-    }
+    
+    public 
 
     public bool Save(CreateFavoriteRequest request)
     {
-        if (request == null)
-        {
-            throw new CustomApplicationException(400, "Favorite request cannot be null", null);
-        }
+        var userId = _sessionUser.User.Id;
+        var existingFavorite = _favoriteRepository.GetByUserAndRecipe(userId, request.RecipeId);
 
-        var user = _userRepository.GetActiveById(request.UserId);
-        if (user == null)
-        {
-            throw new CustomApplicationException(404, $"User not found for ID: {request.UserId}", null);
-        }
-
-        var recipe = _recipeRepository.GetActiveById(request.RecipeId);
-        if (recipe == null)
-        {
-            throw new CustomApplicationException(404, $"Recipe not found for ID: {request.RecipeId}", null);
-        }
-
-        var existingFavorite = _favoriteRepository.GetByUserAndRecipe(request.UserId, request.RecipeId);
         if (existingFavorite != null)
         {
-            throw new CustomApplicationException(409, "This recipe is already marked as favorite by the user", null);
+            _favoriteRepository.DeleteById(existingFavorite.Id);
         }
 
-        var favorite = new Favorite
+        if (request.IsFavourite)
         {
-            UserId = request.UserId,
-            RecipeId = request.RecipeId
-        };
+            var favorite = new Favorite
+            {
+                UserId = userId,
+                RecipeId = request.RecipeId
+            };
 
-        var success = _favoriteRepository.Save(favorite);
-        if (!success)
-        {
-            throw new CustomApplicationException(500, "Failed to save favorite due to server error", null);
+            var success = _favoriteRepository.Save(favorite);
+            return success;
         }
+        
 
-        return success;
-    }
-
-    public bool DeleteByUserAndRecipe(int userId, int recipeId)
-    {
-        var existingFavorite = _favoriteRepository.GetByUserAndRecipe(userId, recipeId);
-        if (existingFavorite == null)
-        {
-            throw new CustomApplicationException(404, "Favorite not found", null);
-        }
-
-        var success = _favoriteRepository.DeleteByUserAndRecipe(userId, recipeId);
-        if (!success)
-        {
-            throw new CustomApplicationException(500, "Failed to delete favorite due to server error", null);
-        }
-
-        return success;
+        return true;
     }
 }
