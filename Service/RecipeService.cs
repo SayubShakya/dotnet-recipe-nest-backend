@@ -26,8 +26,18 @@ public class RecipeService
 
     public PaginatedResponse<RecipeResponse> GetAll(int start, int limit)
     {
-        Paged<RecipeProjection> pagedRecipes =
-            _recipeRepository.GetAllAuthorizedPaginated(start, limit, _sessionUser.User.Id);
+        Paged<RecipeProjection> pagedRecipes = null;
+        if (_sessionUser.Authenticated)
+        {
+          pagedRecipes =
+                _recipeRepository.GetAllAuthorizedPaginated(start, limit, _sessionUser.User.Id);
+        }
+        else
+        {
+            pagedRecipes =
+                _recipeRepository.GetAllPaginated(start, limit);
+        }
+     
 
         List<RecipeResponse> items = pagedRecipes.Items.Select(recipe => new RecipeResponse(
             recipe.Id,

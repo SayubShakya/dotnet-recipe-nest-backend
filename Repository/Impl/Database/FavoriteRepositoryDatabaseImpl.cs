@@ -2,7 +2,9 @@
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl.Entity;
 using RecipeNest.Db.Query.Impl.Projection;
+using RecipeNest.Dto;
 using RecipeNest.Entity;
+using RecipeNest.Projection;
 
 namespace RecipeNest.Repository.Impl.Database;
 
@@ -30,6 +32,12 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
             Console.WriteLine($"Error saving favorite: {ex.Message}");
             return false;
         }
+    }
+    
+    public Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId)
+    {
+        return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllFavorites,
+            IQueryConstant.IRecipe.CountAllFavorites, start, limit, new FavoriteRecipeProjectionRowMapper(), userId, userId);
     }
 
 

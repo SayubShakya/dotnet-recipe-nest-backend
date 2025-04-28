@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
+using RecipeNest.Constant;
 using RecipeNest.Controller;
 using RecipeNest.Request;
 using RecipeNest.Response;
@@ -22,18 +23,18 @@ public class FavoriteRouter
     {
         Console.WriteLine("requesting Favorite path: " + path);
 
-        if (Regex.IsMatch(path, @"^/favorites/?$"))
+        if (Regex.IsMatch(path, @"^/favorites/?(?:\?.*)?"))
         {
             if (request.HttpMethod.Equals("POST"))
                 return _favoriteController.Save(BaseController.JsonRequestBody<CreateFavoriteRequest>(request));
+
+            if (request.HttpMethod.Equals("GET"))
+            {
+                int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+                int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
+                return _favoriteController.GetAllFavorites(start, limit);
+            }
         }
-      // else if (Regex.IsMatch(path, @"^/favorites/?(?:\?.*)?"))
-      //   {
-      //       var userId = Convert.ToInt32(request.QueryString["user_id"]);
-      //       var recipeId = Convert.ToInt32(request.QueryString["recipe_id"]);
-      //
-      //       if (request.HttpMethod.Equals("GET")) return _favoriteController.GetByUserAndRecipe(userId, recipeId);
-      //   }
 
         return ResponseUtil.NotFound();
     }

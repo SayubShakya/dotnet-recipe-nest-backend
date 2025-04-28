@@ -6,22 +6,29 @@ namespace RecipeNest.Controller;
 
 public class FavoriteController : BaseController
 {
-    private readonly FavoriteService favoriteService;
+    private readonly FavoriteService _favoriteService;
 
     public FavoriteController(FavoriteService favoriteService)
     {
-        this.favoriteService = favoriteService;
+        _favoriteService = favoriteService;
     }
-    public ServerResponse GetAll(int start, int limit)
+
+    public ServerResponse GetAllFavorites(int start, int limit)
     {
-        var response = favoriteService.GetByUserAndRecipe(userId, recipeId);
-        if (response == null) return new ServerResponse(null, "Favorite not found", 404);
-        return new ServerResponse(response, "Favorite found", 200);
+        try
+        {
+            PaginatedResponse<RecipeResponse> response = _favoriteService.GetAll(start, limit);
+            return new ServerResponse(response, null, 200);
+        }
+        catch (Exception ex)
+        {
+            return new ServerResponse(null, "Failed to retrieve favorite recipes.", 500, ex.Message);
+        }
     }
 
     public ServerResponse Save(CreateFavoriteRequest request)
     {
-        var success = favoriteService.Save(request);
+        var success = _favoriteService.Save(request);
         if (success) return new ServerResponse(null, "Favorite created successfully", 201);
         return new ServerResponse(null, "Failed to create favorite", 400);
     }

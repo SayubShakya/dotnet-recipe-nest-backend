@@ -33,7 +33,7 @@ public class RecipeController : BaseController
     {
         return new ServerResponse(_recipeService.GetById(id), "Recipe found!", 200);
     }
-    
+
     public ServerResponse GetByTitle(string title)
     {
         return new ServerResponse(_recipeService.GetByTitle(title), "Recipe found by title!", 200);
@@ -57,18 +57,4 @@ public class RecipeController : BaseController
     {
         return new ServerResponse(_recipeService.DeleteById(id), "Recipe deleted!", 200);
     }
-    
-    public ServerResponse GetAllFavorites(int userId, int start, int limit)
-    {
-        try 
-        {
-            PaginatedResponse<RecipeResponse> response = _recipeService.GetAllFavorites(userId, start, limit);
-            return new ServerResponse(response, null, 200);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error in RecipeController.GetAllFavorites: {ex}");
-            return new ServerResponse(null, "Failed to retrieve favorite recipes.", 500, ex.Message);
-        }
-    }
-    }
+}

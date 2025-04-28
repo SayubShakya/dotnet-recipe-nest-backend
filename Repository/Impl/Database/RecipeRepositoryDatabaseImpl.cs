@@ -12,10 +12,10 @@ namespace RecipeNest.Repository.Impl.Database;
 
 public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 {
-    public Paged<Recipe> GetAllPaginated(int start, int limit)
+    public Paged<RecipeProjection> GetAllPaginated(int start, int limit)
     {
         return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllActiveOrderByCreatedDate,
-            IQueryConstant.IRecipe.AllActiveCount, start, limit, new RecipeRowMapper());
+            IQueryConstant.IRecipe.AllActiveCount, start, limit, new FavoriteRecipeProjectionRowMapper());
     }
 
     public Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId)

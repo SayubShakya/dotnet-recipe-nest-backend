@@ -1,6 +1,7 @@
 ﻿using RecipeNest.CustomException;
 using RecipeNest.Dto;
 using RecipeNest.Entity;
+using RecipeNest.Projection;
 using RecipeNest.Response;
 using RecipeNest.Repository;
 using RecipeNest.Request;
@@ -22,7 +23,34 @@ public class FavoriteService
         _sessionUser = sessionUser;
     }
     
-    public 
+    public PaginatedResponse<RecipeResponse> GetAll(int start, int limit)
+    {
+        Paged<RecipeProjection> pagedRecipes =
+            _favoriteRepository.GetAllAuthorizedPaginated(start, limit, _sessionUser.User.Id);
+
+        List<RecipeResponse> items = pagedRecipes.Items.Select(recipe => new RecipeResponse(
+            recipe.Id,
+            recipe.ImageUrl,
+            recipe.Title,
+            recipe.Description,
+            recipe.RecipeDetail,
+            recipe.Ingredients,
+            recipe.RecipeByUserId,
+            recipe.CuisineId,
+            recipe.IsFavorite,
+            recipe.Rating
+        )).ToList();
+
+        PaginatedResponse<RecipeResponse> paginatedResponse = new()
+        {
+            Items = items,
+            Count = pagedRecipes.Count,
+            Limit = pagedRecipes.Limit,
+            Start = pagedRecipes.Start
+        };
+
+        return paginatedResponse;
+    }
 
     public bool Save(CreateFavoriteRequest request)
     {

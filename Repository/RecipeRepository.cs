@@ -9,7 +9,7 @@ namespace RecipeNest.Repository;
 public interface IRecipeRepository : IBaseRepository<Recipe>
 {
     Recipe? GetByTitle(string title);
-    Paged<Recipe> GetAllPaginated(int start, int limit);
+    Paged<RecipeProjection> GetAllPaginated(int start, int limit);
     Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId);
     Paged<Recipe> GetFavoriteRecipes(int userId, int start, int limit);
 
