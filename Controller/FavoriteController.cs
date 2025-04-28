@@ -29,7 +29,7 @@ public class FavoriteController : BaseController
     public ServerResponse Save(CreateFavoriteRequest request)
     {
         var success = _favoriteService.Save(request);
-        if (success) return new ServerResponse(null, "Favorite created successfully", 201);
+        if (success) return new ServerResponse(null, null, 201);
         return new ServerResponse(null, "Failed to create favorite", 400);
     }
     
