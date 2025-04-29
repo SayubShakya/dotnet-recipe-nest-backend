@@ -29,8 +29,16 @@ public class RecipeService
         Paged<RecipeProjection> pagedRecipes = null;
         if (_sessionUser.Authenticated)
         {
-          pagedRecipes =
-                _recipeRepository.GetAllAuthorizedPaginated(start, limit, _sessionUser.User.Id);
+            if (_sessionUser.Role.Name.Equals("CHEF"))
+            {
+                pagedRecipes =
+                    _recipeRepository.GetAllByChefPaginated(start, limit, _sessionUser.User.Id);
+            }
+            else
+            {
+                pagedRecipes =
+                    _recipeRepository.GetAllAuthorizedPaginated(start, limit, _sessionUser.User.Id);
+            }
         }
         else
         {
@@ -136,7 +144,7 @@ public class RecipeService
             Description = request.Description,
             RecipeDetail = request.RecipeDetail,
             Ingredients = request.Ingredients,
-            RecipeByUserId = request.RecipeByUserId,
+            RecipeByUserId = _sessionUser.User.Id,
             CuisineId = request.CuisineId
         };
 

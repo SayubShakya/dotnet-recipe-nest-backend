@@ -17,8 +17,20 @@ public class FavoriteRecipeProjectionRowMapper : IRowMapper<RecipeProjection>
             Ingredients = reader.GetString("ingredients"),
             RecipeByUserId = reader.GetInt32("recipe_by"),
             CuisineId = reader.GetInt32("cuisine"),
-            Rating = !reader.IsDBNull(11) ? reader.GetInt32("rating") : null,
+            Rating = GetFaultyValue(reader),
             IsFavorite = null
         };
+    }
+
+    private static int? GetFaultyValue(MySqlDataReader reader)
+    {
+        try
+        {
+            return !reader.IsDBNull(11) ? reader.GetInt32("rating") : null;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
 }

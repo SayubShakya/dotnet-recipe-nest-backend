@@ -12,6 +12,12 @@ namespace RecipeNest.Repository.Impl.Database;
 
 public class RecipeRepositoryDatabaseImpl : IRecipeRepository
 {
+    public Paged<RecipeProjection> GetAllByChefPaginated(int start, int limit, int userId)
+    {
+        return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllActiveByChef,
+            IQueryConstant.IRecipe.GetAllActiveByChefCount, start, limit, new FavoriteRecipeProjectionRowMapper(), userId, userId,userId);
+    }
+
     public Paged<RecipeProjection> GetAllPaginated(int start, int limit)
     {
         return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllActiveOrderByCreatedDate,
@@ -31,6 +37,13 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
             IQueryConstant.IRecipe.CountAllFavorites, start, limit, new RecipeRowMapper(), userId);
     }
 
+    
+    // public Paged<RecipeTableProjection> GetAllRecipesByChefs(int start, int limit)
+    // {
+    //     return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllRecipesByChefs, IQueryConstant.IRecipe.GetAllRecipesByChefsCount,
+    //         start, limit, new RecipeTableProjectionRowMapper());
+    //     
+    // }
 
     public bool DeleteById(int id)
     {
@@ -89,4 +102,6 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
         );
         return true;
     }
+    
+    
 }

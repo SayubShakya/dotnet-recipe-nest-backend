@@ -34,6 +34,8 @@ public class DatabaseConnector
             sqlCommand = GetPreparedStatement(sqlConnection, sql);
 
             MapParams(parameters, sqlCommand);
+            
+            
 
             return sqlCommand.ExecuteNonQuery();
         }

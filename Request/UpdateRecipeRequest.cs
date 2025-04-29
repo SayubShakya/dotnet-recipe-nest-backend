@@ -38,7 +38,7 @@ public class UpdateRecipeRequest
 
     [Key("recipe_by")] public int? RecipeByUserId { get; set; }
 
-    [Key("cuisine")] public int? CuisineId { get; set; }
+    [Key("cuisine_id")] public int? CuisineId { get; set; }
 
     public override string ToString()
     {

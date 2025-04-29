@@ -15,7 +15,7 @@ public class RecipeRowMapper : IRowMapper<Recipe>
             ImageUrl = reader.GetString("image_url"),
             Title = reader.GetString("title"),
             Description = reader.GetString("description"),
-            RecipeDetail = reader.GetString("recipe_detail"),
+            RecipeDetail = reader.GetString("recipe"),
             Ingredients = reader.GetString("ingredients"),
             RecipeByUserId = reader.GetInt32("recipe_by"),
             CuisineId = reader.GetInt32("cuisine"),

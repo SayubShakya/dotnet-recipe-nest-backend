@@ -32,6 +32,8 @@ public interface IQueryConstant
 
         public const string GetActiveById = "SELECT * FROM users WHERE id=@param1 AND is_active=1";
         public const string GetInactiveById = "SELECT * FROM users WHERE id=@param1 AND is_active=0";
+        
+        
 
         public const string GetAllActiveOrderByCreatedDate =
             "SELECT * FROM users WHERE is_active=1 ORDER BY created_date";
@@ -54,7 +56,7 @@ public interface IQueryConstant
             "SELECT u.first_name, u.last_name, u.phone_number, u.email FROM users u INNER JOIN roles r ON u.role_id = r.id WHERE r.name = 'CHEF' AND u.is_active = 1 ORDER BY u.first_name";
         public const string GetActiveChefsCount =
             "SELECT count(*) as count FROM users u INNER JOIN roles r ON u.role_id = r.id WHERE r.name = 'CHEF' AND u.is_active = 1 ORDER BY u.first_name";
-
+        
     }
 
     public interface ICuisine
@@ -93,20 +95,32 @@ public interface IQueryConstant
             "SELECT count(*) as count\nFROM (SELECT r.*\n      FROM favorites f\n               LEFT JOIN recipes r on r.id = f.recipe_id\n      where f.user_id = @param1\n        and f.is_active = 1) r\n         LEFT JOIN (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra\n                   ON r.id = ra.recipe_id\n         LEFT JOIN (SELECT * FROM favorites WHERE is_active = 1 AND user_id = @param2) fa ON r.id = fa.recipe_id\nWHERE r.is_active = 1";
 
         public const string GetAllActiveOrderByCreatedDate =
-            "SELECT r.*, ra.rating\nFROM recipes r\n         LEFT JOIN (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra\n                   ON r.id = ra.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
+            "SELECT r.*, ra.rating, c.name as cuisine FROM recipes r  LEFT JOIN (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra ON r.id = ra.recipe_id LEFT JOIN cuisines c ON r.cuisine = c.id WHERE r.is_active = 1 ORDER BY r.created_date";
 
         public const string GetAllActiveAuthorized =
-            "SELECT r.*, ra.rating, fa.is_active as is_favorite\nFROM recipes r\n         LEFT JOIN (SELECT * FROM ratings WHERE is_active=1 AND user_id=@param1) ra ON r.id = ra.recipe_id\n         LEFT JOIN (SELECT * FROM favorites WHERE is_active=1 AND user_id=@param2) fa ON r.id = fa.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
+            "SELECT r.*, ra.rating, fa.is_active as is_favorite, c.name as cuisine FROM recipes r LEFT JOIN  (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra ON r.id = ra.recipe_id LEFT JOIN (SELECT * FROM favorites WHERE is_active=1 AND user_id=@param2) fa ON r.id = fa.recipe_id LEFT JOIN cuisines c ON r.cuisine = c.id WHERE r.is_active = 1 ORDER BY r.created_date";
 
         public const string GetAllActiveAuthorizedCount =
-            "SELECT count(*) as count FROM recipes r\n         LEFT JOIN (SELECT * FROM ratings WHERE is_active=1 AND user_id=@param1) ra ON r.id = ra.recipe_id\n         LEFT JOIN (SELECT * FROM favorites WHERE is_active=1 AND user_id=@param2) fa ON r.id = fa.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
+            "SELECT count(*) as count FROM recipes r  LEFT JOIN (SELECT * FROM ratings WHERE is_active=1 AND user_id=@param1) ra ON r.id = ra.recipe_id  LEFT JOIN (SELECT * FROM favorites WHERE is_active=1 AND user_id=@param2) fa ON r.id = fa.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
 
+        public const string GetAllActiveByChef=
+            "SELECT r.*, ra.rating, c.name as cuisine FROM recipes r LEFT JOIN  (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra ON r.id = ra.recipe_id LEFT JOIN cuisines c ON r.cuisine = c.id WHERE r.is_active = 1 AND r.recipe_by=@param3 ORDER BY r.created_date";
+
+        public const string GetAllActiveByChefCount =
+            "SELECT count(*) as count FROM recipes r LEFT JOIN  (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra ON r.id = ra.recipe_id WHERE r.is_active = 1 AND r.recipe_by=@param3 ORDER BY r.created_date";
+        
         public const string AllActiveCount =
-            "SELECT count(*) as count\nFROM recipes r\n         LEFT JOIN (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra\n                   ON r.id = ra.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
+            "SELECT count(*) as count FROM recipes r LEFT JOIN (SELECT AVG(rating) as rating, recipe_id FROM ratings WHERE is_active = 1 GROUP BY recipe_id) ra\n                   ON r.id = ra.recipe_id\nWHERE r.is_active = 1\nORDER BY r.created_date";
 
 
         public const string DeleteById = "UPDATE recipes SET is_active=0 WHERE id=@param1 AND is_active = 1";
         public const string GetByTitle = "SELECT * FROM recipes WHERE title=@param1 AND is_active=1";
+        
+        
+        // public const string GetAllRecipesByChefs = "SELECT * FROM recipes WHERE is_active = 1 AND recipe_by = @param1";
+        //
+        // public const string GetAllRecipesByChefsCount =
+        //     "SELECT count(*) as count FROM recipes WHERE is_active = 1 AND recipe_by = @param1";
         
         
     }
