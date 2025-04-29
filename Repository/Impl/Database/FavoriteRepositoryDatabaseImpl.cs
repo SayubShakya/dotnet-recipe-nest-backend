@@ -33,11 +33,12 @@ public class FavoriteRepositoryDatabaseImpl : IFavoriteRepository
             return false;
         }
     }
-    
+
     public Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId)
     {
         return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllFavorites,
-            IQueryConstant.IRecipe.CountAllFavorites, start, limit, new FavoriteRecipeProjectionRowMapper(), userId, userId);
+            IQueryConstant.IRecipe.CountAllFavorites, start, limit, new FavoriteRecipeProjectionRowMapper(), userId,
+            userId);
     }
 
 

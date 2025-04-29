@@ -1,6 +1,4 @@
-﻿// FavoriteResponse.cs
-
-using MessagePack;
+﻿using MessagePack;
 
 namespace RecipeNest.Response;
 

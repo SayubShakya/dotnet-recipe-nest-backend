@@ -15,14 +15,15 @@ public class FavoriteService
     private readonly IUserRepository _userRepository;
     private readonly SessionUser _sessionUser;
 
-    public FavoriteService(IFavoriteRepository favoriteRepository, IRecipeRepository recipeRepository, IUserRepository userRepository, SessionUser sessionUser)
+    public FavoriteService(IFavoriteRepository favoriteRepository, IRecipeRepository recipeRepository,
+        IUserRepository userRepository, SessionUser sessionUser)
     {
         _favoriteRepository = favoriteRepository;
         _recipeRepository = recipeRepository;
         _userRepository = userRepository;
         _sessionUser = sessionUser;
     }
-    
+
     public PaginatedResponse<RecipeResponse> GetAll(int start, int limit)
     {
         Paged<RecipeProjection> pagedRecipes =
@@ -73,7 +74,7 @@ public class FavoriteService
             var success = _favoriteRepository.Save(favorite);
             return success;
         }
-        
+
 
         return true;
     }

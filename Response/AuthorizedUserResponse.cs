@@ -11,7 +11,7 @@ public class AuthorizedUserResponse
         Name = name;
         Role = role;
     }
-    
+
     [Key("id")] public int? Id { get; set; }
 
     [Key("name")] public string Name { get; set; }

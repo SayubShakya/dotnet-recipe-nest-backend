@@ -1,5 +1,3 @@
-// RoleController.cs
-
 using RecipeNest.CustomException;
 using RecipeNest.Request;
 using RecipeNest.Response;

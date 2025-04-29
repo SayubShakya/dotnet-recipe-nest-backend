@@ -19,8 +19,8 @@ public class CuisineService
     public PaginatedResponse<CuisineResponse> GetAll(int start, int limit)
     {
         Paged<Cuisine> pagedCuisines = _cuisineRepository.GetAllPaginated(start, limit);
-        
-        List<CuisineResponse> items =  pagedCuisines.Items.Select(cuisine => new CuisineResponse(
+
+        List<CuisineResponse> items = pagedCuisines.Items.Select(cuisine => new CuisineResponse(
             cuisine.Id,
             cuisine.Name,
             cuisine.ImageUrl
@@ -40,7 +40,7 @@ public class CuisineService
     public CuisineResponse? GetById(int id)
     {
         var cuisine = _cuisineRepository.GetActiveById(id);
-        if (cuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
+        if (cuisine == null) throw new CustomApplicationException(404, "Cuisine not found", null);
 
         return new CuisineResponse(
             cuisine.Id,
@@ -54,7 +54,7 @@ public class CuisineService
         if (string.IsNullOrWhiteSpace(name)) return null;
 
         var cuisine = _cuisineRepository.GetByName(name);
-        if (cuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
+        if (cuisine == null) throw new CustomApplicationException(404, "Cuisine not found", null);
 
         return new CuisineResponse(
             cuisine.Id,
@@ -78,7 +78,7 @@ public class CuisineService
     public bool Update(UpdateCuisineRequest request)
     {
         var existingCuisine = _cuisineRepository.GetActiveById(request.Id);
-        if (existingCuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
+        if (existingCuisine == null) throw new CustomApplicationException(404, "Cuisine not found", null);
 
 
         var cuisineToUpdate = new Cuisine
@@ -95,7 +95,7 @@ public class CuisineService
     public bool DeleteById(int id)
     {
         var existingCuisine = _cuisineRepository.GetActiveById(id);
-        if (existingCuisine == null)  throw new CustomApplicationException(404, "Cuisine not found", null);
+        if (existingCuisine == null) throw new CustomApplicationException(404, "Cuisine not found", null);
         return _cuisineRepository.DeleteById(id);
     }
 }

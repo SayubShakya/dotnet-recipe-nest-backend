@@ -13,10 +13,11 @@ public class UserRepositoryDatabaseImpl : IUserRepository
 {
     public Paged<UserTableProjection> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetUsersWithRoles, IQueryConstant.IUser.GetUsersWithRolesCount,
+        return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetUsersWithRoles,
+            IQueryConstant.IUser.GetUsersWithRolesCount,
             start, limit, new UserTableProjectionRowMapper());
     }
-    
+
     public Paged<ChefTableProjection> GetAllActiveChef(int start, int limit)
     {
         return DatabaseConnector.QueryAll(IQueryConstant.IUser.GetActiveChefs, IQueryConstant.IUser.GetActiveChefsCount,
@@ -53,12 +54,12 @@ public class UserRepositoryDatabaseImpl : IUserRepository
     {
         return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetActiveById, new UserRowMapper(), id);
     }
-    
+
     public User GetById(int id)
     {
         return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetById, new UserRowMapper(), id);
     }
-    
+
     public User GetInactiveById(int id)
     {
         return DatabaseConnector.QueryOne(IQueryConstant.IUser.GetInactiveById, new UserRowMapper(), id);
@@ -92,7 +93,7 @@ public class UserRepositoryDatabaseImpl : IUserRepository
             user.Id
         ) == 1;
     }
-    
+
     public bool UpdateProfile(User user)
     {
         return DatabaseConnector.Update(IQueryConstant.IUser.UpdateProfile,
@@ -111,5 +112,4 @@ public class UserRepositoryDatabaseImpl : IUserRepository
         DatabaseConnector.Update(IQueryConstant.IUser.RestoreById, id);
         return true;
     }
-    
 }

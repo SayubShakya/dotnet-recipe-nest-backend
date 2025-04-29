@@ -23,19 +23,19 @@ public class RecipeRouter
     public ServerResponse Recipe(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Recipe path check: " + path);
-        
+
         if (Regex.IsMatch(path, @"^/recipes\?id=\d+$"))
         {
             int id = int.Parse(request.QueryString["id"]!);
-            
+
             if (request.HttpMethod.Equals("GET")) return _recipeController.GetById(id);
 
             if (request.HttpMethod.Equals("DELETE")) return _recipeController.DeleteById(id);
-            
+
             return ResponseUtil.Unauthorized();
         }
-        
-       if (Regex.IsMatch(path, @"^/recipes/?(?:\?.*)?$"))
+
+        if (Regex.IsMatch(path, @"^/recipes/?(?:\?.*)?$"))
         {
             int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
             int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
@@ -55,6 +55,7 @@ public class RecipeRouter
                 return ResponseUtil.Unauthorized();
             }
         }
+
         return ResponseUtil.NotFound();
     }
 }

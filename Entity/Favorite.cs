@@ -1,8 +1,4 @@
-﻿// Favorite.cs
-
-using MessagePack;
-
-// Required for DateTime
+﻿using MessagePack;
 
 namespace RecipeNest.Entity;
 

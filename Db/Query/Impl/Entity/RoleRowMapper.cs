@@ -1,5 +1,3 @@
-// RoleRowMapper.cs
-
 using MySql.Data.MySqlClient;
 using RecipeNest.Entity;
 

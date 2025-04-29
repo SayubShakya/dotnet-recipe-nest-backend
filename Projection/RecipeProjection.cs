@@ -1,6 +1,4 @@
-﻿// Model/Recipe.cs
-
-namespace RecipeNest.Projection;
+﻿namespace RecipeNest.Projection;
 
 public class RecipeProjection
 {
@@ -38,7 +36,7 @@ public class RecipeProjection
     public int? RecipeByUserId { get; set; }
 
     public int? CuisineId { get; set; }
-    
+
     public int? Rating { get; set; }
     public bool? IsFavorite { get; set; }
 

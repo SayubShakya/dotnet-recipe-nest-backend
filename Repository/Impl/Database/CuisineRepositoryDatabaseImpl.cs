@@ -1,6 +1,4 @@
-﻿// CuisineRepositoryDatabaseImpl.cs
-
-using RecipeNest.Constant;
+﻿using RecipeNest.Constant;
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl.Entity;
 using RecipeNest.Db.Query.Impl.Projection;
@@ -11,10 +9,10 @@ namespace RecipeNest.Repository.Impl.Database;
 
 public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 {
-
     public Paged<Cuisine> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate, IQueryConstant.ICuisine.AllActiveCount, start, limit, new CuisineRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate,
+            IQueryConstant.ICuisine.AllActiveCount, start, limit, new CuisineRowMapper());
     }
 
     public bool DeleteById(int id)
@@ -28,7 +26,8 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 
     public List<Cuisine> GetAll()
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate, new CuisineRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.ICuisine.GetAllActiveOrderByCreatedDate,
+            new CuisineRowMapper());
     }
 
     public Cuisine GetActiveById(int id)
@@ -38,7 +37,8 @@ public class CuisineRepositoryDatabaseImpl : ICuisineRepository
 
     public Cuisine GetByName(string name)
     {
-        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GetByName, new CuisineRowMapper(), name);;
+        return DatabaseConnector.QueryOne(IQueryConstant.ICuisine.GetByName, new CuisineRowMapper(), name);
+        ;
     }
 
 

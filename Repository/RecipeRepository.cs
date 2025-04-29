@@ -1,6 +1,4 @@
-﻿// Repository/IRecipeRepository.cs
-
-using RecipeNest.Dto;
+﻿using RecipeNest.Dto;
 using RecipeNest.Entity;
 using RecipeNest.Projection;
 
@@ -13,5 +11,4 @@ public interface IRecipeRepository : IBaseRepository<Recipe>
     Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId);
     Paged<RecipeProjection> GetAllByChefPaginated(int start, int limit, int userId);
     Paged<Recipe> GetFavoriteRecipes(int userId, int start, int limit);
-    
 }

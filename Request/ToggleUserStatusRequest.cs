@@ -1,6 +1,4 @@
-﻿// CreateUserRequest.cs
-
-using MessagePack;
+﻿using MessagePack;
 
 namespace RecipeNest.Request;
 
@@ -18,7 +16,7 @@ public class ToggleUserStatusRequest
         IsActive = isActive;
     }
 
-    [Key("id")] public  int Id { get; set; }
+    [Key("id")] public int Id { get; set; }
 
-    [Key("is_active")] public  bool IsActive{ get; set; }
+    [Key("is_active")] public bool IsActive { get; set; }
 }

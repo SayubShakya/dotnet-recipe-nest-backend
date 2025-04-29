@@ -1,6 +1,4 @@
-﻿// Db/Query/Impl/RecipeRowMapper.cs
-
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
 using RecipeNest.Entity;
 
 namespace RecipeNest.Db.Query.Impl.Entity;

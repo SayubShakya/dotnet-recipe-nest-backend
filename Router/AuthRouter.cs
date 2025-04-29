@@ -18,7 +18,7 @@ public class AuthRouter
         _authController = authController;
         _sessionUser = sessionUser;
     }
-    
+
     public ServerResponse Auth(string path, HttpListenerRequest request)
     {
         Console.WriteLine("Role requesting path: " + path);
@@ -42,10 +42,10 @@ public class AuthRouter
             }
             else
             {
-                return ResponseUtil.Unauthorized(); 
+                return ResponseUtil.Unauthorized();
             }
         }
-        
+
         return ResponseUtil.NotFound();
     }
 }

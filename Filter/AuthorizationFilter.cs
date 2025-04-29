@@ -55,7 +55,7 @@ public class AuthorizationFilter
 
         return true;
     }
-    
+
     private static void BuildSessionUser(ILifetimeScope scope, User user, Role role)
     {
         SessionUser sessionUser = scope.Resolve<SessionUser>();

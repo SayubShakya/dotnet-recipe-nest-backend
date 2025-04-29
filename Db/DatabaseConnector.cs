@@ -6,7 +6,6 @@ namespace RecipeNest.Db;
 
 public class DatabaseConnector
 {
-    
     private static readonly string ConnectionString =
         $"Server={Environment.GetEnvironmentVariable("DATABASE_URL")};Database={Environment.GetEnvironmentVariable("DATABASE_NAME")};User ID={Environment.GetEnvironmentVariable("DATABASE_USERNAME")};Password={Environment.GetEnvironmentVariable("DATABASE_PASSWORD")};Pooling=true;MinPoolSize=100;MaxPoolSize=300;";
 
@@ -34,8 +33,7 @@ public class DatabaseConnector
             sqlCommand = GetPreparedStatement(sqlConnection, sql);
 
             MapParams(parameters, sqlCommand);
-            
-            
+
 
             return sqlCommand.ExecuteNonQuery();
         }

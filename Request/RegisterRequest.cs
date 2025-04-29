@@ -1,6 +1,4 @@
-﻿// Request/RegisterRequest.cs
-
-using MessagePack;
+﻿using MessagePack;
 
 namespace RecipeNest.Request;
 
@@ -20,7 +18,6 @@ public class RegisterRequest
     [Key("email")] public string Email { get; set; }
 
     [Key("password")] public string Password { get; set; }
-    
-    [Key("role_id")] public int RoleId { get; set; }
 
+    [Key("role_id")] public int RoleId { get; set; }
 }

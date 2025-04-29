@@ -32,5 +32,4 @@ public class FavoriteController : BaseController
         if (success) return new ServerResponse(null, null, 201);
         return new ServerResponse(null, "Failed to create favorite", 400);
     }
-    
 }

@@ -1,6 +1,4 @@
-﻿// Reponse/RecipeResponse.cs
-
-using MessagePack;
+﻿using MessagePack;
 
 namespace RecipeNest.Response;
 
@@ -41,8 +39,8 @@ public class RecipeResponse
     [Key("recipe_by")] public int? RecipeByUserId { get; set; }
 
     [Key("cuisine_id")] public int? CuisineId { get; set; }
-    
+
     [Key("is_favorite")] public bool? IsFavorite { get; set; }
-    
+
     [Key("rating")] public int? Rating { get; set; }
 }

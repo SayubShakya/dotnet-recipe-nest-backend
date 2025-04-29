@@ -1,6 +1,4 @@
-﻿// Cuisine.cs
-
-using MessagePack;
+﻿using MessagePack;
 
 namespace RecipeNest.Entity;
 

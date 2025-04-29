@@ -39,7 +39,7 @@ public class UserService
 
         return paginatedResponse;
     }
-    
+
     public PaginatedResponse<ChefTableResponse> GetAllActiveChef(int start, int limit)
     {
         Paged<ChefTableProjection> users = _userRepository.GetAllActiveChef(start, limit);
@@ -56,7 +56,7 @@ public class UserService
 
         return paginatedResponse;
     }
-    
+
     private static ChefTableResponse MapChefTableResponse(ChefTableProjection user)
     {
         return new ChefTableResponse()
@@ -143,10 +143,10 @@ public class UserService
 
         return _userRepository.Update(user);
     }
-    
+
     public bool UpdateProfile(UpdateUserProfileRequest request)
     {
-       int id =  _sessionUser.User.Id;
+        int id = _sessionUser.User.Id;
 
         var user = new User
         {
@@ -174,7 +174,7 @@ public class UserService
         if (user.IsActive) throw new CustomApplicationException(409, "Users is already activated!", null);
         return _userRepository.RestoreById(id);
     }
-    
+
     private User? FindById(int id)
     {
         User user = _userRepository.GetById(id);

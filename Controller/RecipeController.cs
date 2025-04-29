@@ -1,6 +1,4 @@
-﻿// Controller/RecipeController.cs
-
-using RecipeNest.Request;
+﻿using RecipeNest.Request;
 using RecipeNest.Response;
 using RecipeNest.Service;
 

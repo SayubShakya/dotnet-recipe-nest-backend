@@ -1,6 +1,4 @@
-﻿// Repository/Impl/Database/RecipeRepositoryDatabaseImpl.cs
-
-using RecipeNest.Constant;
+﻿using RecipeNest.Constant;
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl.Entity;
 using RecipeNest.Db.Query.Impl.Projection;
@@ -15,7 +13,8 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
     public Paged<RecipeProjection> GetAllByChefPaginated(int start, int limit, int userId)
     {
         return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllActiveByChef,
-            IQueryConstant.IRecipe.GetAllActiveByChefCount, start, limit, new FavoriteRecipeProjectionRowMapper(), userId, userId,userId);
+            IQueryConstant.IRecipe.GetAllActiveByChefCount, start, limit, new FavoriteRecipeProjectionRowMapper(),
+            userId, userId, userId);
     }
 
     public Paged<RecipeProjection> GetAllPaginated(int start, int limit)
@@ -27,7 +26,8 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
     public Paged<RecipeProjection> GetAllAuthorizedPaginated(int start, int limit, int userId)
     {
         return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllActiveAuthorized,
-            IQueryConstant.IRecipe.GetAllActiveAuthorizedCount, start, limit, new RecipeProjectionRowMapper(), userId, userId);
+            IQueryConstant.IRecipe.GetAllActiveAuthorizedCount, start, limit, new RecipeProjectionRowMapper(), userId,
+            userId);
     }
 
 
@@ -36,14 +36,6 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
         return DatabaseConnector.QueryAllWithParams(IQueryConstant.IRecipe.GetAllFavorites,
             IQueryConstant.IRecipe.CountAllFavorites, start, limit, new RecipeRowMapper(), userId);
     }
-
-    
-    // public Paged<RecipeTableProjection> GetAllRecipesByChefs(int start, int limit)
-    // {
-    //     return DatabaseConnector.QueryAll(IQueryConstant.IRecipe.GetAllRecipesByChefs, IQueryConstant.IRecipe.GetAllRecipesByChefsCount,
-    //         start, limit, new RecipeTableProjectionRowMapper());
-    //     
-    // }
 
     public bool DeleteById(int id)
     {
@@ -102,6 +94,4 @@ public class RecipeRepositoryDatabaseImpl : IRecipeRepository
         );
         return true;
     }
-    
-    
 }

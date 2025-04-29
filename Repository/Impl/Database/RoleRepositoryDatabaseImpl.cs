@@ -1,5 +1,3 @@
-// RoleRepositoryDatabaseImpl.cs
-
 using RecipeNest.Constant;
 using RecipeNest.Db;
 using RecipeNest.Db.Query.Impl.Entity;
@@ -11,11 +9,12 @@ namespace RecipeNest.Repository.Impl.Database;
 
 public class RoleRepositoryDatabaseImpl : IRoleRepository
 {
-    
     public Paged<Role> GetAllPaginated(int start, int limit)
     {
-        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GetAllActiveOrderByCreatedDate, IQueryConstant.IRole.AllActiveCount, start, limit, new RoleRowMapper());
+        return DatabaseConnector.QueryAll(IQueryConstant.IRole.GetAllActiveOrderByCreatedDate,
+            IQueryConstant.IRole.AllActiveCount, start, limit, new RoleRowMapper());
     }
+
     public bool DeleteById(int id)
     {
         var role = GetActiveById(id);
@@ -24,7 +23,7 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
         DatabaseConnector.Update(IQueryConstant.IRole.DeleteById, id);
         return true;
     }
-    
+
     public List<Role> GetAll()
     {
         return DatabaseConnector.QueryAll(IQueryConstant.IRole.GetAllActiveOrderByCreatedDate, new RoleRowMapper());
@@ -32,7 +31,8 @@ public class RoleRepositoryDatabaseImpl : IRoleRepository
 
     public Role GetActiveById(int id)
     {
-        return DatabaseConnector.QueryOne(IQueryConstant.IRole.GetById, new RoleRowMapper(), id);;
+        return DatabaseConnector.QueryOne(IQueryConstant.IRole.GetById, new RoleRowMapper(), id);
+        ;
     }
 
     public bool Save(Role role)

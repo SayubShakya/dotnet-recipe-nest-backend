@@ -1,5 +1,3 @@
-//RowMapper.cs
-
 using MySql.Data.MySqlClient;
 
 namespace RecipeNest.Db.Query;

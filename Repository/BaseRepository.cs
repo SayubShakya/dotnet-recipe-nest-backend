@@ -1,5 +1,3 @@
-// BaseRepository.cs
-
 namespace RecipeNest.Repository;
 
 public interface IBaseRepository<T>
@@ -13,5 +11,4 @@ public interface IBaseRepository<T>
     List<T> GetAll();
 
     bool DeleteById(int id);
-    
 }

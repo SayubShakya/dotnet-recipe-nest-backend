@@ -1,6 +1,4 @@
-﻿// Model/Recipe.cs
-
-namespace RecipeNest.Entity;
+﻿namespace RecipeNest.Entity;
 
 public class Recipe
 {

@@ -52,9 +52,9 @@ public static class Application
     {
         Console.WriteLine(
             $"Thread Name: {Thread.CurrentThread.Name ?? "No Name"}, Thread ID: {Environment.CurrentManagedThreadId}");
-        
-        HttpListenerContext context = (HttpListenerContext) state!;
-        
+
+        HttpListenerContext context = (HttpListenerContext)state!;
+
         HttpListenerRequest request = context.Request;
         HttpListenerResponse response = context.Response;
 
@@ -65,7 +65,7 @@ public static class Application
             using (ILifetimeScope scope = container.BeginLifetimeScope())
             {
                 APIRouter router = scope.Resolve<APIRouter>();
-                
+
                 bool isAuthorized =
                     AuthorizationFilter.Filter(request, scope);
 
