@@ -22,6 +22,9 @@ public class RoleRouter
 
     public ServerResponse Role(string path, HttpListenerRequest request)
     {
+
+
+
         if (_sessionUser.Authenticated)
         {
             Console.WriteLine("Role requesting path: " + path);
@@ -36,11 +39,15 @@ public class RoleRouter
 
             else if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
             {
-                int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
-                int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
+                
+                if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
+                {
+                    int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+                    int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
 
-                if (request.HttpMethod.Equals("GET")) return _roleController.GetAll(start, limit);
-
+                    if (request.HttpMethod.Equals("GET")) return _roleController.GetAll(start, limit);
+                }
+                
                 if (request.HttpMethod.Equals("POST"))
                     return _roleController.Save(BaseController.JsonRequestBody<CreateRoleRequest>(request));
 
@@ -49,6 +56,16 @@ public class RoleRouter
             }
 
             return ResponseUtil.NotFound();
+        }
+        else
+        {
+            if (Regex.IsMatch(path, @"^/roles/?(?:\?.*)?"))
+            {
+                int start = int.Parse(request.QueryString["start"] ?? IApplicationConstant.DefaultStart);
+                int limit = int.Parse(request.QueryString["limit"] ?? IApplicationConstant.DefaultLimit);
+
+                if (request.HttpMethod.Equals("GET")) return _roleController.GetAll(start, limit);
+            }
         }
 
         return ResponseUtil.Unauthorized();

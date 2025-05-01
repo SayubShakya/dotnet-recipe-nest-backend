@@ -16,9 +16,33 @@ public class UserRowMapper : IRowMapper<User>
             Email = reader.GetString("email"),
             Password = reader.GetString("password"),
             RoleId = reader.GetInt32("role_id"),
-            ImageUrl = reader.GetString("image_url"),
-            About = reader.GetString("about"),
+            ImageUrl =HandleOptionalImageUrl(reader),
+            About = HandleOptionalAbout(reader),
             IsActive = reader.GetBoolean("is_active"),
         };
+    }
+    
+    private static string? HandleOptionalImageUrl(MySqlDataReader reader)
+    {
+        try
+        {
+            return reader.GetString("image_url");
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+    }
+    
+    private static string? HandleOptionalAbout(MySqlDataReader reader)
+    {
+        try
+        {
+            return reader.GetString("about");
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
 }
