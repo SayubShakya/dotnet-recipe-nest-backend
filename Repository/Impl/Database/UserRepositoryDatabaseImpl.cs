@@ -76,7 +76,7 @@ public class UserRepositoryDatabaseImpl : IUserRepository
             user.Email,
             user.Password,
             user.RoleId
-        ) == 1;
+        ) == 1; 
     }
 
     public bool Update(User user)
