@@ -37,5 +37,5 @@ A RESTful API for recipe management, built with C# and ASP.NET Core. Manage reci
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/SayubShakya/recipe_nest_dotnet.git
-   cd recipe_nest_dotnet
+   git clone https://github.com/SayubShakya/dotnet-recipe-nest-backend
+   cd dotnet-recipe-nest-backend
